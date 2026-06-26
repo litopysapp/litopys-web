@@ -1,0 +1,1018 @@
+﻿---
+import Layout from '../layouts/Layout.astro';
+---
+<Layout title="Демо редактора — Літопис" description="Спробуйте Літопис прямо в браузері." fullPage={true}>
+
+<div class="demo-root">
+
+  <!-- ═══ TOPBAR ═══ -->
+  <header class="app-topbar">
+    <div class="app-title">
+      <a href="/" class="brand-logo-link">
+        <img src="/litopys-logo-demo.gif" alt="Літопис демо" class="brand-logo-img">
+      </a>
+    </div>
+
+    <div class="litopys-module-switch locked">
+      <span class="litopys-module-switch-label active-label">ЖБД</span>
+      <button type="button" class="litopys-module-switch-toggle" title="Доступно у повній версії">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#3c3c3c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="12" r="3"/><rect width="20" height="14" x="2" y="5" rx="7"/></svg>
+      </button>
+      <span class="litopys-module-switch-label">БР</span>
+    </div>
+
+    <div class="controls topbar-actions">
+      <!-- Undo/Redo -->
+      <div class="document-history-actions">
+        <button id="btn-undo" class="icon-only" title="Скасувати">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg>
+        </button>
+        <button id="btn-redo" class="icon-only" title="Повторити">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 14 5-5-5-5"/><path d="M20 9H9.5a5.5 5.5 0 0 0 0 11H13"/></svg>
+        </button>
+      </div>
+      <div class="topbar-sep"></div>
+
+      <!-- "Робота з текстом" -->
+      <div class="text-work-menu" id="twm-wrap">
+        <button class="manual-text-import-button" id="btn-twm">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 21h8"/><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/></svg>
+          <span>Робота з текстом</span>
+          <span class="dropdown-caret">▾</span>
+        </button>
+        <div id="textWorkMenu" class="compact-dropdown">
+          <div class="compact-dropdown-label">Доступно у повній версії</div>
+          <button disabled style="opacity:.45;cursor:default;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M8 12h8M12 8v8"/></svg>
+            <span>Вставити текст</span>
+          </button>
+          <button disabled style="opacity:.45;cursor:default;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>
+            <span>Внести правки</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- DOCX pill -->
+      <button id="btn-export-docx" class="file-picker-pill" title="Завантажити DOCX">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        <span class="file-picker-name">DOCX</span>
+      </button>
+
+      <!-- Зберегти / Друк (декор) -->
+      <button class="icon-only" title="Зберегти PDF (повна версія)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/><path d="M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7"/><path d="M7 3v4a1 1 0 0 0 1 1h7"/></svg>
+      </button>
+      <button class="icon-only" title="Друк (повна версія)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 9V3a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6"/><rect x="6" y="14" width="12" height="8" rx="1"/></svg>
+      </button>
+    </div>
+
+    <div class="topbar-profile">
+      <button class="icon-only menu-button" id="btn-menu" title="Меню">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16"/><path d="M4 12h16"/><path d="M4 19h16"/></svg>
+      </button>
+      <div id="profileMenu" class="profile-menu">
+        <div class="compact-dropdown-label">Демо-версія</div>
+        <a href="/" class="pmenu-link">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+          <span>На головну</span>
+        </a>
+        <a href="/" class="pmenu-link">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+          <span>Про Літопис</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ═══ APP SHELL — три колонки як у JBD ═══ -->
+  <div class="app-shell">
+
+    <!-- Ліва панель — Налаштування -->
+    <aside class="settings-panel" id="left-panel">
+      <h2>
+        <span class="panel-title-text">Налаштування</span>
+        <span class="panel-menu-icon" id="btn-collapse-left" title="Згорнути панель">☰</span>
+      </h2>
+
+      <div class="settings-block">
+        <h3>Preview / PDF</h3>
+        <label class="template-toggle">
+          <input type="checkbox" id="showGrid" checked>
+          Показати бланк у preview
+        </label>
+        <label>
+          Прозорість сітки
+          <input type="range" id="gridOpacity" min="0" max="1" step="0.01" value="0.42">
+          <span id="gridOpacityValue">0.42</span>
+        </label>
+        <label class="template-toggle">
+          <input type="checkbox" id="hideText">
+          Приховати текст
+        </label>
+      </div>
+
+      <div class="settings-block">
+        <h3>Непарні сторінки</h3>
+        <label>
+          Випадковий відступ дати, мм
+          <input type="range" id="oddDateX" min="0" max="40" step="0.1" value="0.5">
+          <span id="oddDateXVal">0.5</span>
+        </label>
+        <label>
+          Випадковий відступ часу, мм
+          <input type="range" id="oddTimeX" min="0" max="40" step="0.1" value="0.5">
+          <span id="oddTimeXVal">0.5</span>
+        </label>
+        <label>
+          Відступ тексту від лівої межі стовпчика, мм
+          <input type="range" id="oddTextX" min="0" max="80" step="0.1" value="0.5">
+          <span id="oddTextXVal">0.5</span>
+        </label>
+      </div>
+
+      <div class="settings-block">
+        <h3>Рядки</h3>
+        <label>
+          Верх першого рядка, мм
+          <input type="range" id="firstRowTop" min="15" max="35" step="0.01" value="31.47">
+          <span id="firstRowTopVal">31.47</span>
+        </label>
+        <label>
+          Крок рядків, мм
+          <input type="range" id="rowHeight" min="2.5" max="6.5" step="0.001" value="6.084">
+          <span id="rowHeightVal">6.084</span>
+        </label>
+      </div>
+
+      <div class="settings-block">
+        <h3>Початок генерації</h3>
+        <label>
+          Починати з типу сторінки
+          <select id="startPageNumber">
+            <option value="1">1 — непарна</option>
+            <option value="2">2 — парна</option>
+          </select>
+        </label>
+        <label>
+          Початковий рядок на першій сторінці
+          <input type="number" id="startRowNumber" min="1" max="60" step="1" value="1">
+        </label>
+      </div>
+
+      <div class="settings-block">
+        <h3>Рукопис</h3>
+        <label class="template-toggle">
+          <input type="checkbox" id="useHandFont" checked>
+          Рукописний шрифт OleksiiFull
+        </label>
+        <label>
+          Розмір тексту, pt
+          <input type="range" id="textFontSize" min="6" max="48" step="0.5" value="24">
+          <span id="textFontSizeVal">24</span>
+        </label>
+        <label>
+          Нахил літер, ±°
+          <input type="range" id="letterRotate" min="0" max="5" step="0.1" value="0">
+          <span id="letterRotateVal">0</span>
+        </label>
+      </div>
+
+      <div class="settings-actions">
+        <button class="icon-only" title="Зберегти налаштування">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/><path d="M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7"/><path d="M7 3v4a1 1 0 0 0 1 1h7"/></svg>
+        </button>
+        <button class="icon-only" title="Скинути налаштування">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Центр — аркуш з таблицею ЖБД -->
+    <main class="preview-area">
+      <div id="preview">
+        <div class="page-wrapper">
+          <div class="page-abs">
+
+            <!-- Бланк і текст ЖБД — абсолютні мм-координати як у застосунку -->
+            <div id="jbd-blank-layer"></div>
+            <div id="jbd-text-layer"></div>
+
+          </div><!-- /page-abs -->
+        </div>
+      </div>
+    </main>
+
+    <!-- Права панель — Редактор бланка -->
+    <aside class="blank-editor-panel" id="right-panel">
+      <h2>
+        <span class="panel-title-text">Редактор бланка</span>
+        <span class="panel-menu-icon" id="btn-collapse-right" title="Згорнути панель">☰</span>
+      </h2>
+
+      <div class="settings-block">
+        <h3>Блок: заголовки</h3>
+        <label>
+          Заголовок колонки 1
+          <input type="text" id="blankHeader1" value="Дата">
+        </label>
+        <label>
+          Заголовок колонки 2
+          <input type="text" id="blankHeader2" value="Зміст розпорядження">
+        </label>
+        <label>
+          Заголовок колонки 3
+          <input type="text" id="blankHeader3" value="Примітка">
+        </label>
+        <label>
+          Номери колонок
+          <input type="text" id="blankNums" value="1,2,3">
+        </label>
+        <label>
+          Висота шапки (1–3 рядки)
+          <input type="range" id="blankHeaderRows" min="1" max="3" step="1" value="2">
+          <span id="blankHeaderRowsVal">2</span>
+        </label>
+      </div>
+
+      <div class="settings-block">
+        <h3>Блок: позиція таблиці</h3>
+        <label>
+          Внутрішній відступ від краю, мм
+          <input type="range" id="blankInnerMargin" min="0" max="30" step="0.1" value="10">
+          <span id="blankInnerMarginVal">10</span>
+        </label>
+        <label>
+          Верх таблиці, мм
+          <input type="range" id="blankTop" min="5" max="35" step="0.1" value="20">
+          <span id="blankTopVal">20</span>
+        </label>
+        <label>
+          Низ таблиці, мм
+          <input type="range" id="blankBottom" min="250" max="295" step="0.1" value="287">
+          <span id="blankBottomVal">287</span>
+        </label>
+        <label>
+          Фактичний X: непарна / парна
+          <input type="text" id="blankActualX" value="25.0 мм / 10.0 мм" readonly>
+        </label>
+      </div>
+
+      <div class="settings-block">
+        <h3>Блок: колонки і рядки</h3>
+        <label>
+          Ширина колонки 1, мм
+          <input type="range" id="blankDateWidth" min="15" max="60" step="0.1" value="30">
+          <span id="blankDateWidthVal">30</span>
+        </label>
+        <label>
+          Ширина колонки 2, мм
+          <input type="range" id="blankTextWidth" min="80" max="150" step="0.1" value="120">
+          <span id="blankTextWidthVal">120</span>
+        </label>
+        <label>
+          Ширина колонки 3, мм
+          <input type="range" id="blankNoteWidth" min="15" max="50" step="0.1" value="25">
+          <span id="blankNoteWidthVal">25</span>
+        </label>
+        <label>
+          Загальна кількість рядків таблиці
+          <input type="range" id="blankRows" min="40" max="55" step="1" value="44">
+          <span id="blankRowsVal">44</span>
+        </label>
+        <label>
+          Доступно рядків для тексту
+          <input type="text" id="blankTextRowsInfo" value="42" readonly>
+        </label>
+      </div>
+
+      <div class="settings-block">
+        <h3>Блок: експорт і профілі</h3>
+        <label>
+          Товщина ліній
+          <input type="range" id="blankLineWidth" min="0.1" max="0.8" step="0.05" value="0.25">
+          <span id="blankLineWidthVal">0.25</span>
+        </label>
+        <div class="settings-actions" style="margin-top:10px;padding-top:10px;">
+          <button class="icon-only" title="Згенерувати PDF-бланк (повна версія)">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          </button>
+          <button class="icon-only" title="Зберегти профіль бланка (повна версія)">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/><path d="M17 21v-7H7v7"/><path d="M7 3v4h7"/></svg>
+          </button>
+          <button class="icon-only" title="Скинути бланк (повна версія)">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+  </div><!-- /app-shell -->
+
+  <!-- Status bar -->
+  <div class="status-bar">
+    <span class="status-note">Браузерна демо-версія Літопису — деякі функції доступні лише у повній програмі</span>
+    <span style="flex:1"></span>
+    <a href="/" class="status-link">Дізнатись більше →</a>
+  </div>
+
+</div><!-- /demo-root -->
+</Layout>
+
+<style is:global>
+  @font-face {
+    font-family: 'OleksiiFull';
+    src: url('/fonts/OleksiiFull-Regular.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  :root { --letter-rotate: 0deg; }
+
+  /* Нахил літер рукопису */
+  #jbd-tbody td {
+    font-style: oblique var(--letter-rotate);
+  }
+
+  /* ── Root ── */
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  .demo-root {
+    display: flex; flex-direction: column;
+    height: 100%;
+    background: #f0f2f5;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+    font-size: 13px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── TOPBAR ── */
+  .app-topbar {
+    display: flex; align-items: center; gap: 6px; flex-shrink: 0;
+    padding: 8px 14px; margin-bottom: 0;
+    background: rgba(255,255,255,.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid #e2e8f0;
+    box-shadow: 0 2px 8px rgba(15,23,42,.07);
+    flex-wrap: wrap; min-height: 56px;
+    position: relative; z-index: 100;
+  }
+  .app-title { display: flex; align-items: center; gap: 7px; flex-shrink: 0; }
+  .brand-logo-link { display: flex; align-items: center; text-decoration: none; }
+  .brand-logo-img { height: 32px; width: auto; display: block; }
+  .demo-chip {
+    font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em;
+    color: #64748b; background: #f1f5f9; border: 1px solid #e2e8f0;
+    border-radius: 4px; padding: 2px 5px;
+  }
+  .litopys-module-switch { display: inline-flex; align-items: center; gap: 8px; margin-left: 10px; flex-shrink: 0; }
+  .litopys-module-switch-label { font-weight: 700; font-size: 15px; color: #94a3b8; user-select: none; }
+  .litopys-module-switch-label.active-label { color: #0f172a; }
+  .litopys-module-switch-toggle {
+    width: 30px; height: 30px; display: inline-flex; align-items: center; justify-content: center;
+    border: 0 !important; background: transparent !important; padding: 0 !important;
+    cursor: default !important; box-shadow: none !important; opacity: .5; border-radius: 0 !important;
+  }
+  .controls { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+  .topbar-actions { flex: 1; }
+  .topbar-sep { width: 1px; height: 20px; background: #e2e8f0; margin: 0 3px; flex-shrink: 0; }
+  .document-history-actions { display: flex; gap: 2px; }
+
+  /* Icon-only */
+  button.icon-only {
+    width: 34px !important; min-width: 34px !important; height: 34px !important;
+    padding: 0 !important; display: inline-flex !important;
+    align-items: center !important; justify-content: center !important;
+    border: 1px solid transparent !important; border-radius: 8px !important;
+    background: transparent !important; color: #334155 !important;
+    box-shadow: none !important; cursor: pointer; font-weight: normal !important;
+    transition: background .1s, border-color .1s !important; transform: none !important;
+  }
+  button.icon-only:hover {
+    background: #f1f5f9 !important; border-color: #e2e8f0 !important; transform: none !important;
+  }
+
+  /* "Робота з текстом" */
+  .text-work-menu { position: relative; }
+  .manual-text-import-button {
+    height: 34px !important; padding: 0 11px !important;
+    display: inline-flex !important; align-items: center !important; gap: 6px !important;
+    border-radius: 9px !important; border: 1px solid #2f2f2f !important;
+    background: #3c3c3c !important; color: #fff !important;
+    font-size: 12.5px !important; font-weight: 600 !important; font-family: inherit !important;
+    white-space: nowrap !important; cursor: pointer;
+    box-shadow: 0 3px 10px rgba(15,23,42,.18) !important;
+    transform: none !important; transition: background .12s !important;
+  }
+  .manual-text-import-button:hover { background: #4a4a4a !important; transform: none !important; }
+  .dropdown-caret { font-size: 10px; opacity: .8; }
+
+  /* File picker pill */
+  .file-picker-pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    height: 34px; padding: 0 11px;
+    border: 1px solid #cbd5e1 !important; border-radius: 9px !important;
+    background: #fff !important; color: #334155 !important;
+    font-size: 12.5px; font-weight: 500; font-family: inherit; cursor: pointer;
+    box-shadow: 0 1px 4px rgba(15,23,42,.06) !important;
+    transform: none !important; transition: background .1s !important;
+  }
+  .file-picker-pill:hover { background: #f8fafc !important; transform: none !important; }
+  .file-picker-name { font-size: 12.5px; }
+
+  /* Compact dropdown */
+  .compact-dropdown {
+    display: none; position: absolute; top: calc(100% + 7px); left: 0;
+    min-width: 200px; background: #fff; border: 1px solid #e2e8f0;
+    border-radius: 13px; box-shadow: 0 14px 40px rgba(15,23,42,.15);
+    padding: 6px; z-index: 500;
+  }
+  .compact-dropdown.open { display: block; }
+  .compact-dropdown-label {
+    padding: 6px 9px 3px; font-size: 10px; font-weight: 700;
+    color: #64748b; text-transform: uppercase; letter-spacing: .05em;
+  }
+  .compact-dropdown button {
+    width: 100% !important; text-align: left !important;
+    display: flex !important; align-items: center !important; gap: 7px !important;
+    padding: 7px 9px !important; border-radius: 8px !important;
+    background: transparent !important; color: #334155 !important;
+    font-size: 12.5px !important; font-weight: 500 !important; font-family: inherit !important;
+    border: 1px solid transparent !important; box-shadow: none !important;
+    cursor: pointer !important; transform: none !important;
+  }
+
+  /* Profile menu */
+  .topbar-profile { margin-left: auto; position: relative; }
+  .profile-menu {
+    display: none; position: absolute; right: 0; top: calc(100% + 8px);
+    min-width: 180px; background: #fff; border: 1px solid #e2e8f0;
+    border-radius: 13px; box-shadow: 0 16px 40px rgba(15,23,42,.16);
+    padding: 7px; z-index: 3000;
+  }
+  .profile-menu.open { display: block; }
+  .pmenu-link {
+    display: flex; align-items: center; gap: 8px; padding: 8px 9px;
+    border-radius: 8px; color: #0f172a; font-size: 12.5px; font-weight: 500;
+    transition: background .1s;
+  }
+  .pmenu-link:hover { background: #f1f5f9; }
+
+  /* ══ APP SHELL — точна сітка JBD ══ */
+  .app-shell {
+    display: grid;
+    grid-template-columns: 240px 1fr 260px;
+    gap: 14px;
+    flex: 1;
+    overflow: hidden;
+    padding: 14px;
+    align-items: start;
+    min-height: 0;
+  }
+
+  /* ── Бічні панелі ── */
+  .settings-panel,
+  .blank-editor-panel {
+    position: sticky; top: 0;
+    max-height: calc(100vh - 58px - 28px);
+    overflow-y: auto;
+    background: rgba(255,255,255,.98);
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 16px;
+    box-shadow: 0 4px 18px rgba(15,23,42,.08);
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 transparent;
+  }
+  .settings-panel h2,
+  .blank-editor-panel h2 {
+    margin: 0 0 12px; font-size: 15px; font-weight: 800;
+    color: #0f172a; letter-spacing: -.02em;
+    display: flex; align-items: center; justify-content: space-between;
+    padding-bottom: 10px; border-bottom: 1px solid #e2e8f0;
+  }
+  .panel-menu-icon {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 22px; height: 22px; border: 1px solid #d1d5db; border-radius: 6px;
+    background: #f8fafc; color: #374151; font-size: 13px;
+    cursor: pointer; flex-shrink: 0; user-select: none;
+  }
+
+  /* Settings blocks */
+  .settings-block {
+    background: #f8fafc; border: 1px solid #e2e8f0;
+    border-radius: 12px; padding: 11px; margin-top: 10px;
+  }
+  .settings-block h3 {
+    font-size: 11.5px; font-weight: 800; color: #334155;
+    letter-spacing: -.01em; margin-bottom: 8px;
+  }
+  .settings-block label {
+    display: block; margin: 8px 0; font-size: 12px; color: #1e293b; line-height: 1.4;
+  }
+  .settings-block input[type=text],
+  .settings-block input[type=number],
+  .settings-block select {
+    width: 100%; box-sizing: border-box; padding: 6px 8px; margin-top: 4px;
+    border: 1px solid #cbd5e1 !important; border-radius: 8px !important;
+    background: #fff !important; color: #0f172a !important;
+    font-size: 12px; font-family: inherit;
+    box-shadow: none !important; transform: none !important;
+  }
+  .settings-block input[type=range] { width: 100%; margin-top: 5px; accent-color: #334155; }
+  .settings-block span {
+    display: inline-block; min-width: 40px;
+    font-variant-numeric: tabular-nums; color: #334155; font-weight: 600;
+  }
+  .template-toggle {
+    display: flex; align-items: center; gap: 6px;
+    padding: 7px 9px; background: #fff; border: 1px solid #e2e8f0;
+    border-radius: 8px; color: #0f172a; font-size: 12px; cursor: pointer;
+  }
+  .settings-actions {
+    display: flex; gap: 6px; flex-wrap: wrap;
+    margin-top: 12px; padding-top: 10px; border-top: 1px solid #e2e8f0;
+  }
+  .settings-actions button.icon-only { width: auto !important; flex: 1; min-width: 32px !important; }
+
+  /* ── Preview area ── */
+  .preview-area {
+    min-width: 0;
+    height: 100%;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  #preview {
+    transform-origin: top center;
+    /* scale set by JS */
+  }
+
+  .page-wrapper { margin-bottom: 0; }
+
+  .page-abs {
+    position: relative;
+    width: 210mm;
+    height: 297mm;
+    background: #fff;
+    box-shadow: 0 4px 24px rgba(0,0,0,.16), 0 1px 4px rgba(0,0,0,.10);
+    margin: 0 auto;
+    overflow: hidden;
+  }
+
+  /* ── Бланк-шар (лінії і заголовки) ── */
+  #jbd-blank-layer, #jbd-text-layer {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  /* Зовнішня рамка таблиці */
+  .tpl-border {
+    position: absolute;
+    box-sizing: border-box;
+    border: 0.25mm solid #000;
+  }
+
+  /* Вертикальні лінії всередині */
+  .tpl-vline {
+    position: absolute;
+    box-sizing: border-box;
+    border-left: 0.25mm solid #000;
+  }
+
+  /* Горизонтальні рядки */
+  .tpl-hline {
+    position: absolute;
+    box-sizing: border-box;
+    border-top: 0.25mm solid #000;
+  }
+
+  /* Текст заголовків */
+  .tpl-header {
+    position: absolute;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-family: "Times New Roman", Times, serif;
+    font-size: 7pt;
+    font-weight: 700;
+    line-height: 1.2;
+    padding: 0 1mm;
+    overflow: hidden;
+  }
+
+  /* Номери колонок */
+  .tpl-num {
+    position: absolute;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Times New Roman", Times, serif;
+    font-size: 7pt;
+    font-weight: 700;
+  }
+
+  /* Текстові клітинки */
+  .tpl-cell {
+    position: absolute;
+    box-sizing: border-box;
+    font-family: "Times New Roman", Times, serif;
+    font-size: 7.5pt;
+    line-height: 1.15;
+    padding: 0 1mm;
+    overflow: hidden;
+    white-space: nowrap;
+    color: #111;
+  }
+
+  /* ── Status bar ── */
+  .status-bar {
+    display: flex; align-items: center; gap: .75rem;
+    height: 28px; padding: 0 14px; flex-shrink: 0;
+    background: rgba(255,255,255,.92); border-top: 1px solid #e2e8f0;
+    font-size: 11px; color: #94a3b8;
+  }
+  .status-link { color: #334155; font-weight: 600; font-size: 11px; }
+  .status-link:hover { text-decoration: underline; }
+
+  @media (max-width: 900px) {
+    .app-shell { grid-template-columns: 1fr; }
+    .settings-panel, .blank-editor-panel { display: none; }
+  }
+</style>
+
+<script>
+// ══════════════════════════════════════════════════════
+//  Стан — точно як DEFAULT_BLANK_TEMPLATE та DEFAULT_CALIBRATION у застосунку
+// ══════════════════════════════════════════════════════
+const blank = {
+  header1: 'Дата',
+  header2: 'Зміст розпорядження',
+  header3: 'Примітка',
+  nums: '1,2,3',
+  innerMargin: 10,   // мм від краю аркуша до таблиці
+  top: 20,           // мм зверху аркуша де починається таблиця
+  bottom: 287,       // мм зверху аркуша де закінчується таблиця
+  dateWidth: 30,     // мм
+  textWidth: 120,    // мм
+  noteWidth: 25,     // мм
+  rows: 44,          // загальна кількість рядків
+  headerRows: 2,     // рядків шапки
+  lineWidth: 0.25,   // мм товщина ліній
+};
+
+const cal = {
+  gridOpacity: 0.42,
+  oddDateX: 0.5,
+  oddTimeX: 0.5,
+  oddTextX: 0.5,
+  firstRowTop: 31.47,
+  rowHeight: 6.084,
+  textFontSize: 24,
+  letterRotate: 0,
+  useHandFont: true,
+};
+
+// Формат: { date, time, text, note }
+// date і time виводяться окремими рядками в колонці "Дата"
+const sampleRows = [
+  {
+    date: '24.02.2022', time: '03:40',
+    text: 'Повномасштабне вторгнення почалося близько 3:40, коли на територію Луганської області зайшла перша колона російських танків',
+    note: ''
+  },
+  {
+    date: '24.02.2022', time: '04:00',
+    text: 'Близько 4:00 за київським часом (UTC+2) 24 лютого президент рф вовапітун оголосив про воєнну операцію з метою нібито «демілітаризації та денацифікації України».',
+    note: ''
+  },
+  {
+    date: '06.07.2023', time: '02:50',
+    text: 'Російські війська підірвали Каховську ГЕС. Підрив призвів до неконтрольованого витоку води з Каховського водосховища, що в свою чергу спричинило до катастрофічного підняття рівня води та затоплення населених пунктів нижче Каховського водосховища.',
+    note: ''
+  },
+];
+
+function $(id){ return document.getElementById(id); }
+
+// ── Синхронізація firstRowTop і rowHeight з blank.rows/bottom (як syncTextFlowToBlankRows) ──
+function syncCalFromBlank(){
+  const textRows = Math.max(1, blank.rows - blank.headerRows);
+  cal.rowHeight = (blank.bottom - blank.top) / blank.rows;
+  cal.firstRowTop = blank.bottom - textRows * cal.rowHeight;
+  // оновлюємо відповідні елементи лівої панелі
+  const rh = $('rowHeight'); if(rh){ rh.value = cal.rowHeight.toFixed(3); const v=$('rowHeightVal'); if(v) v.textContent=cal.rowHeight.toFixed(3); }
+  const ft = $('firstRowTop'); if(ft){ ft.value = cal.firstRowTop.toFixed(2); const v=$('firstRowTopVal'); if(v) v.textContent=cal.firstRowTop.toFixed(2); }
+}
+
+// ── Таблиця: побудова бланк-шару (лінії, заголовки, нумери) ──
+function buildBlankLayer(){
+  const L = blank.innerMargin;            // tableLeft мм
+  const T = blank.top;
+  const B = blank.bottom;
+  const H = B - T;
+  const DW = blank.dateWidth;
+  const TW = blank.textWidth;
+  const NW = blank.noteWidth;
+  const W = DW + TW + NW;
+  const ROW_H = H / blank.rows;
+  const lw = blank.lineWidth;
+  const HR = Math.max(1, Math.round(blank.headerRows));
+  const nums = blank.nums.split(',').map(s=>s.trim());
+  const op = cal.gridOpacity;
+
+  let html = `<div style="position:absolute;inset:0;opacity:${op};">`;
+
+  // Зовнішня рамка
+  html += `<div class="tpl-border" style="left:${L}mm;top:${T}mm;width:${W}mm;height:${H}mm;border-width:${lw}mm;"></div>`;
+
+  // Вертикальні лінії
+  html += `<div class="tpl-vline" style="left:${L+DW}mm;top:${T}mm;height:${H}mm;border-left-width:${lw}mm;"></div>`;
+  html += `<div class="tpl-vline" style="left:${L+DW+TW}mm;top:${T}mm;height:${H}mm;border-left-width:${lw}mm;"></div>`;
+
+  // Горизонтальні лінії рядків (після шапки)
+  for(let r = HR; r < blank.rows; r++){
+    const y = T + r * ROW_H;
+    html += `<div class="tpl-hline" style="left:${L}mm;top:${y}mm;width:${W}mm;border-top-width:${lw}mm;"></div>`;
+  }
+
+  // Лінія під шапкою (між заголовками і номерами, якщо headerRows=2)
+  if(HR >= 2){
+    const y = T + (HR-1)*ROW_H;
+    html += `<div class="tpl-hline" style="left:${L}mm;top:${y}mm;width:${W}mm;border-top-width:${lw}mm;"></div>`;
+  }
+
+  // Заголовки колонок (верхній рядок шапки)
+  html += `<div class="tpl-header" style="left:${L}mm;top:${T}mm;width:${DW}mm;height:${(HR-1)*ROW_H}mm;">${blank.header1}</div>`;
+  html += `<div class="tpl-header" style="left:${L+DW}mm;top:${T}mm;width:${TW}mm;height:${(HR-1)*ROW_H}mm;">${blank.header2}</div>`;
+  html += `<div class="tpl-header" style="left:${L+DW+TW}mm;top:${T}mm;width:${NW}mm;height:${(HR-1)*ROW_H}mm;">${blank.header3}</div>`;
+
+  // Номери колонок (нижній рядок шапки)
+  const numY = T + (HR-1)*ROW_H;
+  html += `<div class="tpl-num" style="left:${L}mm;top:${numY}mm;width:${DW}mm;height:${ROW_H}mm;">${nums[0]||'1'}</div>`;
+  html += `<div class="tpl-num" style="left:${L+DW}mm;top:${numY}mm;width:${TW}mm;height:${ROW_H}mm;">${nums[1]||'2'}</div>`;
+  html += `<div class="tpl-num" style="left:${L+DW+TW}mm;top:${numY}mm;width:${NW}mm;height:${ROW_H}mm;">${nums[2]||'3'}</div>`;
+
+  html += `</div>`;
+  $('jbd-blank-layer').innerHTML = html;
+}
+
+// ── Розбиття тексту по рядках таблиці ──
+// Повертає масив рядків — скільки поміщається у кожному рядку
+// Використовує Canvas для вимірювання ширини тексту
+function splitTextIntoRows(text, fontStr, fontSizePt, colWidthMm) {
+  if(!text) return [];
+  // Конвертуємо мм → px (96dpi: 1mm = 3.7795px)
+  const PX_PER_MM = 3.7795;
+  const maxPx = colWidthMm * PX_PER_MM;
+  const fontSizePx = fontSizePt * (96/72);
+
+  // Canvas для вимірювання
+  const cv = document.createElement('canvas');
+  const ctx = cv.getContext('2d');
+  ctx.font = `${fontSizePx}px ${fontStr}`;
+
+  const words = text.split(' ');
+  const lines = [];
+  let current = '';
+
+  for(const word of words){
+    const test = current ? current + ' ' + word : word;
+    if(ctx.measureText(test).width <= maxPx){
+      current = test;
+    } else {
+      if(current) lines.push(current);
+      current = word;
+    }
+  }
+  if(current) lines.push(current);
+  return lines;
+}
+
+// ── Текст-шар (зразкові дані) ──
+function buildTextLayer(){
+  const L  = blank.innerMargin;
+  const DW = blank.dateWidth;
+  const TW = blank.textWidth;
+  const NW = blank.noteWidth;
+  const ROW_H = (blank.bottom - blank.top) / blank.rows;
+  const HR = Math.max(1, Math.round(blank.headerRows));
+
+  const font = cal.useHandFont
+    ? 'OleksiiFull,Times New Roman,Times,serif'
+    : 'Times New Roman,Times,serif';
+  const fs   = cal.textFontSize + 'pt';
+  const fsPx = cal.textFontSize * (96/72);
+
+  const fontStr = font.replace(/,/g,', ');
+
+  // Будуємо список рядків таблиці з розбиттям тексту
+  // Колонка "Дата": перший рядок = дата (відступ oddDateX),
+  //                 другий рядок = час (відступ oddTimeX),
+  //                 далі порожньо
+  // Колонка "Текст": рядки тексту з переносом
+  const tableRows = [];
+
+  sampleRows.forEach(row => {
+    const dateStr = row.date || '';
+    const timeStr = row.time || '';
+    const textLines = splitTextIntoRows(row.text||'', fontStr, cal.textFontSize, TW - cal.oddTextX - 1);
+    const noteLines = splitTextIntoRows(row.note||'', fontStr, cal.textFontSize, NW - 1.5);
+
+    // Колонка дати: дата на 1-му рядку, час на 2-му, решта порожньо
+    const dateCol = [];
+    if(dateStr) dateCol.push({ val: dateStr, xOff: cal.oddDateX });
+    if(timeStr) dateCol.push({ val: timeStr, xOff: cal.oddTimeX });
+
+    const maxLines = Math.max(dateCol.length, textLines.length, noteLines.length, 1);
+    for(let l = 0; l < maxLines; l++){
+      tableRows.push({
+        dateCell: dateCol[l] || null,   // { val, xOff } або null
+        text:     textLines[l] || '',
+        note:     noteLines[l] || '',
+      });
+    }
+  });
+
+  let html = '';
+  tableRows.forEach((row, i) => {
+    const rowIndex = HR + i;
+    const rowTop   = blank.top + rowIndex * ROW_H;
+    if(rowTop >= blank.bottom) return;
+
+    const rowBottom = rowTop + ROW_H;
+    const base = `position:absolute;box-sizing:border-box;`
+      + `font-family:${font};font-size:${fs};line-height:1;`
+      + `overflow:hidden;white-space:nowrap;`
+      + `bottom:${(297 - rowBottom - 2.73).toFixed(3)}mm;`;
+
+    if(row.dateCell){
+      const xOff = row.dateCell.xOff;
+      html += `<div style="${base}left:${(L+xOff).toFixed(2)}mm;width:${(DW-xOff-0.5).toFixed(2)}mm;">${esc(row.dateCell.val)}</div>`;
+    }
+    if(row.text) html += `<div style="${base}left:${(L+DW+cal.oddTextX).toFixed(2)}mm;width:${(TW-cal.oddTextX-0.5).toFixed(2)}mm;">${esc(row.text)}</div>`;
+    if(row.note) html += `<div style="${base}left:${(L+DW+TW+0.5).toFixed(2)}mm;width:${(NW-1).toFixed(2)}mm;">${esc(row.note)}</div>`;
+  });
+
+  $('jbd-text-layer').innerHTML = html;
+}
+
+function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function render(){
+  syncCalFromBlank();
+  buildBlankLayer();
+  buildTextLayer();
+}
+
+// ── Масштабування ──
+function scalePreview(){
+  const preview = $('preview');
+  const area = document.querySelector('.preview-area');
+  if(!preview || !area) return;
+  const scale = Math.min((area.clientHeight-20)/1123, (area.clientWidth-20)/794, 1);
+  preview.style.transform = `scale(${scale})`;
+  preview.style.transformOrigin = 'top center';
+}
+
+// ── Прив'язка бігунків лівої панелі ──
+function bindLeft(id, key, decimals){
+  const el = $(id); if(!el) return;
+  const val = $(id+'Val')||$(id+'Value');
+  el.addEventListener('input', ()=>{
+    cal[key] = parseFloat(el.value);
+    if(val) val.textContent = parseFloat(el.value).toFixed(decimals||2);
+    render();
+  });
+}
+bindLeft('gridOpacity','gridOpacity',2);
+bindLeft('oddDateX','oddDateX',1);
+bindLeft('oddTimeX','oddTimeX',1);
+bindLeft('oddTextX','oddTextX',1);
+// rowHeight і firstRowTop — тільки для читання (обраховуються з blank)
+
+// ── Прив'язка бігунків правої панелі ──
+function bindRight(id, key, isText){
+  const el = $(id); if(!el) return;
+  const val = $(id+'Val')||($(id+'Value'));
+  el.addEventListener('input', ()=>{
+    if(isText){ blank[key] = el.value; }
+    else { blank[key] = parseFloat(el.value); }
+    if(val && !isText) val.textContent = parseFloat(el.value).toFixed(2);
+    render();
+    // доступно рядків для тексту
+    const ti = $('blankTextRowsInfo');
+    if(ti) ti.value = Math.max(0, blank.rows - blank.headerRows);
+  });
+}
+
+bindRight('blankHeader1','header1',true);
+bindRight('blankHeader2','header2',true);
+bindRight('blankHeader3','header3',true);
+bindRight('blankInnerMargin','innerMargin');
+bindRight('blankTop','top');
+bindRight('blankBottom','bottom');
+bindRight('blankDateWidth','dateWidth');
+bindRight('blankTextWidth','textWidth');
+bindRight('blankNoteWidth','noteWidth');
+bindRight('blankRows','rows');
+bindRight('blankHeaderRows','headerRows');
+bindRight('blankLineWidth','lineWidth');
+
+// Рукопис
+const textFontSizeEl = $('textFontSize');
+if(textFontSizeEl){
+  textFontSizeEl.addEventListener('input', ()=>{
+    cal.textFontSize = parseFloat(textFontSizeEl.value);
+    const v=$('textFontSizeVal'); if(v) v.textContent=textFontSizeEl.value;
+    render();
+  });
+}
+const letterRotateEl = $('letterRotate');
+if(letterRotateEl){
+  letterRotateEl.addEventListener('input', ()=>{
+    cal.letterRotate = parseFloat(letterRotateEl.value);
+    const v=$('letterRotateVal'); if(v) v.textContent=letterRotateEl.value;
+    render();
+  });
+}
+const useHandFontEl = $('useHandFont');
+if(useHandFontEl){
+  useHandFontEl.addEventListener('change', ()=>{
+    cal.useHandFont = useHandFontEl.checked;
+    render();
+  });
+}
+
+// Range → span для всіх інших
+document.querySelectorAll('input[type=range]').forEach(inp=>{
+  const span=$(inp.id+'Val')||$(inp.id+'Value');
+  if(span && !span.textContent) span.textContent=inp.value;
+  // Не перепризначаємо — вже прив'язано вище
+});
+
+// Dropdown toggles
+$('btn-twm').addEventListener('click', e=>{ e.stopPropagation(); $('textWorkMenu').classList.toggle('open'); });
+$('btn-menu').addEventListener('click', e=>{ e.stopPropagation(); $('profileMenu').classList.toggle('open'); });
+document.addEventListener('click', ()=>{ $('textWorkMenu').classList.remove('open'); $('profileMenu').classList.remove('open'); });
+$('btn-undo').addEventListener('click', ()=>{});
+$('btn-redo').addEventListener('click', ()=>{});
+
+// ── Перший рендер ──
+render();
+scalePreview();
+window.addEventListener('resize', scalePreview);
+
+// ── DOCX export ──
+$('btn-export-docx').addEventListener('click', async ()=>{
+  const { Document, Packer, Paragraph, TextRun, Table, TableRow, TableCell, WidthType, BorderStyle } = await import('https://esm.sh/docx@8.5.0');
+  const { saveAs } = await import('https://esm.sh/file-saver@2.0.5');
+
+  const sz = Math.max(1, Math.round(blank.lineWidth * 8));
+  const border = { style: BorderStyle.SINGLE, size: sz, color: '000000' };
+  const cb = { top:border, bottom:border, left:border, right:border };
+
+  const totalW = blank.dateWidth + blank.textWidth + blank.noteWidth;
+  const widths = [
+    Math.round(blank.dateWidth/totalW*100*50),
+    Math.round(blank.textWidth/totalW*100*50),
+    Math.round(blank.noteWidth/totalW*100*50),
+  ];
+
+  const mkCell = (text, bold) => new TableCell({
+    children:[new Paragraph({children:[new TextRun({text:text||'',bold:!!bold})]})],
+    borders:cb, width:{size:widths[0], type:WidthType.DXA},
+  });
+
+  const headerRow = new TableRow({ children:[
+    new TableCell({children:[new Paragraph({children:[new TextRun({text:blank.header1,bold:true})]})], borders:cb}),
+    new TableCell({children:[new Paragraph({children:[new TextRun({text:blank.header2,bold:true})]})], borders:cb}),
+    new TableCell({children:[new Paragraph({children:[new TextRun({text:blank.header3,bold:true})]})], borders:cb}),
+  ]});
+
+  const dataRows = [];
+  for(let i=0; i<blank.rows - blank.headerRows; i++){
+    const r = sampleRows[i]||{};
+    dataRows.push(new TableRow({ children:[
+      new TableCell({children:[new Paragraph({children:[new TextRun({text:(r.date||'').replace(/\n/g,' ')})]})], borders:cb}),
+      new TableCell({children:[new Paragraph({children:[new TextRun({text:r.text||''})]})], borders:cb}),
+      new TableCell({children:[new Paragraph({children:[new TextRun({text:r.note||''})]})], borders:cb}),
+    ]}));
+  }
+
+  const doc = new Document({ sections:[{ children:[
+    new Table({ rows:[headerRow,...dataRows], width:{size:100,type:WidthType.PERCENTAGE} })
+  ]}]});
+
+  const blob = await Packer.toBlob(doc);
+  saveAs(blob,'litopys-jbd-demo.docx');
+});
+</script>
