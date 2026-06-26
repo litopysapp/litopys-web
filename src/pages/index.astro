@@ -474,7 +474,8 @@ import Layout from '../layouts/Layout.astro';
   /* ── Mobile ── */
   @media (max-width: 900px) {
     .hero { grid-template-columns: 1fr; min-height: auto; padding-top: 3rem; }
-    .launcher-wrap { display: none; }
+    .launcher-wrap { display: flex; }
+    .launcher { transform: none; max-width: 100%; }
     .what-grid { grid-template-columns: 1fr; gap: 3rem; }
     .stats-grid { grid-template-columns: repeat(2,1fr); }
   }
