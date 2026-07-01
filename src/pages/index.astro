@@ -141,33 +141,27 @@ import Layout from '../layouts/Layout.astro';
       </div>
       <div class="features-grid">
         <div class="feature-card fade-up" style="--d:.0s">
-          <div class="feature-icon"><img src="/icon-book-open-check.svg" alt="" class="feature-svg" /></div>
-          <h3>ЖБД</h3>
+          <div class="feature-header"><img src="/icon-book-open-check.svg" alt="" class="feature-svg" /><h3>ЖБД</h3></div>
           <p>Журнал бойових дій з таблицею, датою та часом — заповнюй і друкуй.</p>
         </div>
         <div class="feature-card fade-up" style="--d:.08s">
-          <div class="feature-icon"><img src="/icon-book-open-text.svg" alt="" class="feature-svg" /></div>
-          <h3>ЖОВтР</h3>
+          <div class="feature-header"><img src="/icon-book-open-text.svg" alt="" class="feature-svg" /><h3>ЖОВтР</h3></div>
           <p>Шаблон журналу з усіма необхідними полями. Готово за хвилини.</p>
         </div>
         <div class="feature-card fade-up" style="--d:.16s">
-          <div class="feature-icon"><img src="/icon-case-sensitive.svg" alt="" class="feature-svg" /></div>
-          <h3>Персональний шрифт</h3>
+          <div class="feature-header"><img src="/icon-case-sensitive.svg" alt="" class="feature-svg" /><h3>Персональний шрифт</h3></div>
           <p>Оцифруємо твій почерк — зміни ніхто не помітить.</p>
         </div>
         <div class="feature-card fade-up" style="--d:.0s">
-          <div class="feature-icon"><img src="/icon-brush-cleaning.svg" alt="" class="feature-svg" /></div>
-          <h3>Чистий інтерфейс</h3>
+          <div class="feature-header"><img src="/icon-brush-cleaning.svg" alt="" class="feature-svg" /><h3>Чистий інтерфейс</h3></div>
           <p>Нічого зайвого. Тільки потрібні поля — без переповнених панелей.</p>
         </div>
         <div class="feature-card fade-up" style="--d:.08s">
-          <div class="feature-icon"><img src="/icon-save-check.svg" alt="" class="feature-svg" /></div>
-          <h3>Автозбереження</h3>
+          <div class="feature-header"><img src="/icon-save-check.svg" alt="" class="feature-svg" /><h3>Автозбереження</h3></div>
           <p>Дані не зникнуть. Файли на вашому диску, під вашим контролем.</p>
         </div>
         <div class="feature-card fade-up" style="--d:.16s">
-          <div class="feature-icon"><img src="/icon-globe-off.svg" alt="" class="feature-svg" /></div>
-          <h3>Повністю офлайн</h3>
+          <div class="feature-header"><img src="/icon-globe-off.svg" alt="" class="feature-svg" /><h3>Повністю офлайн</h3></div>
           <p>Жодних серверів. Працює без інтернету.</p>
         </div>
       </div>
@@ -423,14 +417,14 @@ import Layout from '../layouts/Layout.astro';
   }
   .facts-col { display: flex; flex-direction: column; gap: 1rem; }
   .fact-card {
-    display: flex; gap: 1rem; align-items: flex-start;
+    display: flex; gap: 1rem; align-items: center;
     background: rgba(255,255,255,.8);
     border: 1px solid #e5e7eb; border-radius: 14px; padding: 1.25rem;
     backdrop-filter: blur(8px);
     transition: box-shadow .2s, transform .2s, border-color .2s;
   }
   .fact-card:hover { box-shadow: 0 8px 24px rgba(0,0,0,.08); transform: translateY(-2px); border-color: #bfd4e8; }
-  .fact-icon-wrap { font-size: 1.5rem; flex-shrink: 0; margin-top: .1rem; width: 24px; height: 24px; }
+  .fact-icon-wrap { font-size: 1.5rem; flex-shrink: 0; width: 24px; height: 24px; display: flex; align-items: center; }
   .fact-svg { width: 24px; height: 24px; display: block; }
   .fact-title { font-weight: 700; font-size: .9375rem; margin-bottom: .2rem; color: #111827; }
   .fact-desc { font-size: .8125rem; color: #6b7280; line-height: 1.55; }
@@ -452,7 +446,9 @@ import Layout from '../layouts/Layout.astro';
   }
   .feature-card:hover { box-shadow: 0 12px 32px rgba(0,0,0,.09); transform: translateY(-3px); border-color: #bfd4e8; }
   .feature-icon { font-size: 2rem; margin-bottom: 1.25rem; width: 32px; height: 32px; }
-  .feature-svg { width: 32px; height: 32px; display: block; }
+  .feature-svg { width: 28px; height: 28px; display: block; flex-shrink: 0; }
+  .feature-header { display: flex; align-items: center; gap: .75rem; margin-bottom: .75rem; }
+  .feature-header h3 { margin: 0; }
   .feature-card h3 { font-size: 1.0625rem; font-weight: 700; margin-bottom: .6rem; color: #111827; letter-spacing: -.01em; }
   .feature-card p { font-size: .875rem; color: #6b7280; line-height: 1.7; }
 
