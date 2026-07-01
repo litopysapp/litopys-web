@@ -96,21 +96,22 @@ const isExpiringSoon = daysLeft !== null && daysLeft <= 14 && daysLeft > 0;
         </section>
       )}
 
-      <!-- MFA status -->
-      <section class="card card-small">
-        <div class="card-header">
-          <h2>Двофакторна автентифікація</h2>
-          <span class:list={['badge', user?.mfaEnabled ? 'badge-green' : 'badge-gray']}>
-            {user?.mfaEnabled ? 'Увімкнено' : 'Вимкнено'}
-          </span>
-        </div>
-        <p class="card-desc">
-          {user?.mfaEnabled
-            ? 'Ваш акаунт захищений кодом з Microsoft Authenticator.'
-            : 'Увімкніть MFA для додаткового захисту акаунту.'}
-        </p>
-        <a href="/dashboard/security" class="btn-outline">Керувати безпекою →</a>
-      </section>
+      {user?.role === 'admin' && (
+        <section class="card card-small">
+          <div class="card-header">
+            <h2>Двофакторна автентифікація</h2>
+            <span class:list={['badge', user?.mfaEnabled ? 'badge-green' : 'badge-gray']}>
+              {user?.mfaEnabled ? 'Увімкнено' : 'Вимкнено'}
+            </span>
+          </div>
+          <p class="card-desc">
+            {user?.mfaEnabled
+              ? 'Ваш акаунт захищений кодом з Microsoft Authenticator.'
+              : 'Увімкніть MFA для додаткового захисту акаунту.'}
+          </p>
+          <a href="/dashboard/security" class="btn-outline">Керувати безпекою →</a>
+        </section>
+      )}
     </main>
   </div>
 </Layout>

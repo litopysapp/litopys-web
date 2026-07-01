@@ -128,62 +128,63 @@ if (Astro.request.method === 'POST') {
         </form>
       </section>
 
-      <!-- MFA -->
-      <section class="card">
-        <div class="card-header">
-          <h2>Двофакторна автентифікація (MFA)</h2>
-          <span class:list={['badge', user?.mfaEnabled ? 'badge-green' : 'badge-gray']}>
-            {user?.mfaEnabled ? 'Увімкнено' : 'Вимкнено'}
-          </span>
-        </div>
-
-        {mfaMsg && <div class="alert-success">{mfaMsg}</div>}
-        {mfaError && <div class="alert-error">{mfaError}</div>}
-
-        {!user?.mfaEnabled && !mfaSetup && (
-          <div>
-            <p class="card-desc">Захистіть акаунт за допомогою Microsoft Authenticator або іншого TOTP-додатку.</p>
-            <form method="POST">
-              <input type="hidden" name="action" value="mfa-setup" />
-              <button type="submit" class="btn-submit">Налаштувати MFA</button>
-            </form>
+      {user?.role === 'admin' && (
+        <section class="card">
+          <div class="card-header">
+            <h2>Двофакторна автентифікація (MFA)</h2>
+            <span class:list={['badge', user?.mfaEnabled ? 'badge-green' : 'badge-gray']}>
+              {user?.mfaEnabled ? 'Увімкнено' : 'Вимкнено'}
+            </span>
           </div>
-        )}
 
-        {mfaSetup && (
-          <div class="mfa-setup">
-            <p class="card-desc">Відскануйте QR-код у Microsoft Authenticator, потім введіть 6-значний код для підтвердження.</p>
-            <img src={mfaSetup.qrDataUrl} alt="QR код MFA" class="mfa-qr" />
-            <p class="mfa-secret">Або введіть секрет вручну: <code>{mfaSetup.secret}</code></p>
-            <form method="POST" class="sec-form">
-              <input type="hidden" name="action" value="mfa-enable" />
-              <label>
-                Код підтвердження
-                <input type="text" name="mfa_code" required inputmode="numeric" pattern="[0-9]{6}" maxlength="6" placeholder="123456" autofocus />
-              </label>
-              <button type="submit" class="btn-submit">Увімкнути MFA</button>
-            </form>
-          </div>
-        )}
+          {mfaMsg && <div class="alert-success">{mfaMsg}</div>}
+          {mfaError && <div class="alert-error">{mfaError}</div>}
 
-        {user?.mfaEnabled && (
-          <div>
-            <p class="card-desc">MFA активне. Для вимкнення введіть пароль та поточний код з додатку.</p>
-            <form method="POST" class="sec-form">
-              <input type="hidden" name="action" value="mfa-disable" />
-              <label>
-                Поточний пароль
-                <input type="password" name="currentPassword" required autocomplete="current-password" placeholder="••••••••" />
-              </label>
-              <label>
-                Код MFA
-                <input type="text" name="mfa_code" required inputmode="numeric" pattern="[0-9]{6}" maxlength="6" placeholder="123456" />
-              </label>
-              <button type="submit" class="btn-submit btn-danger">Вимкнути MFA</button>
-            </form>
-          </div>
-        )}
-      </section>
+          {!user?.mfaEnabled && !mfaSetup && (
+            <div>
+              <p class="card-desc">Захистіть акаунт за допомогою Microsoft Authenticator або іншого TOTP-додатку.</p>
+              <form method="POST">
+                <input type="hidden" name="action" value="mfa-setup" />
+                <button type="submit" class="btn-submit">Налаштувати MFA</button>
+              </form>
+            </div>
+          )}
+
+          {mfaSetup && (
+            <div class="mfa-setup">
+              <p class="card-desc">Відскануйте QR-код у Microsoft Authenticator, потім введіть 6-значний код для підтвердження.</p>
+              <img src={mfaSetup.qrDataUrl} alt="QR код MFA" class="mfa-qr" />
+              <p class="mfa-secret">Або введіть секрет вручну: <code>{mfaSetup.secret}</code></p>
+              <form method="POST" class="sec-form">
+                <input type="hidden" name="action" value="mfa-enable" />
+                <label>
+                  Код підтвердження
+                  <input type="text" name="mfa_code" required inputmode="numeric" pattern="[0-9]{6}" maxlength="6" placeholder="123456" autofocus />
+                </label>
+                <button type="submit" class="btn-submit">Увімкнути MFA</button>
+              </form>
+            </div>
+          )}
+
+          {user?.mfaEnabled && (
+            <div>
+              <p class="card-desc">MFA активне. Для вимкнення введіть пароль та поточний код з додатку.</p>
+              <form method="POST" class="sec-form">
+                <input type="hidden" name="action" value="mfa-disable" />
+                <label>
+                  Поточний пароль
+                  <input type="password" name="currentPassword" required autocomplete="current-password" placeholder="••••••••" />
+                </label>
+                <label>
+                  Код MFA
+                  <input type="text" name="mfa_code" required inputmode="numeric" pattern="[0-9]{6}" maxlength="6" placeholder="123456" />
+                </label>
+                <button type="submit" class="btn-submit btn-danger">Вимкнути MFA</button>
+              </form>
+            </div>
+          )}
+        </section>
+      )}
     </main>
   </div>
 </Layout>
