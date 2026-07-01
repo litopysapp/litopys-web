@@ -9,7 +9,7 @@ import Layout from '../layouts/Layout.astro';
     <div class="hero-content fade-up">
       <div class="hero-badge">Настільний застосунок для Windows</div>
       <h1>Ручка — зброя писаря.<br/>Дозволь пальцям вижити!</h1>
-      <p class="hero-sub">Litopys — офлайн-редактор твоїх журналів.<br class="br-d"/> Без підписок, без хмар, без болі в руках — без зайвого.</p>
+      <p class="hero-sub">Litopys — офлайн-редактор твоїх журналів.<br class="br-d"/> Без хмар, без болі в руках — без зайвого.</p>
       <div class="hero-cta">
         <a href="https://api.litopys.win/download" class="btn-primary btn-download">
           <img src="/icon-download.svg" alt="" class="btn-icon" />Завантажити
@@ -99,28 +99,28 @@ import Layout from '../layouts/Layout.astro';
         </div>
         <div class="facts-col">
           <div class="fact-card fade-up" style="--d:.05s">
-            <div class="fact-icon-wrap">⚡</div>
+            <div class="fact-icon-wrap"><img src="/icon-sparkles.svg" alt="" class="fact-svg" /></div>
             <div>
               <p class="fact-title">Легкий старт</p>
               <p class="fact-desc">Завантажив, зареєструвався, пишеш</p>
             </div>
           </div>
           <div class="fact-card fade-up" style="--d:.1s">
-            <div class="fact-icon-wrap">🔒</div>
+            <div class="fact-icon-wrap"><img src="/icon-book-key.svg" alt="" class="fact-svg" /></div>
             <div>
               <p class="fact-title">Ваші дані — ваші</p>
               <p class="fact-desc">Усі файли зберігаються локально, нічого не йде в мережу</p>
             </div>
           </div>
           <div class="fact-card fade-up" style="--d:.15s">
-            <div class="fact-icon-wrap">📄</div>
+            <div class="fact-icon-wrap"><img src="/icon-file-stack.svg" alt="" class="fact-svg" /></div>
             <div>
               <p class="fact-title">DOCX та PDF</p>
               <p class="fact-desc">Приймає DOCX, експортує в PDF</p>
             </div>
           </div>
           <div class="fact-card fade-up" style="--d:.2s">
-            <div class="fact-icon-wrap">🖨️</div>
+            <div class="fact-icon-wrap"><img src="/icon-pencil-sparkles.svg" alt="" class="fact-svg" /></div>
             <div>
               <p class="fact-title">Друк одним кліком</p>
               <p class="fact-desc">Прямо з програми, з попереднім переглядом сторінки</p>
@@ -141,34 +141,34 @@ import Layout from '../layouts/Layout.astro';
       </div>
       <div class="features-grid">
         <div class="feature-card fade-up" style="--d:.0s">
-          <div class="feature-icon">📋</div>
+          <div class="feature-icon"><img src="/icon-book-open-check.svg" alt="" class="feature-svg" /></div>
           <h3>ЖБД</h3>
           <p>Журнал бойових дій з таблицею, датою та часом — заповнюй і друкуй.</p>
         </div>
         <div class="feature-card fade-up" style="--d:.08s">
-          <div class="feature-icon">📝</div>
+          <div class="feature-icon"><img src="/icon-book-open-text.svg" alt="" class="feature-svg" /></div>
           <h3>ЖОВтР</h3>
           <p>Шаблон журналу з усіма необхідними полями. Готово за хвилини.</p>
         </div>
         <div class="feature-card fade-up" style="--d:.16s">
-          <div class="feature-icon">✍️</div>
+          <div class="feature-icon"><img src="/icon-case-sensitive.svg" alt="" class="feature-svg" /></div>
           <h3>Персональний шрифт</h3>
           <p>Оцифруємо твій почерк — зміни ніхто не помітить.</p>
         </div>
         <div class="feature-card fade-up" style="--d:.0s">
-          <div class="feature-icon">🧹</div>
+          <div class="feature-icon"><img src="/icon-brush-cleaning.svg" alt="" class="feature-svg" /></div>
           <h3>Чистий інтерфейс</h3>
           <p>Нічого зайвого. Тільки потрібні поля — без переповнених панелей.</p>
         </div>
         <div class="feature-card fade-up" style="--d:.08s">
-          <div class="feature-icon">💾</div>
+          <div class="feature-icon"><img src="/icon-save-check.svg" alt="" class="feature-svg" /></div>
           <h3>Автозбереження</h3>
           <p>Дані не зникнуть. Файли на вашому диску, під вашим контролем.</p>
         </div>
         <div class="feature-card fade-up" style="--d:.16s">
-          <div class="feature-icon">🖥️</div>
+          <div class="feature-icon"><img src="/icon-globe-off.svg" alt="" class="feature-svg" /></div>
           <h3>Повністю офлайн</h3>
-          <p>Жодних серверів і підписок. Працює без інтернету в будь-яких умовах.</p>
+          <p>Жодних серверів. Працює без інтернету.</p>
         </div>
       </div>
     </div>
@@ -430,7 +430,8 @@ import Layout from '../layouts/Layout.astro';
     transition: box-shadow .2s, transform .2s, border-color .2s;
   }
   .fact-card:hover { box-shadow: 0 8px 24px rgba(0,0,0,.08); transform: translateY(-2px); border-color: #bfd4e8; }
-  .fact-icon-wrap { font-size: 1.5rem; flex-shrink: 0; margin-top: .1rem; }
+  .fact-icon-wrap { font-size: 1.5rem; flex-shrink: 0; margin-top: .1rem; width: 24px; height: 24px; }
+  .fact-svg { width: 24px; height: 24px; display: block; }
   .fact-title { font-weight: 700; font-size: .9375rem; margin-bottom: .2rem; color: #111827; }
   .fact-desc { font-size: .8125rem; color: #6b7280; line-height: 1.55; }
 
@@ -450,7 +451,8 @@ import Layout from '../layouts/Layout.astro';
     transition: box-shadow .2s, transform .2s, border-color .2s;
   }
   .feature-card:hover { box-shadow: 0 12px 32px rgba(0,0,0,.09); transform: translateY(-3px); border-color: #bfd4e8; }
-  .feature-icon { font-size: 2rem; margin-bottom: 1.25rem; }
+  .feature-icon { font-size: 2rem; margin-bottom: 1.25rem; width: 32px; height: 32px; }
+  .feature-svg { width: 32px; height: 32px; display: block; }
   .feature-card h3 { font-size: 1.0625rem; font-weight: 700; margin-bottom: .6rem; color: #111827; letter-spacing: -.01em; }
   .feature-card p { font-size: .875rem; color: #6b7280; line-height: 1.7; }
 
