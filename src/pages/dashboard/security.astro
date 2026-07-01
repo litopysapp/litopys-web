@@ -30,9 +30,13 @@ if (Astro.request.method === 'POST') {
           body: JSON.stringify({ currentPassword, newPassword }),
         });
         const data = await res.json();
-        if (res.ok) passwordMsg = 'Пароль успішно змінено. Лист-підтвердження надіслано на вашу пошту.';
-        else if (data.error === 'current_password_invalid') passwordError = 'Поточний пароль невірний';
-        else passwordError = data.error ?? 'Помилка зміни паролю';
+        if (data.ok && data.confirmationRequired) {
+          passwordMsg = 'Лист підтвердження надіслано на вашу пошту. Перейдіть за посиланням щоб зберегти новий пароль.';
+        } else if (data.error === 'current_password_invalid') {
+          passwordError = 'Поточний пароль невірний';
+        } else {
+          passwordError = data.error ?? 'Помилка зміни паролю';
+        }
       } catch {
         passwordError = 'Помилка зʼєднання';
       }
