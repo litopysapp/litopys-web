@@ -10,8 +10,8 @@ let maxSessions = 0;
 let actionError = '';
 let actionSuccess = '';
 
-const moduleLabels: Record<string, string> = { jbd: 'ЖБД', br: 'БР' };
-const licenseTypeLabels: Record<string, string> = { full: 'Повна', jbd: 'ЖБД', br: 'БР', trial: 'Пробна' };
+const moduleLabels: Record<string, string> = { jbd: 'ЖБД', br: 'ЖОВтР' };
+const licenseTypeLabels: Record<string, string> = { full: 'Повна', jbd: 'ЖБД', br: 'ЖОВтР', trial: 'Пробна' };
 
 // Дія: завершити сеанс
 if (Astro.request.method === 'POST') {
