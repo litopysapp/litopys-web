@@ -47,9 +47,10 @@ try {
   }
 } catch {}
 
-const expiresDate = license ? new Date(license.expiresAt) : null;
+const expiresDate = license?.expiresAt ? new Date(license.expiresAt) : null;
+const isPerpetual = !expiresDate || isNaN(expiresDate.getTime()) || expiresDate.getFullYear() < 2000;
 const now = new Date();
-const daysLeft = expiresDate ? Math.ceil((expiresDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)) : null;
+const daysLeft = (!isPerpetual && expiresDate) ? Math.ceil((expiresDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)) : null;
 const isExpired = daysLeft !== null && daysLeft <= 0;
 const isExpiringSoon = daysLeft !== null && daysLeft > 0 && daysLeft <= 14;
 
@@ -95,8 +96,8 @@ function fmtDate(d: string | null | undefined) {
         <div class="card-header">
           <h2>Поточна ліцензія</h2>
           {license && (
-            <span class:list={['badge', license.active && !isExpired ? 'badge-green' : 'badge-red']}>
-              {license.active && !isExpired ? 'Активна' : 'Неактивна'}
+            <span class:list={['badge', license.active && (isPerpetual || !isExpired) ? 'badge-green' : 'badge-red']}>
+              {license.active && (isPerpetual || !isExpired) ? 'Активна' : 'Неактивна'}
             </span>
           )}
         </div>
@@ -119,8 +120,10 @@ function fmtDate(d: string | null | undefined) {
               <div class="info-item">
                 <p class="info-label">Діє до</p>
                 <p class:list={['info-value', isExpiringSoon && 'text-warning', isExpired && 'text-danger']}>
-                  {expiresDate?.toLocaleDateString('uk-UA', { day: 'numeric', month: 'long', year: 'numeric' })}
-                  {daysLeft !== null && daysLeft > 0 && ` (${daysLeft} дн.)`}
+                  {isPerpetual
+                    ? 'Безстрокова'
+                    : expiresDate?.toLocaleDateString('uk-UA', { day: 'numeric', month: 'long', year: 'numeric' })}
+                  {!isPerpetual && daysLeft !== null && daysLeft > 0 && ` (${daysLeft} дн.)`}
                   {isExpired && ' — Закінчилась'}
                 </p>
               </div>
