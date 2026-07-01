@@ -80,7 +80,7 @@ if (Astro.request.method === 'POST') {
 }
 ---
 
-<Layout title="Безпека — Літопис">
+<Layout title="Безпека — Літопис" noHeader={true}>
   <div class="dash-wrap">
     <!-- Sidebar -->
     <aside class="sidebar">
@@ -89,7 +89,7 @@ if (Astro.request.method === 'POST') {
       </div>
       <nav class="sidebar-nav">
         <a href="/dashboard" class="nav-item">
-          <span class="nav-icon">🪪</span> Ліцензія
+          <span class="nav-icon-svg"><img src="/icon-user.svg" alt="" /></span> Акаунт
         </a>
         <a href="/dashboard/licenses" class="nav-item">
           <span class="nav-icon-svg"><img src="/icon-key.svg" alt="" /></span> Ліцензія
@@ -98,6 +98,10 @@ if (Astro.request.method === 'POST') {
           <span class="nav-icon">🔐</span> Безпека
         </a>
       </nav>
+      <div class="sidebar-bottom-links">
+        <a href="/" class="sidebar-ext-link">Про застосунок</a>
+        <a href="/demo" class="sidebar-ext-link">Спробувати</a>
+      </div>
       <form method="POST" action="/api/logout" class="sidebar-logout">
         <button type="submit" class="logout-btn">Вийти</button>
       </form>
@@ -196,7 +200,7 @@ if (Astro.request.method === 'POST') {
   .dash-wrap {
     display: grid;
     grid-template-columns: 220px 1fr;
-    min-height: calc(100vh - 52px);
+    min-height: 100vh;
   }
   .sidebar {
     border-right: 1px solid #e5e7eb;
@@ -223,7 +227,10 @@ if (Astro.request.method === 'POST') {
   .nav-icon { font-size: 1rem; }
   .nav-icon-svg img { width: 16px; height: 16px; display: block; filter: brightness(0) saturate(100%); }
   .nav-item.active .nav-icon-svg img { filter: brightness(0) invert(1); }
-  .sidebar-logout { margin-top: 1rem; }
+  .sidebar-bottom-links { display: flex; flex-direction: column; gap: .15rem; margin-bottom: .5rem; }
+  .sidebar-ext-link { font-size: .8125rem; color: #6b7280; padding: .4rem .85rem; border-radius: 8px; transition: color .15s, background .15s; }
+  .sidebar-ext-link:hover { color: #111827; background: #f3f4f6; }
+  .sidebar-logout { margin-top: 0; }
   .logout-btn {
     width: 100%;
     background: none;

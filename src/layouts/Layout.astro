@@ -3,8 +3,9 @@ interface Props {
   title: string;
   description?: string;
   fullPage?: boolean;
+  noHeader?: boolean;
 }
-const { title, description = "Літопис — редактор документів для людей, яким важлива зручність", fullPage = false } = Astro.props;
+const { title, description = "Літопис — редактор документів для людей, яким важлива зручність", fullPage = false, noHeader = false } = Astro.props;
 ---
 <!doctype html>
 <html lang="uk">
@@ -54,7 +55,7 @@ const { title, description = "Літопис — редактор докумен
     </style>
   </head>
   <body class:list={[fullPage && 'full-page']}>
-    {!fullPage && (
+    {!fullPage && !noHeader && (
       <header style="position:sticky; top:0; z-index:100; background:rgba(255,255,255,0.85); backdrop-filter:saturate(180%) blur(20px); -webkit-backdrop-filter:saturate(180%) blur(20px); border-bottom:1px solid var(--border-subtle);">
         <nav style="max-width:980px; margin:0 auto; height:var(--nav-h); padding:0 1.5rem; display:flex; align-items:center; justify-content:space-between;">
           <a href="/"><img src="/litopys-logo-launcher.gif" alt="Літопис" style="height:36px;width:auto;display:block;"></a>

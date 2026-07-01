@@ -1,30 +1,49 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 
-const { user, license } = Astro.locals;
+const { user } = Astro.locals;
+const token = Astro.cookies.get('litopys_token')?.value ?? '';
 
-const moduleLabels: Record<string, string> = {
-  jbd: 'ЖБД',
-  br: 'ЖОВтР',
-};
+let saveMsg = '';
+let saveError = '';
 
-const licenseTypeLabels: Record<string, string> = {
-  full: 'Повна',
-  jbd: 'ЖБД',
-  br: 'ЖОВтР',
-  trial: 'Пробна',
-};
+if (Astro.request.method === 'POST') {
+  const form = await Astro.request.formData();
+  const name = form.get('name')?.toString() ?? '';
+  const phone = form.get('phone')?.toString() ?? '';
+  const unit = form.get('unit')?.toString() ?? '';
+  const callsign = form.get('callsign')?.toString() ?? '';
+  try {
+    const res = await fetch('https://api.litopys.win/profile', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ name, phone, unit, callsign }),
+    });
+    const data = await res.json();
+    if (data.ok) saveMsg = 'Збережено';
+    else saveError = data.error ?? 'Помилка збереження';
+  } catch {
+    saveError = 'Помилка зʼєднання';
+  }
+}
 
-const expiresDate = license?.expiresAt ? new Date(license.expiresAt) : null;
-const createdDate = license?.createdAt ? new Date(license.createdAt) : null;
-const isPerpetual = !expiresDate || isNaN(expiresDate.getTime())
-  || (createdDate && !isNaN(createdDate.getTime()) ? expiresDate <= createdDate : expiresDate.getFullYear() < 2024);
-const now = new Date();
-const daysLeft = (!isPerpetual && expiresDate) ? Math.ceil((expiresDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)) : null;
-const isExpiringSoon = daysLeft !== null && daysLeft <= 14 && daysLeft > 0;
+// Завантажуємо актуальний профіль після можливого збереження
+let profile: any = user;
+try {
+  const res = await fetch('https://api.litopys.win/me', {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  const data = await res.json();
+  if (data.ok && data.user) profile = data.user;
+} catch {}
+
+function fmtDate(d: string | null | undefined) {
+  if (!d) return '—';
+  return new Date(d).toLocaleDateString('uk-UA', { day: 'numeric', month: 'long', year: 'numeric' });
+}
 ---
 
-<Layout title="Кабінет — Літопис">
+<Layout title="Акаунт — Літопис" noHeader={true}>
   <div class="dash-wrap">
     <!-- Sidebar -->
     <aside class="sidebar">
@@ -33,7 +52,7 @@ const isExpiringSoon = daysLeft !== null && daysLeft <= 14 && daysLeft > 0;
       </div>
       <nav class="sidebar-nav">
         <a href="/dashboard" class="nav-item active">
-          <span class="nav-icon">🪪</span> Ліцензія
+          <span class="nav-icon-svg"><img src="/icon-user.svg" alt="" /></span> Акаунт
         </a>
         <a href="/dashboard/licenses" class="nav-item">
           <span class="nav-icon-svg"><img src="/icon-key.svg" alt="" /></span> Ліцензія
@@ -42,6 +61,10 @@ const isExpiringSoon = daysLeft !== null && daysLeft <= 14 && daysLeft > 0;
           <span class="nav-icon">🔐</span> Безпека
         </a>
       </nav>
+      <div class="sidebar-bottom-links">
+        <a href="/" class="sidebar-ext-link">Про застосунок</a>
+        <a href="/demo" class="sidebar-ext-link">Спробувати</a>
+      </div>
       <form method="POST" action="/api/logout" class="sidebar-logout">
         <button type="submit" class="logout-btn">Вийти</button>
       </form>
@@ -50,73 +73,52 @@ const isExpiringSoon = daysLeft !== null && daysLeft <= 14 && daysLeft > 0;
     <!-- Main -->
     <main class="dash-main">
       <div class="dash-header">
-        <div>
-          <p class="dash-greeting">Вітаємо, {user?.name}!</p>
-          <p class="dash-email">{user?.email}</p>
-        </div>
+        <p class="dash-greeting">{profile?.name || profile?.email}</p>
+        <p class="dash-email">{profile?.email}</p>
       </div>
 
-      <!-- License card -->
-      {license ? (
-        <section class="card">
-          <div class="card-header">
-            <h2>Ліцензія</h2>
-            <span class:list={['badge', license.active ? 'badge-green' : 'badge-red']}>
-              {license.active ? 'Активна' : 'Неактивна'}
-            </span>
-          </div>
-          <div class="info-grid">
-            <div class="info-item">
-              <p class="info-label">Тип</p>
-              <p class="info-value">{licenseTypeLabels[license.type] ?? license.type}</p>
-            </div>
-            <div class="info-item">
-              <p class="info-label">Модулі</p>
-              <p class="info-value">{license.modules.map(m => moduleLabels[m] ?? m).join(', ')}</p>
-            </div>
-            <div class="info-item">
-              <p class="info-label">Макс. сесій</p>
-              <p class="info-value">{license.maxSessions}</p>
-            </div>
-            <div class="info-item">
-              <p class="info-label">Діє до</p>
-              <p class:list={['info-value', isExpiringSoon && 'text-warning']}>
-                {isPerpetual
-                  ? 'Безстрокова'
-                  : expiresDate?.toLocaleDateString('uk-UA', { day: 'numeric', month: 'long', year: 'numeric' })}
-                {!isPerpetual && daysLeft !== null && daysLeft > 0 && ` (${daysLeft} дн.)`}
-                {!isPerpetual && daysLeft !== null && daysLeft <= 0 && ' — Закінчилась'}
-              </p>
-            </div>
-          </div>
-          {isExpiringSoon && (
-            <div class="alert-warning">
-              Термін ліцензії закінчується менш ніж через 14 днів. Зверніться до адміністратора для продовження.
-            </div>
-          )}
-        </section>
-      ) : (
-        <section class="card">
-          <p class="no-license">Ліцензії не знайдено. Зверніться до адміністратора.</p>
-        </section>
-      )}
+      <!-- Інформація про акаунт -->
+      <section class="card">
+        <div class="card-header">
+          <h2>Інформація про акаунт</h2>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Email</span>
+          <span class="info-value">{profile?.email}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">В системі з</span>
+          <span class="info-value">{fmtDate(profile?.created_at ?? profile?.createdAt)}</span>
+        </div>
+      </section>
 
-      {user?.role === 'admin' && (
-        <section class="card card-small">
-          <div class="card-header">
-            <h2>Двофакторна автентифікація</h2>
-            <span class:list={['badge', user?.mfaEnabled ? 'badge-green' : 'badge-gray']}>
-              {user?.mfaEnabled ? 'Увімкнено' : 'Вимкнено'}
-            </span>
-          </div>
-          <p class="card-desc">
-            {user?.mfaEnabled
-              ? 'Ваш акаунт захищений кодом з Microsoft Authenticator.'
-              : 'Увімкніть MFA для додаткового захисту акаунту.'}
-          </p>
-          <a href="/dashboard/security" class="btn-outline">Керувати безпекою →</a>
-        </section>
-      )}
+      <!-- Редагування профілю -->
+      <section class="card">
+        <div class="card-header">
+          <h2>Профіль</h2>
+        </div>
+        {saveMsg && <div class="alert-success">{saveMsg}</div>}
+        {saveError && <div class="alert-error">{saveError}</div>}
+        <form method="POST" class="profile-form">
+          <label>
+            Імʼя
+            <input type="text" name="name" value={profile?.name ?? ''} placeholder="Введіть імʼя" />
+          </label>
+          <label>
+            Позивний
+            <input type="text" name="callsign" value={profile?.callsign ?? ''} placeholder="Наприклад: Дніпро" />
+          </label>
+          <label>
+            Підрозділ
+            <input type="text" name="unit" value={profile?.unit ?? ''} placeholder="Наприклад: 47 ОМБр" />
+          </label>
+          <label>
+            Телефон
+            <input type="tel" name="phone" value={profile?.phone ?? ''} placeholder="+380..." />
+          </label>
+          <button type="submit" class="btn-submit">Зберегти</button>
+        </form>
+      </section>
     </main>
   </div>
 </Layout>
@@ -125,7 +127,7 @@ const isExpiringSoon = daysLeft !== null && daysLeft <= 14 && daysLeft > 0;
   .dash-wrap {
     display: grid;
     grid-template-columns: 220px 1fr;
-    min-height: calc(100vh - 52px);
+    min-height: 100vh;
   }
 
   /* Sidebar */
@@ -154,7 +156,12 @@ const isExpiringSoon = daysLeft !== null && daysLeft <= 14 && daysLeft > 0;
   .nav-icon { font-size: 1rem; }
   .nav-icon-svg img { width: 16px; height: 16px; display: block; filter: brightness(0) saturate(100%); }
   .nav-item.active .nav-icon-svg img { filter: brightness(0) invert(1); }
-  .sidebar-logout { margin-top: 1rem; }
+
+  .sidebar-bottom-links { display: flex; flex-direction: column; gap: .15rem; margin-bottom: .5rem; }
+  .sidebar-ext-link { font-size: .8125rem; color: #6b7280; padding: .4rem .85rem; border-radius: 8px; transition: color .15s, background .15s; }
+  .sidebar-ext-link:hover { color: #111827; background: #f3f4f6; }
+
+  .sidebar-logout { margin-top: 0; }
   .logout-btn {
     width: 100%;
     background: none;
@@ -170,7 +177,7 @@ const isExpiringSoon = daysLeft !== null && daysLeft <= 14 && daysLeft > 0;
   .logout-btn:hover { border-color: #dc2626; color: #dc2626; }
 
   /* Main */
-  .dash-main { padding: 2rem 2.5rem; max-width: 720px; }
+  .dash-main { padding: 2rem 2.5rem; max-width: 600px; }
   .dash-header { margin-bottom: 2rem; }
   .dash-greeting { font-size: 1.25rem; font-weight: 800; color: #111827; letter-spacing: -.02em; }
   .dash-email { font-size: .875rem; color: #6b7280; margin-top: .2rem; }
@@ -183,7 +190,6 @@ const isExpiringSoon = daysLeft !== null && daysLeft <= 14 && daysLeft > 0;
     padding: 1.5rem;
     margin-bottom: 1.25rem;
   }
-  .card-small { }
   .card-header {
     display: flex;
     align-items: center;
@@ -191,62 +197,76 @@ const isExpiringSoon = daysLeft !== null && daysLeft <= 14 && daysLeft > 0;
     margin-bottom: 1.25rem;
   }
   .card-header h2 { font-size: 1rem; font-weight: 700; color: #111827; }
-  .card-desc { font-size: .875rem; color: #6b7280; margin-bottom: 1rem; line-height: 1.6; }
 
-  /* Badge */
-  .badge {
-    font-size: .75rem;
-    font-weight: 700;
-    padding: .25rem .65rem;
-    border-radius: 20px;
-  }
-  .badge-green { background: #dcfce7; color: #15803d; }
-  .badge-red { background: #fef2f2; color: #dc2626; }
-  .badge-gray { background: #f3f4f6; color: #6b7280; }
-
-  /* Info grid */
-  .info-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+  .info-row {
+    display: flex;
+    align-items: baseline;
     gap: 1rem;
+    padding: .6rem 0;
+    border-bottom: 1px solid #f3f4f6;
   }
-  .info-label { font-size: .75rem; font-weight: 600; color: #9ca3af; text-transform: uppercase; letter-spacing: .05em; margin-bottom: .25rem; }
-  .info-value { font-size: .9375rem; font-weight: 600; color: #111827; }
-  .text-warning { color: #d97706; }
+  .info-row:last-child { border-bottom: none; }
+  .info-label { font-size: .75rem; font-weight: 600; color: #9ca3af; text-transform: uppercase; letter-spacing: .05em; min-width: 120px; flex-shrink: 0; }
+  .info-value { font-size: .9375rem; font-weight: 500; color: #111827; }
+
+  /* Form */
+  .profile-form { display: flex; flex-direction: column; gap: 1rem; }
+  label { display: flex; flex-direction: column; gap: .375rem; font-size: .8125rem; font-weight: 600; color: #374151; }
+  input {
+    padding: .65rem .9rem;
+    border: 1.5px solid #d1d5db;
+    border-radius: 10px;
+    font-size: .9375rem;
+    font-family: inherit;
+    outline: none;
+    transition: border-color .15s;
+    background: #fff;
+  }
+  input:focus { border-color: #1a1a2e; }
+
+  .btn-submit {
+    background: #1a1a2e;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: .7rem 1.5rem;
+    font-size: .9375rem;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    transition: opacity .2s;
+    align-self: flex-start;
+    margin-top: .25rem;
+  }
+  .btn-submit:hover { opacity: .85; }
 
   /* Alerts */
-  .alert-warning {
-    margin-top: 1.25rem;
-    background: #fffbeb;
-    border: 1px solid #fde68a;
-    color: #92400e;
+  .alert-success {
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    color: #15803d;
     border-radius: 10px;
-    padding: .75rem 1rem;
-    font-size: .8125rem;
-    line-height: 1.6;
-  }
-
-  .no-license { color: #6b7280; font-size: .9375rem; }
-
-  .btn-outline {
-    display: inline-block;
-    border: 1.5px solid #1a1a2e;
-    color: #1a1a2e;
-    border-radius: 8px;
-    padding: .5rem 1.1rem;
+    padding: .65rem 1rem;
     font-size: .875rem;
-    font-weight: 600;
-    transition: background .15s, color .15s;
+    margin-bottom: 1rem;
   }
-  .btn-outline:hover { background: #1a1a2e; color: #fff; }
+  .alert-error {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #dc2626;
+    border-radius: 10px;
+    padding: .65rem 1rem;
+    font-size: .875rem;
+    margin-bottom: 1rem;
+  }
 
   @media (max-width: 700px) {
     .dash-wrap { grid-template-columns: 1fr; }
     .sidebar { flex-direction: row; flex-wrap: wrap; border-right: none; border-bottom: 1px solid #e5e7eb; padding: 1rem; }
     .sidebar-logo { display: none; }
     .sidebar-nav { flex-direction: row; }
+    .sidebar-bottom-links { display: none; }
     .sidebar-logout { margin-top: 0; margin-left: auto; }
     .dash-main { padding: 1.25rem 1rem; }
-    .info-grid { grid-template-columns: 1fr; }
   }
 </style>
