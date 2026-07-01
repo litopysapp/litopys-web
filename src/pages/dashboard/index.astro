@@ -62,6 +62,7 @@ function fmtDate(d: string | null | undefined) {
         </a>
       </nav>
       <div class="sidebar-bottom-links">
+        <a href="https://api.litopys.win/download" class="sidebar-ext-link sidebar-download"><img src="/icon-download.svg" alt="" />Завантажити</a>
         <a href="/" class="sidebar-ext-link"><img src="/icon-question.svg" alt="" />Про застосунок</a>
         <a href="/demo" class="sidebar-ext-link"><img src="/icon-play.svg" alt="" />Спробувати</a>
       </div>
@@ -162,6 +163,8 @@ function fmtDate(d: string | null | undefined) {
   .sidebar-ext-link:hover { color: #111827; background: #f3f4f6; }
   .sidebar-ext-link img { width: 15px; height: 15px; display: block; filter: brightness(0) saturate(100%) invert(47%) sepia(7%) saturate(400%) hue-rotate(180deg); flex-shrink: 0; }
   .sidebar-ext-link:hover img { filter: brightness(0); }
+  .sidebar-download { color: #1a1a2e; font-weight: 600; }
+  .sidebar-download img { filter: brightness(0) !important; }
 
   .sidebar-logout { margin-top: 0; }
   .logout-btn {

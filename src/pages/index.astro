@@ -11,8 +11,10 @@ import Layout from '../layouts/Layout.astro';
       <h1>Ручка — зброя писаря.<br/>Дозволь пальцям вижити!</h1>
       <p class="hero-sub">Litopys — офлайн-редактор твоїх журналів.<br class="br-d"/> Без підписок, без хмар, без болі в руках — без зайвого.</p>
       <div class="hero-cta">
-        <a href="/demo" class="btn-primary">Спробувати онлайн</a>
-        <a href="#features" class="btn-ghost">Дізнатись більше</a>
+        <a href="https://api.litopys.win/download" class="btn-primary btn-download">
+          <img src="/icon-download.svg" alt="" class="btn-icon" />Завантажити
+        </a>
+        <a href="/demo" class="btn-ghost">Спробувати онлайн</a>
       </div>
     </div>
 
@@ -229,6 +231,8 @@ import Layout from '../layouts/Layout.astro';
     box-shadow: 0 4px 16px rgba(0,0,0,.2);
   }
   .btn-primary:hover { opacity: .85; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.25); }
+  .btn-download { display: inline-flex; align-items: center; gap: .5rem; }
+  .btn-icon { width: 16px; height: 16px; display: block; filter: brightness(0) invert(1); flex-shrink: 0; }
   .btn-ghost {
     display: inline-block;
     color: #374151;
