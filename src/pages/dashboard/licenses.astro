@@ -1,0 +1,255 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const { user } = Astro.locals;
+const token = Astro.cookies.get('litopys_token')?.value ?? '';
+
+let license: any = null;
+let sessions: any[] = [];
+let maxSessions = 0;
+let actionError = '';
+let actionSuccess = '';
+
+const moduleLabels: Record<string, string> = { jbd: 'ЖБД', br: 'БР' };
+const licenseTypeLabels: Record<string, string> = { full: 'Повна', jbd: 'ЖБД', br: 'БР', trial: 'Пробна' };
+
+// Дія: завершити сеанс
+if (Astro.request.method === 'POST') {
+  const form = await Astro.request.formData();
+  const sessionId = form.get('sessionId')?.toString();
+  const action = form.get('action')?.toString();
+
+  if (sessionId && action === 'revoke') {
+    try {
+      const res = await fetch(`https://api.litopys.win/sessions/${sessionId}/revoke`, {
+        method: 'PATCH',
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const data = await res.json();
+      actionSuccess = data.ok ? 'Сеанс завершено' : 'Не вдалось завершити сеанс';
+      if (!data.ok) actionError = actionSuccess, actionSuccess = '';
+    } catch {
+      actionError = 'Помилка зʼєднання';
+    }
+  }
+}
+
+// Завантажуємо /me (ліцензія + сеанси)
+try {
+  const res = await fetch('https://api.litopys.win/me', {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  const data = await res.json();
+  if (data.ok) {
+    license = data.license ?? null;
+    sessions = data.sessions ?? [];
+    maxSessions = data.maxSessions ?? 0;
+  }
+} catch {}
+
+const expiresDate = license ? new Date(license.expiresAt) : null;
+const now = new Date();
+const daysLeft = expiresDate ? Math.ceil((expiresDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)) : null;
+const isExpired = daysLeft !== null && daysLeft <= 0;
+const isExpiringSoon = daysLeft !== null && daysLeft > 0 && daysLeft <= 14;
+
+function fmtDate(d: string | null | undefined) {
+  if (!d) return '—';
+  return new Date(d).toLocaleString('uk-UA', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+}
+---
+
+<Layout title="Ліцензія — Літопис">
+  <div class="dash-wrap">
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <img src="/litopys-logo-launcher.gif" alt="Літопис" />
+      </div>
+      <nav class="sidebar-nav">
+        <a href="/dashboard" class="nav-item">
+          <span class="nav-icon">🪪</span> Кабінет
+        </a>
+        <a href="/dashboard/licenses" class="nav-item active">
+          <span class="nav-icon-svg"><img src="/icon-key.svg" alt="" /></span> Ліцензія
+        </a>
+        <a href="/dashboard/security" class="nav-item">
+          <span class="nav-icon">🔐</span> Безпека
+        </a>
+      </nav>
+      <form method="POST" action="/api/logout" class="sidebar-logout">
+        <button type="submit" class="logout-btn">Вийти</button>
+      </form>
+    </aside>
+
+    <main class="dash-main">
+      <div class="dash-header">
+        <p class="dash-greeting">Ліцензія та сеанси</p>
+        <p class="dash-email">{user?.name} · {user?.email}</p>
+      </div>
+
+      {actionSuccess && <div class="alert-success">{actionSuccess}</div>}
+      {actionError && <div class="alert-error">{actionError}</div>}
+
+      <!-- Ліцензія -->
+      <section class="card">
+        <div class="card-header">
+          <h2>Поточна ліцензія</h2>
+          {license && (
+            <span class:list={['badge', license.active && !isExpired ? 'badge-green' : 'badge-red']}>
+              {license.active && !isExpired ? 'Активна' : 'Неактивна'}
+            </span>
+          )}
+        </div>
+
+        {license ? (
+          <>
+            <div class="info-grid">
+              <div class="info-item">
+                <p class="info-label">Тип</p>
+                <p class="info-value">{licenseTypeLabels[license.type] ?? license.type}</p>
+              </div>
+              <div class="info-item">
+                <p class="info-label">Модулі</p>
+                <p class="info-value">{license.modules.map((m: string) => moduleLabels[m] ?? m).join(', ')}</p>
+              </div>
+              <div class="info-item">
+                <p class="info-label">Макс. сеансів</p>
+                <p class="info-value">{license.maxSessions}</p>
+              </div>
+              <div class="info-item">
+                <p class="info-label">Діє до</p>
+                <p class:list={['info-value', isExpiringSoon && 'text-warning', isExpired && 'text-danger']}>
+                  {expiresDate?.toLocaleDateString('uk-UA', { day: 'numeric', month: 'long', year: 'numeric' })}
+                  {daysLeft !== null && daysLeft > 0 && ` (${daysLeft} дн.)`}
+                  {isExpired && ' — Закінчилась'}
+                </p>
+              </div>
+            </div>
+            {isExpiringSoon && (
+              <div class="alert-warning">Термін ліцензії закінчується менш ніж через 14 днів.</div>
+            )}
+            {isExpired && (
+              <div class="alert-danger">Термін ліцензії закінчився. Зверніться для продовження.</div>
+            )}
+          </>
+        ) : (
+          <p class="no-data">Ліцензії не знайдено. Зверніться до адміністратора.</p>
+        )}
+      </section>
+
+      <!-- Активні сеанси -->
+      <section class="card">
+        <div class="card-header">
+          <h2>Активні сеанси</h2>
+          <span class="badge badge-gray">{sessions.length} / {maxSessions}</span>
+        </div>
+
+        {sessions.length === 0 ? (
+          <p class="no-data">Активних сеансів немає.</p>
+        ) : (
+          <div class="sessions-list">
+            {sessions.map((s: any) => (
+              <div class="session-item">
+                <div class="session-info">
+                  <div class="session-icon">💻</div>
+                  <div>
+                    <p class="session-name">{s.session_name ?? s.sessionName ?? 'Без назви'}</p>
+                    <p class="session-device">{s.current_device_label ?? s.currentDeviceLabel ?? '—'}</p>
+                    <p class="session-last">
+                      Остання активність: {fmtDate(s.last_seen_at ?? s.lastSeenAt)}
+                    </p>
+                  </div>
+                </div>
+                <form method="POST" class="revoke-form">
+                  <input type="hidden" name="action" value="revoke" />
+                  <input type="hidden" name="sessionId" value={s.id} />
+                  <button type="submit" class="btn-revoke"
+                    onclick="return confirm('Завершити цей сеанс?')">
+                    Завершити
+                  </button>
+                </form>
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
+
+      <!-- Історія сеансів -->
+      <section class="card">
+        <div class="card-header">
+          <h2>Історія сеансів</h2>
+        </div>
+        <div class="history-placeholder">
+          <p>Історія сеансів буде доступна найближчим часом.</p>
+        </div>
+      </section>
+    </main>
+  </div>
+</Layout>
+
+<style>
+  .dash-wrap { display: grid; grid-template-columns: 220px 1fr; min-height: calc(100vh - 52px); }
+  .sidebar { border-right: 1px solid #e5e7eb; padding: 1.5rem 1rem; display: flex; flex-direction: column; background: #fafafa; }
+  .sidebar-logo img { height: 36px; margin-bottom: 2rem; }
+  .sidebar-nav { display: flex; flex-direction: column; gap: .25rem; flex: 1; }
+  .nav-item { display: flex; align-items: center; gap: .6rem; padding: .6rem .85rem; border-radius: 10px; font-size: .875rem; font-weight: 500; color: #374151; transition: background .15s, color .15s; }
+  .nav-item:hover { background: #f3f4f6; color: #111827; }
+  .nav-item.active { background: #1a1a2e; color: #fff; }
+  .nav-icon { font-size: 1rem; }
+  .nav-icon-svg img { width: 16px; height: 16px; display: block; filter: brightness(0) saturate(100%); }
+  .nav-item.active .nav-icon-svg img { filter: brightness(0) invert(1); }
+  .sidebar-logout { margin-top: 1rem; }
+  .logout-btn { width: 100%; background: none; border: 1.5px solid #e5e7eb; border-radius: 10px; padding: .55rem; font-size: .8125rem; color: #6b7280; cursor: pointer; font-family: inherit; transition: border-color .15s, color .15s; }
+  .logout-btn:hover { border-color: #dc2626; color: #dc2626; }
+
+  .dash-main { padding: 2rem 2.5rem; max-width: 760px; }
+  .dash-header { margin-bottom: 2rem; }
+  .dash-greeting { font-size: 1.25rem; font-weight: 800; color: #111827; letter-spacing: -.02em; }
+  .dash-email { font-size: .875rem; color: #6b7280; margin-top: .2rem; }
+
+  .card { background: #fff; border: 1px solid #e5e7eb; border-radius: 16px; padding: 1.5rem; margin-bottom: 1.25rem; }
+  .card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; }
+  .card-header h2 { font-size: 1rem; font-weight: 700; color: #111827; }
+
+  .badge { font-size: .75rem; font-weight: 700; padding: .25rem .65rem; border-radius: 20px; }
+  .badge-green { background: #dcfce7; color: #15803d; }
+  .badge-red { background: #fef2f2; color: #dc2626; }
+  .badge-gray { background: #f3f4f6; color: #6b7280; }
+
+  .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .info-label { font-size: .75rem; font-weight: 600; color: #9ca3af; text-transform: uppercase; letter-spacing: .05em; margin-bottom: .25rem; }
+  .info-value { font-size: .9375rem; font-weight: 600; color: #111827; }
+  .text-warning { color: #d97706; }
+  .text-danger { color: #dc2626; }
+
+  .alert-success { background: #f0fdf4; border: 1px solid #bbf7d0; color: #15803d; border-radius: 10px; padding: .65rem 1rem; font-size: .875rem; margin-bottom: 1rem; }
+  .alert-error { background: #fef2f2; border: 1px solid #fecaca; color: #dc2626; border-radius: 10px; padding: .65rem 1rem; font-size: .875rem; margin-bottom: 1rem; }
+  .alert-warning { margin-top: 1rem; background: #fffbeb; border: 1px solid #fde68a; color: #92400e; border-radius: 10px; padding: .75rem 1rem; font-size: .8125rem; }
+  .alert-danger { margin-top: 1rem; background: #fef2f2; border: 1px solid #fecaca; color: #dc2626; border-radius: 10px; padding: .75rem 1rem; font-size: .8125rem; }
+
+  .sessions-list { display: flex; flex-direction: column; gap: .75rem; }
+  .session-item { display: flex; align-items: center; justify-content: space-between; padding: 1rem; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 12px; gap: 1rem; }
+  .session-info { display: flex; align-items: flex-start; gap: .875rem; }
+  .session-icon { font-size: 1.75rem; flex-shrink: 0; margin-top: .1rem; }
+  .session-name { font-size: .9375rem; font-weight: 700; color: #111827; margin-bottom: .15rem; }
+  .session-device { font-size: .8125rem; color: #6b7280; margin-bottom: .15rem; }
+  .session-last { font-size: .75rem; color: #9ca3af; }
+  .revoke-form { flex-shrink: 0; }
+  .btn-revoke { background: none; border: 1.5px solid #fca5a5; color: #dc2626; border-radius: 8px; padding: .45rem .9rem; font-size: .8125rem; font-weight: 600; cursor: pointer; font-family: inherit; transition: background .15s; white-space: nowrap; }
+  .btn-revoke:hover { background: #fef2f2; }
+
+  .history-placeholder { padding: 2rem; text-align: center; color: #9ca3af; font-size: .875rem; background: #f9fafb; border-radius: 10px; border: 1px dashed #e5e7eb; }
+
+  .no-data { color: #6b7280; font-size: .9375rem; }
+
+  @media (max-width: 700px) {
+    .dash-wrap { grid-template-columns: 1fr; }
+    .sidebar { flex-direction: row; flex-wrap: wrap; border-right: none; border-bottom: 1px solid #e5e7eb; padding: 1rem; }
+    .sidebar-logo { display: none; }
+    .sidebar-nav { flex-direction: row; }
+    .sidebar-logout { margin-top: 0; margin-left: auto; }
+    .dash-main { padding: 1.25rem 1rem; }
+    .info-grid { grid-template-columns: 1fr; }
+    .session-item { flex-direction: column; align-items: flex-start; }
+  }
+</style>

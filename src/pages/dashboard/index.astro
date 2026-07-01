@@ -32,8 +32,8 @@ const isExpiringSoon = daysLeft !== null && daysLeft <= 14 && daysLeft > 0;
         <a href="/dashboard" class="nav-item active">
           <span class="nav-icon">🪪</span> Ліцензія
         </a>
-        <a href="/dashboard/sessions" class="nav-item">
-          <span class="nav-icon">💻</span> Сеанси
+        <a href="/dashboard/licenses" class="nav-item">
+          <span class="nav-icon-svg"><img src="/icon-key.svg" alt="" /></span> Ліцензія
         </a>
         <a href="/dashboard/security" class="nav-item">
           <span class="nav-icon">🔐</span> Безпека
@@ -147,6 +147,8 @@ const isExpiringSoon = daysLeft !== null && daysLeft <= 14 && daysLeft > 0;
   .nav-item:hover { background: #f3f4f6; color: #111827; }
   .nav-item.active { background: #1a1a2e; color: #fff; }
   .nav-icon { font-size: 1rem; }
+  .nav-icon-svg img { width: 16px; height: 16px; display: block; filter: brightness(0) saturate(100%); }
+  .nav-item.active .nav-icon-svg img { filter: brightness(0) invert(1); }
   .sidebar-logout { margin-top: 1rem; }
   .logout-btn {
     width: 100%;
