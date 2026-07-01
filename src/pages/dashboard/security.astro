@@ -17,17 +17,25 @@ if (Astro.request.method === 'POST') {
   if (action === 'change-password') {
     const currentPassword = form.get('currentPassword')?.toString() ?? '';
     const newPassword = form.get('newPassword')?.toString() ?? '';
-    try {
-      const res = await fetch('https://api.litopys.win/change-password', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-        body: JSON.stringify({ currentPassword, newPassword }),
-      });
-      const data = await res.json();
-      if (res.ok) passwordMsg = 'Пароль успішно змінено';
-      else passwordError = data.error ?? 'Помилка зміни паролю';
-    } catch {
-      passwordError = 'Помилка зʼєднання';
+    const confirmPassword = form.get('confirmPassword')?.toString() ?? '';
+    if (newPassword !== confirmPassword) {
+      passwordError = 'Новий пароль та підтвердження не збігаються';
+    } else if (newPassword.length < 8) {
+      passwordError = 'Пароль має бути не менше 8 символів';
+    } else {
+      try {
+        const res = await fetch('https://api.litopys.win/change-password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+          body: JSON.stringify({ currentPassword, newPassword }),
+        });
+        const data = await res.json();
+        if (res.ok) passwordMsg = 'Пароль успішно змінено. Лист-підтвердження надіслано на вашу пошту.';
+        else if (data.error === 'current_password_invalid') passwordError = 'Поточний пароль невірний';
+        else passwordError = data.error ?? 'Помилка зміни паролю';
+      } catch {
+        passwordError = 'Помилка зʼєднання';
+      }
     }
   }
 
@@ -130,6 +138,10 @@ if (Astro.request.method === 'POST') {
           <label>
             Новий пароль
             <input type="password" name="newPassword" required autocomplete="new-password" placeholder="••••••••" minlength="8" />
+          </label>
+          <label>
+            Підтвердження нового паролю
+            <input type="password" name="confirmPassword" required autocomplete="new-password" placeholder="••••••••" minlength="8" />
           </label>
           <button type="submit" class="btn-submit">Змінити пароль</button>
         </form>
