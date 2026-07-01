@@ -48,7 +48,7 @@ try {
 } catch {}
 
 const expiresDate = license?.expiresAt ? new Date(license.expiresAt) : null;
-const isPerpetual = !expiresDate || isNaN(expiresDate.getTime()) || expiresDate.getFullYear() < 2020;
+const isPerpetual = !expiresDate || isNaN(expiresDate.getTime()) || expiresDate.getFullYear() < 2024;
 const now = new Date();
 const daysLeft = (!isPerpetual && expiresDate) ? Math.ceil((expiresDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)) : null;
 const isExpired = daysLeft !== null && daysLeft <= 0;
