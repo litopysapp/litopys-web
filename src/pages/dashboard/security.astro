@@ -1,0 +1,321 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const { user } = Astro.locals;
+const token = Astro.cookies.get('litopys_token')?.value ?? '';
+
+let passwordMsg = '';
+let passwordError = '';
+let mfaMsg = '';
+let mfaError = '';
+let mfaSetup: { secret: string; qrDataUrl: string } | null = null;
+
+if (Astro.request.method === 'POST') {
+  const form = await Astro.request.formData();
+  const action = form.get('action')?.toString();
+
+  if (action === 'change-password') {
+    const currentPassword = form.get('currentPassword')?.toString() ?? '';
+    const newPassword = form.get('newPassword')?.toString() ?? '';
+    try {
+      const res = await fetch('https://api.litopys.win/change-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ currentPassword, newPassword }),
+      });
+      const data = await res.json();
+      if (res.ok) passwordMsg = 'Пароль успішно змінено';
+      else passwordError = data.error ?? 'Помилка зміни паролю';
+    } catch {
+      passwordError = 'Помилка зʼєднання';
+    }
+  }
+
+  if (action === 'mfa-setup') {
+    try {
+      const res = await fetch('https://api.litopys.win/mfa/setup', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const data = await res.json();
+      if (data.ok) mfaSetup = { secret: data.secret, qrDataUrl: data.qrDataUrl };
+      else mfaError = 'Помилка налаштування MFA';
+    } catch {
+      mfaError = 'Помилка зʼєднання';
+    }
+  }
+
+  if (action === 'mfa-enable') {
+    const code = form.get('mfa_code')?.toString() ?? '';
+    try {
+      const res = await fetch('https://api.litopys.win/mfa/enable', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ code }),
+      });
+      const data = await res.json();
+      if (data.ok) mfaMsg = 'MFA успішно увімкнено';
+      else mfaError = 'Невірний код. Спробуйте ще раз';
+    } catch {
+      mfaError = 'Помилка зʼєднання';
+    }
+  }
+
+  if (action === 'mfa-disable') {
+    const currentPassword = form.get('currentPassword')?.toString() ?? '';
+    const code = form.get('mfa_code')?.toString() ?? '';
+    try {
+      const res = await fetch('https://api.litopys.win/mfa/disable', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ currentPassword, code }),
+      });
+      const data = await res.json();
+      if (data.ok) mfaMsg = 'MFA вимкнено';
+      else mfaError = data.error ?? 'Помилка вимкнення MFA';
+    } catch {
+      mfaError = 'Помилка зʼєднання';
+    }
+  }
+}
+---
+
+<Layout title="Безпека — Літопис">
+  <div class="dash-wrap">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <img src="/litopys-logo-launcher.gif" alt="Літопис" />
+      </div>
+      <nav class="sidebar-nav">
+        <a href="/dashboard" class="nav-item">
+          <span class="nav-icon">🪪</span> Ліцензія
+        </a>
+        <a href="/dashboard/security" class="nav-item active">
+          <span class="nav-icon">🔐</span> Безпека
+        </a>
+      </nav>
+      <form method="POST" action="/api/logout" class="sidebar-logout">
+        <button type="submit" class="logout-btn">Вийти</button>
+      </form>
+    </aside>
+
+    <!-- Main -->
+    <main class="dash-main">
+      <div class="dash-header">
+        <p class="dash-greeting">Безпека акаунту</p>
+        <p class="dash-email">{user?.email}</p>
+      </div>
+
+      <!-- Change password -->
+      <section class="card">
+        <div class="card-header">
+          <h2>Зміна паролю</h2>
+        </div>
+        {passwordMsg && <div class="alert-success">{passwordMsg}</div>}
+        {passwordError && <div class="alert-error">{passwordError}</div>}
+        <form method="POST" class="sec-form">
+          <input type="hidden" name="action" value="change-password" />
+          <label>
+            Поточний пароль
+            <input type="password" name="currentPassword" required autocomplete="current-password" placeholder="••••••••" />
+          </label>
+          <label>
+            Новий пароль
+            <input type="password" name="newPassword" required autocomplete="new-password" placeholder="••••••••" minlength="8" />
+          </label>
+          <button type="submit" class="btn-submit">Змінити пароль</button>
+        </form>
+      </section>
+
+      <!-- MFA -->
+      <section class="card">
+        <div class="card-header">
+          <h2>Двофакторна автентифікація (MFA)</h2>
+          <span class:list={['badge', user?.mfaEnabled ? 'badge-green' : 'badge-gray']}>
+            {user?.mfaEnabled ? 'Увімкнено' : 'Вимкнено'}
+          </span>
+        </div>
+
+        {mfaMsg && <div class="alert-success">{mfaMsg}</div>}
+        {mfaError && <div class="alert-error">{mfaError}</div>}
+
+        {!user?.mfaEnabled && !mfaSetup && (
+          <div>
+            <p class="card-desc">Захистіть акаунт за допомогою Microsoft Authenticator або іншого TOTP-додатку.</p>
+            <form method="POST">
+              <input type="hidden" name="action" value="mfa-setup" />
+              <button type="submit" class="btn-submit">Налаштувати MFA</button>
+            </form>
+          </div>
+        )}
+
+        {mfaSetup && (
+          <div class="mfa-setup">
+            <p class="card-desc">Відскануйте QR-код у Microsoft Authenticator, потім введіть 6-значний код для підтвердження.</p>
+            <img src={mfaSetup.qrDataUrl} alt="QR код MFA" class="mfa-qr" />
+            <p class="mfa-secret">Або введіть секрет вручну: <code>{mfaSetup.secret}</code></p>
+            <form method="POST" class="sec-form">
+              <input type="hidden" name="action" value="mfa-enable" />
+              <label>
+                Код підтвердження
+                <input type="text" name="mfa_code" required inputmode="numeric" pattern="[0-9]{6}" maxlength="6" placeholder="123456" autofocus />
+              </label>
+              <button type="submit" class="btn-submit">Увімкнути MFA</button>
+            </form>
+          </div>
+        )}
+
+        {user?.mfaEnabled && (
+          <div>
+            <p class="card-desc">MFA активне. Для вимкнення введіть пароль та поточний код з додатку.</p>
+            <form method="POST" class="sec-form">
+              <input type="hidden" name="action" value="mfa-disable" />
+              <label>
+                Поточний пароль
+                <input type="password" name="currentPassword" required autocomplete="current-password" placeholder="••••••••" />
+              </label>
+              <label>
+                Код MFA
+                <input type="text" name="mfa_code" required inputmode="numeric" pattern="[0-9]{6}" maxlength="6" placeholder="123456" />
+              </label>
+              <button type="submit" class="btn-submit btn-danger">Вимкнути MFA</button>
+            </form>
+          </div>
+        )}
+      </section>
+    </main>
+  </div>
+</Layout>
+
+<style>
+  .dash-wrap {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    min-height: calc(100vh - 52px);
+  }
+  .sidebar {
+    border-right: 1px solid #e5e7eb;
+    padding: 1.5rem 1rem;
+    display: flex;
+    flex-direction: column;
+    background: #fafafa;
+  }
+  .sidebar-logo img { height: 36px; margin-bottom: 2rem; }
+  .sidebar-nav { display: flex; flex-direction: column; gap: .25rem; flex: 1; }
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+    padding: .6rem .85rem;
+    border-radius: 10px;
+    font-size: .875rem;
+    font-weight: 500;
+    color: #374151;
+    transition: background .15s, color .15s;
+  }
+  .nav-item:hover { background: #f3f4f6; color: #111827; }
+  .nav-item.active { background: #1a1a2e; color: #fff; }
+  .nav-icon { font-size: 1rem; }
+  .sidebar-logout { margin-top: 1rem; }
+  .logout-btn {
+    width: 100%;
+    background: none;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 10px;
+    padding: .55rem;
+    font-size: .8125rem;
+    color: #6b7280;
+    cursor: pointer;
+    font-family: inherit;
+    transition: border-color .15s, color .15s;
+  }
+  .logout-btn:hover { border-color: #dc2626; color: #dc2626; }
+
+  .dash-main { padding: 2rem 2.5rem; max-width: 600px; }
+  .dash-header { margin-bottom: 2rem; }
+  .dash-greeting { font-size: 1.25rem; font-weight: 800; color: #111827; letter-spacing: -.02em; }
+  .dash-email { font-size: .875rem; color: #6b7280; margin-top: .2rem; }
+
+  .card {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-bottom: 1.25rem;
+  }
+  .card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.25rem;
+  }
+  .card-header h2 { font-size: 1rem; font-weight: 700; color: #111827; }
+  .card-desc { font-size: .875rem; color: #6b7280; margin-bottom: 1rem; line-height: 1.6; }
+
+  .badge { font-size: .75rem; font-weight: 700; padding: .25rem .65rem; border-radius: 20px; }
+  .badge-green { background: #dcfce7; color: #15803d; }
+  .badge-gray { background: #f3f4f6; color: #6b7280; }
+
+  .sec-form { display: flex; flex-direction: column; gap: 1rem; }
+  label { display: flex; flex-direction: column; gap: .375rem; font-size: .8125rem; font-weight: 600; color: #374151; }
+  input {
+    padding: .65rem .9rem;
+    border: 1.5px solid #d1d5db;
+    border-radius: 10px;
+    font-size: .9375rem;
+    font-family: inherit;
+    outline: none;
+    transition: border-color .15s;
+  }
+  input:focus { border-color: #1a1a2e; }
+
+  .btn-submit {
+    background: #1a1a2e;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: .7rem 1.5rem;
+    font-size: .9375rem;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    transition: opacity .2s;
+    align-self: flex-start;
+  }
+  .btn-submit:hover { opacity: .85; }
+  .btn-danger { background: #dc2626; }
+
+  .alert-success {
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    color: #15803d;
+    border-radius: 10px;
+    padding: .65rem 1rem;
+    font-size: .875rem;
+    margin-bottom: 1rem;
+  }
+  .alert-error {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #dc2626;
+    border-radius: 10px;
+    padding: .65rem 1rem;
+    font-size: .875rem;
+    margin-bottom: 1rem;
+  }
+
+  .mfa-setup { display: flex; flex-direction: column; gap: 1rem; }
+  .mfa-qr { width: 180px; height: 180px; border: 1px solid #e5e7eb; border-radius: 12px; }
+  .mfa-secret { font-size: .8rem; color: #6b7280; }
+  .mfa-secret code { background: #f3f4f6; padding: .15rem .4rem; border-radius: 4px; font-size: .8rem; }
+
+  @media (max-width: 700px) {
+    .dash-wrap { grid-template-columns: 1fr; }
+    .sidebar { flex-direction: row; flex-wrap: wrap; border-right: none; border-bottom: 1px solid #e5e7eb; padding: 1rem; }
+    .sidebar-logo { display: none; }
+    .sidebar-nav { flex-direction: row; }
+    .sidebar-logout { margin-top: 0; margin-left: auto; }
+    .dash-main { padding: 1.25rem 1rem; }
+  }
+</style>

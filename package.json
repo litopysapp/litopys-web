@@ -12,6 +12,7 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/node": "^11.0.0",
     "@tiptap/core": "^3.27.1",
     "@tiptap/extension-bold": "^3.27.1",
     "@tiptap/extension-bullet-list": "^3.27.1",
