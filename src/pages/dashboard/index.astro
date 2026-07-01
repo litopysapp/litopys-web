@@ -15,9 +15,10 @@ const licenseTypeLabels: Record<string, string> = {
   trial: 'Пробна',
 };
 
-const expiresDate = license ? new Date(license.expiresAt) : null;
+const expiresDate = license?.expiresAt ? new Date(license.expiresAt) : null;
+const isPerpetual = !expiresDate || isNaN(expiresDate.getTime()) || expiresDate.getFullYear() < 2020;
 const now = new Date();
-const daysLeft = expiresDate ? Math.ceil((expiresDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)) : null;
+const daysLeft = (!isPerpetual && expiresDate) ? Math.ceil((expiresDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)) : null;
 const isExpiringSoon = daysLeft !== null && daysLeft <= 14 && daysLeft > 0;
 ---
 
@@ -78,9 +79,11 @@ const isExpiringSoon = daysLeft !== null && daysLeft <= 14 && daysLeft > 0;
             <div class="info-item">
               <p class="info-label">Діє до</p>
               <p class:list={['info-value', isExpiringSoon && 'text-warning']}>
-                {expiresDate?.toLocaleDateString('uk-UA', { day: 'numeric', month: 'long', year: 'numeric' })}
-                {daysLeft !== null && daysLeft > 0 && ` (${daysLeft} дн.)`}
-                {daysLeft !== null && daysLeft <= 0 && ' — Закінчилась'}
+                {isPerpetual
+                  ? 'Безстрокова'
+                  : expiresDate?.toLocaleDateString('uk-UA', { day: 'numeric', month: 'long', year: 'numeric' })}
+                {!isPerpetual && daysLeft !== null && daysLeft > 0 && ` (${daysLeft} дн.)`}
+                {!isPerpetual && daysLeft !== null && daysLeft <= 0 && ' — Закінчилась'}
               </p>
             </div>
           </div>
