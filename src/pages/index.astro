@@ -79,7 +79,7 @@ import Layout from '../layouts/Layout.astro';
           <p class="stat-label">Сумісний формат</p>
         </div>
         <div class="stat-item fade-up" style="--d:.3s">
-          <p class="stat-num">🇺🇦</p>
+          <p class="stat-num"><img src="/ukraine-map.gif" alt="Україна" class="stat-ua-img" /></p>
           <p class="stat-label">Зроблено в Україні</p>
         </div>
       </div>
@@ -498,6 +498,8 @@ import Layout from '../layouts/Layout.astro';
     .features-grid { grid-template-columns: 1fr; }
     .cta-card { padding: 3rem 1.5rem; }
   }
+
+  .stat-ua-img { height: 48px; width: auto; display: block; margin: 0 auto; }
 
   /* ── Battalion ── */
   .section-battalion { padding: 4rem 0; }
