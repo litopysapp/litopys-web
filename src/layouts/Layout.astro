@@ -6,6 +6,20 @@ interface Props {
   noHeader?: boolean;
 }
 const { title, description = "Літопис — редактор документів для людей, яким важлива зручність", fullPage = false, noHeader = false } = Astro.props;
+
+let downloadSetup = 'https://github.com/litopysapp/litopys_release/releases/latest';
+let downloadPortable = 'https://github.com/litopysapp/litopys_release/releases/latest';
+try {
+  const rel = await fetch('https://api.github.com/repos/litopysapp/litopys_release/releases/latest', {
+    headers: { 'Accept': 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28' }
+  });
+  if (rel.ok) {
+    const data = await rel.json();
+    const assets: { name: string; browser_download_url: string }[] = data.assets ?? [];
+    downloadSetup = assets.find(a => a.name.includes('x64'))?.browser_download_url ?? downloadSetup;
+    downloadPortable = assets.find(a => a.name.includes('Portable'))?.browser_download_url ?? downloadPortable;
+  }
+} catch {}
 ---
 <!doctype html>
 <html lang="uk">
@@ -59,10 +73,21 @@ const { title, description = "Літопис — редактор докумен
       <header style="position:sticky; top:0; z-index:100; background:rgba(255,255,255,0.85); backdrop-filter:saturate(180%) blur(20px); -webkit-backdrop-filter:saturate(180%) blur(20px); border-bottom:1px solid var(--border-subtle);">
         <nav style="max-width:980px; margin:0 auto; height:var(--nav-h); padding:0 1.5rem; display:flex; align-items:center; justify-content:space-between;">
           <a href="/"><img src="/litopys-logo-launcher.gif" alt="Літопис" style="height:36px;width:auto;display:block;"></a>
-          <div style="display:flex; gap:2rem; font-size:.875rem; font-weight:400; color:var(--text-secondary);">
+          <div style="display:flex; gap:1.5rem; align-items:center; font-size:.875rem; font-weight:400; color:var(--text-secondary);">
             <a href="/">Про застосунок</a>
             <a href="/demo" style="color:var(--text);">Спробувати</a>
-            <a href="/dashboard" style="color:var(--text); font-weight:600;">Кабінет</a>
+            <div class="nav-download-wrap">
+              <button class="nav-icon-btn" id="dl-btn" aria-label="Завантажити" aria-expanded="false" aria-haspopup="true">
+                <img src="/icon-download-header.svg" alt="" style="width:18px;height:18px;display:block;" />
+              </button>
+              <div class="nav-dropdown" id="dl-menu" role="menu">
+                <a href={downloadSetup} class="nav-dropdown-item" role="menuitem">Litopys</a>
+                <a href={downloadPortable} class="nav-dropdown-item" role="menuitem">Litopys Portable</a>
+              </div>
+            </div>
+            <a href="/dashboard" class="nav-icon-btn" aria-label="Кабінет">
+              <img src="/icon-user-header.svg" alt="" style="width:18px;height:18px;display:block;" />
+            </a>
           </div>
         </nav>
       </header>
@@ -82,3 +107,76 @@ const { title, description = "Літопис — редактор докумен
     )}
   </body>
 </html>
+
+<style is:global>
+  .nav-icon-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    color: var(--text);
+    transition: background .15s;
+    padding: 0;
+    flex-shrink: 0;
+  }
+  .nav-icon-btn:hover { background: var(--bg-subtle); }
+  .nav-icon-btn img { filter: brightness(0) saturate(100%); }
+
+  .nav-download-wrap { position: relative; }
+
+  .nav-dropdown {
+    display: none;
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+    background: #fff;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius);
+    box-shadow: 0 8px 24px rgba(0,0,0,.12);
+    min-width: 180px;
+    z-index: 200;
+    overflow: hidden;
+    animation: ddFade .12s ease;
+  }
+  .nav-dropdown.open { display: block; }
+  @keyframes ddFade { from { opacity:0; transform:translateY(-4px); } to { opacity:1; transform:none; } }
+
+  .nav-dropdown-item {
+    display: block;
+    padding: .65rem 1rem;
+    font-size: .875rem;
+    font-weight: 500;
+    color: var(--text);
+    transition: background .12s;
+    white-space: nowrap;
+  }
+  .nav-dropdown-item:hover { background: var(--bg-subtle); }
+  .nav-dropdown-item + .nav-dropdown-item { border-top: 1px solid var(--border-subtle); }
+</style>
+
+<script>
+  const dlBtn = document.getElementById('dl-btn');
+  const dlMenu = document.getElementById('dl-menu');
+  if (dlBtn && dlMenu) {
+    dlBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const open = dlMenu.classList.toggle('open');
+      dlBtn.setAttribute('aria-expanded', String(open));
+    });
+    document.addEventListener('click', () => {
+      dlMenu.classList.remove('open');
+      dlBtn.setAttribute('aria-expanded', 'false');
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        dlMenu.classList.remove('open');
+        dlBtn.setAttribute('aria-expanded', 'false');
+      }
+    });
+  }
+</script>
