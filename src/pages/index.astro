@@ -1,19 +1,5 @@
 ---
 import Layout from '../layouts/Layout.astro';
-
-let downloadSetup = 'https://github.com/litopysapp/litopys_release/releases/latest';
-let downloadPortable = 'https://github.com/litopysapp/litopys_release/releases/latest';
-try {
-  const rel = await fetch('https://api.github.com/repos/litopysapp/litopys_release/releases/latest', {
-    headers: { 'Accept': 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28' }
-  });
-  if (rel.ok) {
-    const data = await rel.json();
-    const assets: { name: string; browser_download_url: string }[] = data.assets ?? [];
-    downloadSetup = assets.find(a => a.name.includes('x64'))?.browser_download_url ?? downloadSetup;
-    downloadPortable = assets.find(a => a.name.includes('Portable'))?.browser_download_url ?? downloadPortable;
-  }
-} catch {}
 ---
 <Layout title="Літопис — редактор документів">
 
@@ -30,8 +16,8 @@ try {
             <img src="/icon-download.svg" alt="" class="btn-icon" />Завантажити
           </button>
           <div class="hero-dl-menu" id="hero-dl-menu" role="menu">
-            <a href={downloadSetup} class="hero-dl-item" role="menuitem">Litopys <span class="hero-dl-hint">x64 Setup</span></a>
-            <a href={downloadPortable} class="hero-dl-item" role="menuitem">Litopys Portable <span class="hero-dl-hint">без встановлення</span></a>
+            <a href="#" id="hero-dl-setup" class="hero-dl-item" role="menuitem">Litopys <span class="hero-dl-hint">x64 Setup</span></a>
+            <a href="#" id="hero-dl-portable" class="hero-dl-item" role="menuitem">Litopys Portable <span class="hero-dl-hint">без встановлення</span></a>
           </div>
         </div>
         <a href="/demo" class="btn-ghost">Спробувати онлайн</a>

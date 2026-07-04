@@ -7,19 +7,6 @@ interface Props {
 }
 const { title, description = "Літопис — редактор документів для людей, яким важлива зручність", fullPage = false, noHeader = false } = Astro.props;
 
-let downloadSetup = 'https://github.com/litopysapp/litopys_release/releases/latest';
-let downloadPortable = 'https://github.com/litopysapp/litopys_release/releases/latest';
-try {
-  const rel = await fetch('https://api.github.com/repos/litopysapp/litopys_release/releases/latest', {
-    headers: { 'Accept': 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28' }
-  });
-  if (rel.ok) {
-    const data = await rel.json();
-    const assets: { name: string; browser_download_url: string }[] = data.assets ?? [];
-    downloadSetup = assets.find(a => a.name.includes('x64'))?.browser_download_url ?? downloadSetup;
-    downloadPortable = assets.find(a => a.name.includes('Portable'))?.browser_download_url ?? downloadPortable;
-  }
-} catch {}
 ---
 <!doctype html>
 <html lang="uk">
@@ -81,8 +68,8 @@ try {
                 <img src="/icon-download-header.svg" alt="" style="width:18px;height:18px;display:block;" />
               </button>
               <div class="nav-dropdown" id="dl-menu" role="menu">
-                <a href={downloadSetup} class="nav-dropdown-item" role="menuitem">Litopys</a>
-                <a href={downloadPortable} class="nav-dropdown-item" role="menuitem">Litopys Portable</a>
+                <a href="#" id="nav-dl-setup" class="nav-dropdown-item" role="menuitem">Litopys</a>
+                <a href="#" id="nav-dl-portable" class="nav-dropdown-item" role="menuitem">Litopys Portable</a>
               </div>
             </div>
             <a href="/dashboard" class="nav-icon-btn" aria-label="Кабінет">
@@ -160,6 +147,32 @@ try {
 </style>
 
 <script>
+  // Fetch latest GitHub release assets and wire up download links
+  (async () => {
+    const FALLBACK = 'https://github.com/litopysapp/litopys_release/releases/latest';
+    try {
+      const res = await fetch('https://api.github.com/repos/litopysapp/litopys_release/releases/latest', {
+        headers: { 'Accept': 'application/vnd.github+json' }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        const assets: { name: string; browser_download_url: string }[] = data.assets ?? [];
+        const setup = assets.find((a: any) => a.name.includes('x64'))?.browser_download_url ?? FALLBACK;
+        const portable = assets.find((a: any) => a.name.includes('Portable'))?.browser_download_url ?? FALLBACK;
+        // nav dropdown
+        const ns = document.getElementById('nav-dl-setup');
+        const np = document.getElementById('nav-dl-portable');
+        if (ns) ns.href = setup;
+        if (np) np.href = portable;
+        // hero dropdown (index page)
+        const hs = document.getElementById('hero-dl-setup');
+        const hp = document.getElementById('hero-dl-portable');
+        if (hs) hs.href = setup;
+        if (hp) hp.href = portable;
+      }
+    } catch {}
+  })();
+
   const dlBtn = document.getElementById('dl-btn');
   const dlMenu = document.getElementById('dl-menu');
   if (dlBtn && dlMenu) {
