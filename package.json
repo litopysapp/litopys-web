@@ -8,10 +8,13 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
-    "preview": "astro preview",
-    "astro": "astro"
+    "preview": "npm run build && wrangler dev",
+    "astro": "astro",
+    "generate-types": "wrangler types",
+    "deploy": "npm run build && wrangler deploy"
   },
   "dependencies": {
+    "@astrojs/cloudflare": "^14.1.1",
     "@astrojs/node": "^11.0.0",
     "@tiptap/core": "^3.27.1",
     "@tiptap/extension-bold": "^3.27.1",
@@ -27,6 +30,7 @@
     "file-saver": "^2.0.5"
   },
   "devDependencies": {
-    "playwright": "^1.61.1"
+    "playwright": "^1.61.1",
+    "wrangler": "^4.107.0"
   }
 }
