@@ -1,5 +1,19 @@
 ---
 import Layout from '../layouts/Layout.astro';
+
+let downloadSetup = 'https://github.com/litopysapp/litopys_release/releases/latest';
+let downloadPortable = 'https://github.com/litopysapp/litopys_release/releases/latest';
+try {
+  const rel = await fetch('https://api.github.com/repos/litopysapp/litopys_release/releases/latest', {
+    headers: { 'Accept': 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28' }
+  });
+  if (rel.ok) {
+    const data = await rel.json();
+    const assets: { name: string; browser_download_url: string }[] = data.assets ?? [];
+    downloadSetup = assets.find(a => a.name.includes('x64'))?.browser_download_url ?? downloadSetup;
+    downloadPortable = assets.find(a => a.name.includes('Portable'))?.browser_download_url ?? downloadPortable;
+  }
+} catch {}
 ---
 <Layout title="Літопис — редактор документів">
 
@@ -11,9 +25,15 @@ import Layout from '../layouts/Layout.astro';
       <h1>Ручка — зброя писаря.<br/>Дозволь пальцям вижити!</h1>
       <p class="hero-sub">Litopys — офлайн-редактор твоїх журналів.<br class="br-d"/> Без хмар, без болі в руках — без зайвого.</p>
       <div class="hero-cta">
-        <a href="https://api.litopys.win/download" class="btn-primary btn-download">
-          <img src="/icon-download.svg" alt="" class="btn-icon" />Завантажити
-        </a>
+        <div class="hero-dl-wrap">
+          <button class="btn-primary btn-download" id="hero-dl-btn" aria-expanded="false" aria-haspopup="true">
+            <img src="/icon-download.svg" alt="" class="btn-icon" />Завантажити
+          </button>
+          <div class="hero-dl-menu" id="hero-dl-menu" role="menu">
+            <a href={downloadSetup} class="hero-dl-item" role="menuitem">Litopys <span class="hero-dl-hint">x64 Setup</span></a>
+            <a href={downloadPortable} class="hero-dl-item" role="menuitem">Litopys Portable <span class="hero-dl-hint">без встановлення</span></a>
+          </div>
+        </div>
         <a href="/demo" class="btn-ghost">Спробувати онлайн</a>
       </div>
     </div>
@@ -236,7 +256,40 @@ import Layout from '../layouts/Layout.astro';
     box-shadow: 0 4px 16px rgba(0,0,0,.2);
   }
   .btn-primary:hover { opacity: .85; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.25); }
-  .btn-download { display: inline-flex; align-items: center; gap: .5rem; }
+  .btn-download { display: inline-flex; align-items: center; gap: .5rem; cursor: pointer; }
+
+  .hero-dl-wrap { position: relative; }
+  .hero-dl-menu {
+    display: none;
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    box-shadow: 0 12px 32px rgba(0,0,0,.15);
+    min-width: 220px;
+    z-index: 200;
+    overflow: hidden;
+    animation: ddFadeHero .13s ease;
+  }
+  .hero-dl-menu.open { display: block; }
+  @keyframes ddFadeHero { from { opacity:0; transform:translateY(-4px); } to { opacity:1; transform:none; } }
+  .hero-dl-item {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: .75rem;
+    padding: .75rem 1.1rem;
+    font-size: .9375rem;
+    font-weight: 600;
+    color: #111827;
+    transition: background .12s;
+    white-space: nowrap;
+  }
+  .hero-dl-item:hover { background: #f9fafb; }
+  .hero-dl-item + .hero-dl-item { border-top: 1px solid #f3f4f6; }
+  .hero-dl-hint { font-size: .75rem; font-weight: 400; color: #9ca3af; }
   .btn-icon { width: 16px; height: 16px; display: block; filter: brightness(0) invert(1); flex-shrink: 0; }
   .btn-ghost {
     display: inline-block;
@@ -529,4 +582,25 @@ import Layout from '../layouts/Layout.astro';
   }, { threshold: 0.12 });
 
   document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+  // Hero download dropdown
+  const heroBtn = document.getElementById('hero-dl-btn');
+  const heroMenu = document.getElementById('hero-dl-menu');
+  if (heroBtn && heroMenu) {
+    heroBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const open = heroMenu.classList.toggle('open');
+      heroBtn.setAttribute('aria-expanded', String(open));
+    });
+    document.addEventListener('click', () => {
+      heroMenu.classList.remove('open');
+      heroBtn?.setAttribute('aria-expanded', 'false');
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        heroMenu.classList.remove('open');
+        heroBtn?.setAttribute('aria-expanded', 'false');
+      }
+    });
+  }
 </script>
