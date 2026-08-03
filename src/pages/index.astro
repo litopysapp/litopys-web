@@ -197,6 +197,21 @@ import Layout from '../layouts/Layout.astro';
     </div>
   </section>
 
+  <!-- ══ LITOSCAN PROMO TOAST ══ -->
+  <div id="litoscan-modal" class="ls-toast" role="dialog" aria-labelledby="ls-modal-title" hidden>
+    <button type="button" class="ls-toast-close" id="ls-modal-close" aria-label="Закрити">✕</button>
+    <div class="ls-toast-icon"><img src="/litoscan-logo.ico" alt="LitoScan" /></div>
+    <div class="ls-toast-body">
+      <p class="ls-toast-eyebrow">Новий застосунок</p>
+      <h2 id="ls-modal-title">Знайомтесь — LitoScan</h2>
+      <p class="ls-toast-text">Безкоштовна програма для сканування документів. Ідеально доповнює Літопис.</p>
+      <div class="ls-toast-actions">
+        <a href="https://github.com/litopysapp/LitoScan/releases/download/v0.2.3/LitoScan-Setup-0.2.3.exe" id="ls-modal-download" class="ls-toast-btn">Завантажити →</a>
+        <button type="button" class="ls-modal-later" id="ls-modal-later">Може пізніше</button>
+      </div>
+    </div>
+  </div>
+
 </Layout>
 
 <style is:global>
@@ -554,6 +569,88 @@ import Layout from '../layouts/Layout.astro';
   @media (max-width: 640px) {
     .battalion-card { flex-direction: column; text-align: center; padding: 2rem 1.5rem; }
   }
+
+  /* ── LitoScan promo toast ── */
+  .ls-toast {
+    position: fixed;
+    right: 1.5rem;
+    bottom: 1.5rem;
+    z-index: 1000;
+    display: flex;
+    gap: .9rem;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 18px;
+    padding: 1.25rem;
+    max-width: 340px;
+    box-shadow: 0 16px 48px rgba(0,0,0,.16);
+    animation: lsToastUp .3s ease;
+  }
+  .ls-toast[hidden] { display: none; }
+  @keyframes lsToastUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+
+  .ls-toast-close {
+    position: absolute;
+    top: .6rem; right: .6rem;
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    border: none;
+    background: #f3f4f6;
+    color: #6b7280;
+    font-size: .75rem;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background .15s;
+  }
+  .ls-toast-close:hover { background: #e5e7eb; }
+
+  .ls-toast-icon {
+    width: 44px; height: 44px;
+    flex-shrink: 0;
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .ls-toast-icon img { width: 100%; height: 100%; object-fit: cover; }
+
+  .ls-toast-body { flex: 1; padding-right: 1rem; }
+  .ls-toast-eyebrow {
+    font-size: .6875rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: #4f7cac;
+    margin-bottom: .3rem;
+  }
+  .ls-toast h2 { font-size: 1rem; font-weight: 800; color: #111827; letter-spacing: -.01em; margin-bottom: .4rem; }
+  .ls-toast-text { font-size: .8125rem; color: #6b7280; line-height: 1.5; margin-bottom: 1rem; }
+
+  .ls-toast-actions { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+  .ls-toast-btn {
+    display: inline-block;
+    background: #1a1a2e;
+    color: #fff;
+    padding: .5rem 1.1rem;
+    border-radius: 50px;
+    font-size: .8125rem;
+    font-weight: 600;
+    transition: opacity .2s;
+  }
+  .ls-toast-btn:hover { opacity: .85; }
+  .ls-modal-later {
+    background: none;
+    border: none;
+    color: #9ca3af;
+    font-size: .8125rem;
+    font-family: inherit;
+    cursor: pointer;
+    padding: .25rem;
+  }
+  .ls-modal-later:hover { color: #6b7280; }
+
+  @media (max-width: 480px) {
+    .ls-toast { left: 1rem; right: 1rem; max-width: none; }
+  }
 </style>
 
 <script>
@@ -589,4 +686,46 @@ import Layout from '../layouts/Layout.astro';
       }
     });
   }
+
+  // LitoScan promo modal — раз за сесію, з невеликою затримкою
+  const lsModal = document.getElementById('litoscan-modal');
+  const lsClose = document.getElementById('ls-modal-close');
+  const lsLater = document.getElementById('ls-modal-later');
+  const lsDownload = document.getElementById('ls-modal-download');
+  const LS_SEEN_KEY = 'litoscan_promo_seen';
+
+  // Підтягуємо актуальний Setup.exe з останнього релізу LitoScan
+  (async () => {
+    try {
+      const res = await fetch('https://api.github.com/repos/litopysapp/LitoScan/releases/latest', {
+        headers: { 'Accept': 'application/vnd.github+json' }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        const assets: { name: string; browser_download_url: string }[] = data.assets ?? [];
+        const setup = assets.find((a: any) => a.name.includes('Setup'))?.browser_download_url;
+        if (setup && lsDownload) (lsDownload as HTMLAnchorElement).href = setup;
+      }
+    } catch {}
+  })();
+
+  function hideLsModal() {
+    lsModal?.setAttribute('hidden', '');
+    sessionStorage.setItem(LS_SEEN_KEY, '1');
+  }
+
+  if (lsModal && !sessionStorage.getItem(LS_SEEN_KEY)) {
+    setTimeout(() => {
+      lsModal.removeAttribute('hidden');
+    }, 4000);
+  }
+
+  lsClose?.addEventListener('click', hideLsModal);
+  lsLater?.addEventListener('click', hideLsModal);
+  lsModal?.addEventListener('click', (e) => {
+    if (e.target === lsModal) hideLsModal();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && lsModal && !lsModal.hasAttribute('hidden')) hideLsModal();
+  });
 </script>
