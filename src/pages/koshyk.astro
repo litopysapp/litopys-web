@@ -1,0 +1,198 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+<Layout title="Кошик — Літопис" description="Ваше замовлення в Літописі.">
+
+  <!-- ══ HERO ══ -->
+  <section class="hero-page">
+    <div class="hero-bg"></div>
+    <div class="container">
+      <p class="eyebrow fade-up">Кошик</p>
+      <h1 class="fade-up" style="--d:.05s">Ваше замовлення.</h1>
+    </div>
+  </section>
+
+  <!-- ══ CART ══ -->
+  <section class="section-cart">
+    <div class="container">
+
+      <div id="cart-empty" class="cart-empty fade-up" style="display:none;">
+        <p class="cart-empty-text">Кошик порожній.</p>
+        <a href="/tsiny" class="btn-primary">Переглянути ціни →</a>
+      </div>
+
+      <div id="cart-content" style="display:none;">
+        <div id="cart-items" class="cart-items"></div>
+
+        <div class="cart-summary fade-up">
+          <p class="cart-total-label">Разом</p>
+          <p class="cart-total-value" id="cart-total">0 грн</p>
+        </div>
+
+        <div class="cart-actions fade-up">
+          <a href="/oformlennia" class="btn-primary">Оформити замовлення →</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</Layout>
+
+<style is:global>
+  .fade-up {
+    opacity: 0;
+    transform: translateY(32px);
+    transition: opacity .65s ease, transform .65s ease;
+    transition-delay: var(--d, 0s);
+  }
+  .fade-up.visible { opacity: 1; transform: translateY(0); }
+</style>
+
+<style>
+  .container { max-width: 860px; margin: 0 auto; padding: 0 1.5rem; }
+  .eyebrow {
+    font-size: .75rem;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: #4f7cac;
+    margin-bottom: 1rem;
+  }
+
+  /* ── Hero ── */
+  .hero-page { position: relative; padding: 6rem 0 2rem; }
+  .hero-bg {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background: radial-gradient(ellipse at 20% 40%, #dce8f5 0%, transparent 55%),
+                radial-gradient(ellipse at 80% 60%, #f5ead8 0%, transparent 50%),
+                #f8f9fb;
+    pointer-events: none;
+  }
+  .hero-page h1 {
+    font-size: clamp(1.9rem, 4vw, 2.75rem);
+    font-weight: 800;
+    letter-spacing: -.04em;
+    color: #111827;
+  }
+
+  /* ── Cart ── */
+  .section-cart { padding: 2rem 0 6rem; }
+
+  .cart-empty { text-align: center; padding: 4rem 1rem; }
+  .cart-empty-text { font-size: 1.0625rem; color: #6b7280; margin-bottom: 1.5rem; }
+
+  .cart-items { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 2rem; }
+  .cart-items :global(.cart-item) {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    background: rgba(255,255,255,.85);
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    padding: 1.25rem 1.5rem;
+    backdrop-filter: blur(8px);
+  }
+  .cart-items :global(.cart-item-name) { font-size: 1rem; font-weight: 700; color: #111827; flex: 1; }
+  .cart-items :global(.cart-item-price) { font-size: .9375rem; color: #6b7280; white-space: nowrap; }
+
+  .cart-items :global(.cart-remove) {
+    width: 28px; height: 28px;
+    display: flex; align-items: center; justify-content: center;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    color: #9ca3af;
+    font-size: 1.125rem;
+    transition: color .15s;
+  }
+  .cart-items :global(.cart-remove:hover) { color: #dc2626; }
+
+  .cart-summary {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    border-top: 1px solid #e5e7eb;
+    padding-top: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  .cart-total-label { font-size: 1rem; color: #6b7280; font-weight: 600; }
+  .cart-total-value { font-size: 1.75rem; font-weight: 800; color: #111827; letter-spacing: -.02em; }
+
+  .cart-actions { display: flex; justify-content: flex-end; }
+
+  .btn-primary {
+    display: inline-block;
+    background: #1a1a2e;
+    color: #fff;
+    padding: .8rem 1.9rem;
+    border-radius: 50px;
+    font-size: .9375rem;
+    font-weight: 600;
+    transition: opacity .2s, transform .2s, box-shadow .2s;
+    box-shadow: 0 4px 16px rgba(0,0,0,.2);
+  }
+  .btn-primary:hover { opacity: .85; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.25); }
+
+  @media (max-width: 560px) {
+    .cart-items :global(.cart-item) { flex-wrap: wrap; }
+    .cart-items :global(.cart-item-name) { width: 100%; }
+  }
+</style>
+
+<script>
+  function formatUAH(n: number) {
+    return n.toLocaleString('uk-UA') + ' грн';
+  }
+
+  function render() {
+    const cart = (window as any).LitopysCart;
+    if (!cart) return;
+    const items = cart.readCart();
+    const empty = document.getElementById('cart-empty')!;
+    const content = document.getElementById('cart-content')!;
+    const list = document.getElementById('cart-items')!;
+    const totalEl = document.getElementById('cart-total')!;
+
+    if (items.length === 0) {
+      empty.style.display = 'block';
+      content.style.display = 'none';
+      return;
+    }
+    empty.style.display = 'none';
+    content.style.display = 'block';
+
+    list.innerHTML = items.map((i: any) => `
+      <div class="cart-item" data-id="${i.id}">
+        <p class="cart-item-name">${i.name}</p>
+        <p class="cart-item-price">${formatUAH(i.price)}</p>
+        <button class="cart-remove" data-action="remove" aria-label="Видалити">✕</button>
+      </div>
+    `).join('');
+
+    totalEl.textContent = formatUAH(cart.cartTotal());
+
+    list.querySelectorAll('.cart-item').forEach((row) => {
+      const id = (row as HTMLElement).dataset.id!;
+      row.querySelector('[data-action="remove"]')?.addEventListener('click', () => {
+        cart.removeFromCart(id);
+        render();
+      });
+    });
+  }
+
+  render();
+  window.addEventListener('litopys-cart-updated', render);
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+</script>

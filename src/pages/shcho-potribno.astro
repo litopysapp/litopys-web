@@ -1,0 +1,222 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+<Layout title="Що потрібно — Літопис" description="Що потрібно, щоб почати писати журнали в Літописі.">
+
+  <!-- ══ HERO ══ -->
+  <section class="hero-page">
+    <div class="hero-bg"></div>
+    <div class="container">
+      <p class="eyebrow fade-up">Що для цього потрібно</p>
+      <h1 class="fade-up" style="--d:.05s">Всього дві речі —<br/>ноутбук і плотер.</h1>
+      <p class="hero-sub fade-up" style="--d:.1s">Ніякого спеціального обладнання чи навичок. Все інше бере на себе Літопис.</p>
+    </div>
+  </section>
+
+  <!-- ══ REQUIREMENTS ══ -->
+  <section class="section-reqs">
+    <div class="container">
+      <div class="reqs-grid">
+        <div class="req-card fade-up">
+          <div class="req-icon-wrap"><img src="/icon-file-stack.svg" alt="" class="req-svg" /></div>
+          <h3>Ноутбук з Літописом</h3>
+          <p class="body-text">Звичайний ноутбук на Windows зі встановленою програмою Літопис. Саме в ній ти оформлюєш журнал: заповнюєш поля, перевіряєш і готуєш сторінку.</p>
+        </div>
+        <div class="req-card fade-up" style="--d:.08s">
+          <div class="req-icon-wrap"><img src="/icon-pencil-sparkles.svg" alt="" class="req-svg" /></div>
+          <h3>Плотер Silhouette Portrait 4</h3>
+          <p class="body-text">Він і виконує ручну роботу — власноруч пише на папері те, що ти оформив у Літописі, твоїм почерком.</p>
+        </div>
+      </div>
+
+      <div class="reqs-cta fade-up">
+        <a href="/demo" class="btn-primary">Спробувати демо →</a>
+        <a href="/yak-pratsyuye" class="btn-ghost">Як це працює →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ BATTALION ══ -->
+  <section class="section-battalion">
+    <div class="container">
+      <div class="battalion-card fade-up">
+        <img src="/shevron-battalion.png" alt="Шеврон батальйону" class="battalion-shevron" />
+        <p class="battalion-text">Долучайся до Першого окремого батальйону безпілотних писарів та збережи свої руки!</p>
+        <a href="/register" class="btn-primary">Долучитись →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ CTA ══ -->
+  <section class="section-cta">
+    <div class="container">
+      <div class="cta-card fade-up">
+        <p class="eyebrow cta-eyebrow">Готові спробувати?</p>
+        <h2>Відкрийте Літопис<br/>прямо зараз</h2>
+        <p class="cta-sub">Протестуйте редактор у браузері — без реєстрації та завантажень.</p>
+        <a href="/demo" class="btn-white">Відкрити демо →</a>
+      </div>
+    </div>
+  </section>
+
+</Layout>
+
+<style is:global>
+  .fade-up {
+    opacity: 0;
+    transform: translateY(32px);
+    transition: opacity .65s ease, transform .65s ease;
+    transition-delay: var(--d, 0s);
+  }
+  .fade-up.visible { opacity: 1; transform: translateY(0); }
+</style>
+
+<style>
+  .container { max-width: 1060px; margin: 0 auto; padding: 0 1.5rem; }
+  .eyebrow {
+    font-size: .75rem;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: #4f7cac;
+    margin-bottom: 1rem;
+  }
+  .body-text { color: #4b5563; line-height: 1.8; font-size: 1rem; }
+
+  /* ── Hero ── */
+  .hero-page { position: relative; padding: 6rem 0 3rem; }
+  .hero-bg {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background: radial-gradient(ellipse at 20% 40%, #dce8f5 0%, transparent 55%),
+                radial-gradient(ellipse at 80% 60%, #f5ead8 0%, transparent 50%),
+                #f8f9fb;
+    pointer-events: none;
+  }
+  .hero-page h1 {
+    font-size: clamp(1.9rem, 4vw, 3rem);
+    font-weight: 800;
+    letter-spacing: -.04em;
+    line-height: 1.12;
+    color: #111827;
+    margin-bottom: 1.25rem;
+    max-width: 760px;
+  }
+  .hero-sub { font-size: 1.0625rem; color: #6b7280; line-height: 1.75; max-width: 620px; }
+
+  /* ── Requirements ── */
+  .section-reqs { padding: 3rem 0 7rem; }
+  .reqs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  .req-card {
+    background: rgba(255,255,255,.85);
+    border: 1px solid #e5e7eb;
+    border-radius: 18px;
+    padding: 2.5rem;
+    backdrop-filter: blur(8px);
+    transition: box-shadow .2s, transform .2s, border-color .2s;
+  }
+  .req-card:hover { box-shadow: 0 12px 32px rgba(0,0,0,.09); transform: translateY(-3px); border-color: #bfd4e8; }
+  .req-icon-wrap {
+    width: 52px; height: 52px;
+    display: flex; align-items: center; justify-content: center;
+    background: #eef4fb;
+    border-radius: 14px;
+    margin-bottom: 1.5rem;
+  }
+  .req-svg { width: 26px; height: 26px; display: block; }
+  .req-card h3 { font-size: 1.25rem; font-weight: 700; color: #111827; margin-bottom: .75rem; letter-spacing: -.01em; }
+
+  .reqs-cta { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 3rem; }
+  .btn-primary {
+    display: inline-block;
+    background: #1a1a2e;
+    color: #fff;
+    padding: .8rem 1.9rem;
+    border-radius: 50px;
+    font-size: .9375rem;
+    font-weight: 600;
+    transition: opacity .2s, transform .2s, box-shadow .2s;
+    box-shadow: 0 4px 16px rgba(0,0,0,.2);
+  }
+  .btn-primary:hover { opacity: .85; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.25); }
+  .btn-ghost {
+    display: inline-block;
+    color: #374151;
+    padding: .8rem 1.9rem;
+    border-radius: 50px;
+    font-size: .9375rem;
+    font-weight: 500;
+    border: 1.5px solid #d1d5db;
+    transition: border-color .2s, color .2s, background .2s;
+  }
+  .btn-ghost:hover { border-color: #1a1a2e; color: #1a1a2e; }
+
+  @media (max-width: 900px) {
+    .reqs-grid { grid-template-columns: 1fr; }
+  }
+
+  /* ── Battalion ── */
+  .section-battalion { padding: 4rem 0; }
+  .battalion-card {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    background: #1a1a2e;
+    border-radius: 20px;
+    padding: 2rem 2.5rem;
+    color: #fff;
+  }
+  .battalion-shevron { width: 80px; height: 80px; object-fit: contain; flex-shrink: 0; }
+  .battalion-text { flex: 1; font-size: 1.125rem; font-weight: 600; line-height: 1.5; }
+  @media (max-width: 640px) {
+    .battalion-card { flex-direction: column; text-align: center; padding: 2rem 1.5rem; }
+  }
+
+  /* ── CTA ── */
+  .section-cta { padding: 3rem 0 8rem; }
+  .cta-card {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%);
+    border-radius: 28px; padding: 5rem 3rem; text-align: center; color: #fff;
+    box-shadow: 0 24px 64px rgba(0,0,0,.25);
+    position: relative; overflow: hidden;
+  }
+  .cta-card::before {
+    content: '';
+    position: absolute;
+    top: -80px; right: -80px;
+    width: 320px; height: 320px;
+    background: radial-gradient(circle, rgba(255,213,0,.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .cta-card::after {
+    content: '';
+    position: absolute;
+    bottom: -60px; left: -60px;
+    width: 280px; height: 280px;
+    background: radial-gradient(circle, rgba(0,91,187,.2) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .cta-eyebrow { color: rgba(255,255,255,.5) !important; }
+  .cta-card h2 {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 800; letter-spacing: -.04em; line-height: 1.1; margin-bottom: 1rem;
+    position: relative; z-index: 1;
+  }
+  .cta-sub { font-size: 1.0625rem; color: rgba(255,255,255,.7); margin-bottom: 2.5rem; line-height: 1.6; position: relative; z-index: 1; }
+  @media (max-width: 640px) {
+    .cta-card { padding: 3rem 1.5rem; }
+  }
+</style>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+</script>

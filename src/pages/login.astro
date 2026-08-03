@@ -1,8 +1,11 @@
 ---
 import Layout from '../layouts/Layout.astro';
 
+const rawNext = Astro.url.searchParams.get('next') ?? '';
+const nextPath = rawNext.startsWith('/') && !rawNext.startsWith('//') ? rawNext : '/dashboard';
+
 if (Astro.cookies.has('litopys_token')) {
-  return Astro.redirect('/dashboard');
+  return Astro.redirect(nextPath);
 }
 
 let error = '';
@@ -37,7 +40,7 @@ if (Astro.request.method === 'POST') {
         path: '/',
         maxAge: 60 * 60 * 24 * 30,
       });
-      return Astro.redirect('/dashboard');
+      return Astro.redirect(nextPath);
     } else if (data.mfaRequired) {
       mfaRequired = true;
       pendingEmail = email;
@@ -63,12 +66,13 @@ if (Astro.request.method === 'POST') {
       <img src="/litopys-logo-launcher.gif" alt="Літопис" class="login-logo" />
       <h1>Особистий кабінет</h1>
       <p class="login-sub">Увійдіть, щоб переглянути ліцензію та сесії</p>
-      <p class="register-link">Немає акаунту? <a href="/register">Зареєструватись</a></p>
+      <p class="register-link">Немає акаунту? <a href={`/register?next=${encodeURIComponent(nextPath)}`}>Зареєструватись</a></p>
 
       {error && <div class="alert-error">{error}</div>}
 
       {!mfaRequired ? (
         <form method="POST" class="login-form">
+          <input type="hidden" name="next" value={nextPath} />
           <label>
             Email
             <input type="email" name="email" required autocomplete="email" placeholder="user@litopys.pro" />
@@ -82,6 +86,7 @@ if (Astro.request.method === 'POST') {
       ) : (
         <form method="POST" class="login-form">
           <input type="hidden" name="mfa_step" value="1" />
+          <input type="hidden" name="next" value={nextPath} />
           <input type="hidden" name="email" value={pendingEmail} />
           <input type="hidden" name="password" value={pendingPassword} />
           <p class="mfa-hint">Введіть код з Microsoft Authenticator</p>

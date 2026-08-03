@@ -1,6 +1,6 @@
 import { defineMiddleware } from 'astro:middleware';
 
-const PROTECTED = ['/dashboard'];
+const PROTECTED = ['/dashboard', '/koshyk', '/oformlennia'];
 
 export const onRequest = defineMiddleware(async (context, next) => {
   const { pathname } = context.url;
@@ -9,7 +9,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
   if (!isProtected) return next();
 
   const token = context.cookies.get('litopys_token')?.value;
-  if (!token) return context.redirect('/login');
+  if (!token) return context.redirect(`/login?next=${encodeURIComponent(pathname)}`);
 
   try {
     const res = await fetch('https://api.litopys.win/me', {

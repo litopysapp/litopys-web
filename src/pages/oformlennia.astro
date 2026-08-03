@@ -1,0 +1,225 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const token = Astro.cookies.get('litopys_token')?.value ?? '';
+
+let orderNumber = '';
+let orderTotal = 0;
+let orderError = '';
+
+if (Astro.request.method === 'POST') {
+  const form = await Astro.request.formData();
+  const itemsJson = form.get('items')?.toString() ?? '[]';
+  const comment = form.get('comment')?.toString() ?? '';
+
+  try {
+    const items = JSON.parse(itemsJson);
+    const res = await fetch('https://api.litopys.win/orders', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ items, comment }),
+    });
+    const data = await res.json();
+    if (data.ok) {
+      orderNumber = data.orderNumber;
+      orderTotal = data.total;
+    } else {
+      orderError = 'Не вдалося оформити замовлення. Спробуйте ще раз.';
+    }
+  } catch {
+    orderError = 'Помилка зʼєднання з сервером.';
+  }
+}
+---
+<Layout title="Оформлення замовлення — Літопис" description="Оформіть замовлення в Літописі.">
+
+  <!-- ══ HERO ══ -->
+  <section class="hero-page">
+    <div class="hero-bg"></div>
+    <div class="container">
+      <p class="eyebrow fade-up">Оформлення</p>
+      <h1 class="fade-up" style="--d:.05s">Підтвердіть замовлення.</h1>
+    </div>
+  </section>
+
+  <!-- ══ CONTENT ══ -->
+  <section class="section-form">
+    <div class="container">
+
+      {orderNumber ? (
+        <div class="order-success fade-up">
+          <div class="success-icon">✓</div>
+          <h2>Замовлення №{orderNumber} прийнято</h2>
+          <p>Ми зв'яжемось з вами найближчим часом для підтвердження й оплати.</p>
+          <a href="/" class="btn-primary">На головну →</a>
+        </div>
+        <script>
+          (window as any).LitopysCart?.clearCart();
+        </script>
+      ) : (
+        <>
+          <div id="order-empty" class="order-empty fade-up" style="display:none;">
+            <p class="order-empty-text">Кошик порожній — спершу додайте товар.</p>
+            <a href="/tsiny" class="btn-primary">Переглянути ціни →</a>
+          </div>
+
+          <div id="order-content" style="display:none;">
+            <div class="order-summary fade-up">
+              <p class="order-summary-title">Ваше замовлення</p>
+              <div id="order-items" class="order-items"></div>
+              <div class="order-total">
+                <p>Разом</p>
+                <p id="order-total-value">0 грн</p>
+              </div>
+            </div>
+
+            {orderError && <div class="alert-error fade-up">{orderError}</div>}
+
+            <form id="order-form" method="POST" class="order-actions fade-up">
+              <input type="hidden" name="items" id="order-items-input" />
+              <button type="submit" class="btn-primary">Підтвердити замовлення →</button>
+            </form>
+          </div>
+        </>
+      )}
+
+    </div>
+  </section>
+
+</Layout>
+
+<style is:global>
+  .fade-up {
+    opacity: 0;
+    transform: translateY(32px);
+    transition: opacity .65s ease, transform .65s ease;
+    transition-delay: var(--d, 0s);
+  }
+  .fade-up.visible { opacity: 1; transform: translateY(0); }
+</style>
+
+<style>
+  .container { max-width: 640px; margin: 0 auto; padding: 0 1.5rem; }
+  .eyebrow {
+    font-size: .75rem;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: #4f7cac;
+    margin-bottom: 1rem;
+  }
+
+  /* ── Hero ── */
+  .hero-page { position: relative; padding: 6rem 0 2rem; }
+  .hero-bg {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background: radial-gradient(ellipse at 20% 40%, #dce8f5 0%, transparent 55%),
+                radial-gradient(ellipse at 80% 60%, #f5ead8 0%, transparent 50%),
+                #f8f9fb;
+    pointer-events: none;
+  }
+  .hero-page h1 {
+    font-size: clamp(1.9rem, 4vw, 2.75rem);
+    font-weight: 800;
+    letter-spacing: -.04em;
+    line-height: 1.2;
+    color: #111827;
+  }
+
+  /* ── Form section ── */
+  .section-form { padding: 2rem 0 6rem; }
+
+  .order-empty { text-align: center; padding: 4rem 1rem; }
+  .order-empty-text { font-size: 1.0625rem; color: #6b7280; margin-bottom: 1.5rem; }
+
+  .order-summary {
+    background: rgba(255,255,255,.85);
+    border: 1px solid #e5e7eb;
+    border-radius: 18px;
+    padding: 1.75rem 2rem;
+    backdrop-filter: blur(8px);
+    margin-bottom: 1.5rem;
+  }
+  .order-summary-title { font-size: 1rem; font-weight: 700; color: #111827; margin-bottom: 1rem; }
+  .order-items { display: flex; flex-direction: column; gap: .5rem; margin-bottom: 1rem; }
+  .order-items :global(p) { display: flex; justify-content: space-between; gap: 1rem; font-size: .9375rem; color: #4b5563; }
+  .order-total {
+    display: flex; justify-content: space-between; align-items: baseline;
+    border-top: 1px solid #e5e7eb; padding-top: 1rem;
+    font-weight: 800; font-size: 1.25rem; color: #111827;
+  }
+
+  .order-actions { display: flex; justify-content: flex-end; }
+
+  .alert-error {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #dc2626;
+    border-radius: 10px;
+    padding: .75rem 1rem;
+    font-size: .875rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .order-success { text-align: center; padding: 4rem 1rem; }
+  .success-icon {
+    width: 56px; height: 56px; margin: 0 auto 1.5rem;
+    border-radius: 50%; background: #1a1a2e; color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.5rem; font-weight: 700;
+  }
+  .order-success h2 { font-size: 1.5rem; font-weight: 800; color: #111827; margin-bottom: .75rem; }
+  .order-success p { color: #6b7280; margin-bottom: 2rem; }
+
+  .btn-primary {
+    display: inline-block;
+    background: #1a1a2e;
+    color: #fff;
+    padding: .8rem 1.9rem;
+    border-radius: 50px;
+    font-size: .9375rem;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    transition: opacity .2s, transform .2s, box-shadow .2s;
+    box-shadow: 0 4px 16px rgba(0,0,0,.2);
+  }
+  .btn-primary:hover { opacity: .85; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.25); }
+</style>
+
+<script>
+  function formatUAH(n: number) {
+    return n.toLocaleString('uk-UA') + ' грн';
+  }
+
+  const cart = (window as any).LitopysCart;
+  const items = cart ? cart.readCart() : [];
+
+  const empty = document.getElementById('order-empty');
+  const content = document.getElementById('order-content');
+
+  if (empty && content) {
+    if (items.length === 0) {
+      empty.style.display = 'block';
+    } else {
+      content.style.display = 'block';
+      const list = document.getElementById('order-items')!;
+      list.innerHTML = items.map((i: any) => `<p><span>${i.name}</span><span>${formatUAH(i.price)}</span></p>`).join('');
+      document.getElementById('order-total-value')!.textContent = formatUAH(cart.cartTotal());
+      (document.getElementById('order-items-input') as HTMLInputElement).value = JSON.stringify(items);
+    }
+  }
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+</script>

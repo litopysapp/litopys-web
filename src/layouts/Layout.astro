@@ -16,6 +16,7 @@ const { title, description = "Літопис — редактор докумен
     <meta name="description" content={description} />
     <title>{title}</title>
     <link rel="icon" href="/favicon-kokarda.gif" type="image/gif">
+    <script src="/cart.js" is:inline></script>
     <style is:global>
       @font-face {
         font-family: 'e-Ukraine';
@@ -63,6 +64,7 @@ const { title, description = "Літопис — редактор докумен
           <div style="display:flex; gap:1.5rem; align-items:center; font-size:.875rem; font-weight:400; color:var(--text-secondary);">
             <a href="/yak-pratsyuye">Як це працює</a>
             <a href="/shcho-potribno">Що потрібно</a>
+            <a href="/tsiny">Ціни</a>
             <a href="/demo" style="color:var(--text);">ДЕМО</a>
             <div class="nav-download-wrap">
               <button class="nav-icon-btn" id="dl-btn" aria-label="Завантажити" aria-expanded="false" aria-haspopup="true">
@@ -75,6 +77,10 @@ const { title, description = "Літопис — редактор докумен
             </div>
             <a href="/dashboard" class="nav-icon-btn" aria-label="Кабінет">
               <img src="/icon-user-header.svg" alt="" style="width:18px;height:18px;display:block;" />
+            </a>
+            <a href="/koshyk" class="nav-icon-btn" aria-label="Кошик" style="position:relative;">
+              <img src="/icon-cart.svg" alt="" style="width:18px;height:18px;display:block;" />
+              <span id="cart-badge" style="display:none; position:absolute; top:2px; right:2px; min-width:15px; height:15px; padding:0 3px; border-radius:8px; background:#1a1a2e; color:#fff; font-size:.625rem; font-weight:700; align-items:center; justify-content:center; line-height:1;"></span>
             </a>
           </div>
         </nav>

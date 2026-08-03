@@ -1,0 +1,244 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+<Layout title="Як це працює — Літопис" description="Як Літопис перетворює текст на власноручно написаний журнал.">
+
+  <!-- ══ HERO ══ -->
+  <section class="hero-page">
+    <div class="hero-bg"></div>
+    <div class="container">
+      <p class="eyebrow fade-up">Як це працює</p>
+      <h1 class="fade-up" style="--d:.05s">Від тексту в редакторі<br/>до сторінки, написаної від руки.</h1>
+      <p class="hero-sub fade-up" style="--d:.1s">Чотири кроки — і журнал готовий, а ваші руки відпочивають.</p>
+    </div>
+  </section>
+
+  <!-- ══ STEPS ══ -->
+  <section class="section-steps">
+    <div class="container">
+      <div class="steps-list">
+        <div class="step-row fade-up">
+          <div class="step-num">01</div>
+          <div class="step-body">
+            <h3>Завантаж і встанови Літопис</h3>
+            <p class="body-text">Заведи акаунт, встанови програму на ноутбук — і одразу відкривай потрібний журнал.</p>
+          </div>
+        </div>
+        <div class="step-row fade-up" style="--d:.08s">
+          <div class="step-num">02</div>
+          <div class="step-body">
+            <h3>Обери журнал і заповни поля</h3>
+            <p class="body-text">ЖБД чи ЖОВтР — обери потрібний шаблон і онеси записи у звичному вигляді.</p>
+          </div>
+        </div>
+        <div class="step-row fade-up" style="--d:.16s">
+          <div class="step-num">03</div>
+          <div class="step-body">
+            <h3>Перевір і сформуй документ</h3>
+            <p class="body-text">Переглянь сторінку перед друком — все на своїх місцях, нічого зайвого.</p>
+          </div>
+        </div>
+        <div class="step-row fade-up" style="--d:.24s">
+          <div class="step-num">04</div>
+          <div class="step-body">
+            <h3>Віддай на друк плотеру</h3>
+            <p class="body-text">Плотер Silhouette Portrait 4 власноруч напише сторінку твоїм почерком — просто і без мозолів.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="steps-cta fade-up">
+        <a href="/demo" class="btn-primary">Спробувати демо →</a>
+        <a href="/shcho-potribno" class="btn-ghost">Що для цього потрібно →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ BATTALION ══ -->
+  <section class="section-battalion">
+    <div class="container">
+      <div class="battalion-card fade-up">
+        <img src="/shevron-battalion.png" alt="Шеврон батальйону" class="battalion-shevron" />
+        <p class="battalion-text">Долучайся до Першого окремого батальйону безпілотних писарів та збережи свої руки!</p>
+        <a href="/register" class="btn-primary">Долучитись →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ CTA ══ -->
+  <section class="section-cta">
+    <div class="container">
+      <div class="cta-card fade-up">
+        <p class="eyebrow cta-eyebrow">Готові спробувати?</p>
+        <h2>Відкрийте Літопис<br/>прямо зараз</h2>
+        <p class="cta-sub">Протестуйте редактор у браузері — без реєстрації та завантажень.</p>
+        <a href="/demo" class="btn-white">Відкрити демо →</a>
+      </div>
+    </div>
+  </section>
+
+</Layout>
+
+<style is:global>
+  .fade-up {
+    opacity: 0;
+    transform: translateY(32px);
+    transition: opacity .65s ease, transform .65s ease;
+    transition-delay: var(--d, 0s);
+  }
+  .fade-up.visible { opacity: 1; transform: translateY(0); }
+</style>
+
+<style>
+  .container { max-width: 1060px; margin: 0 auto; padding: 0 1.5rem; }
+  .eyebrow {
+    font-size: .75rem;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: #4f7cac;
+    margin-bottom: 1rem;
+  }
+  .body-text { color: #4b5563; line-height: 1.8; font-size: 1rem; }
+
+  /* ── Hero ── */
+  .hero-page { position: relative; padding: 6rem 0 3rem; }
+  .hero-bg {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background: radial-gradient(ellipse at 20% 40%, #dce8f5 0%, transparent 55%),
+                radial-gradient(ellipse at 80% 60%, #f5ead8 0%, transparent 50%),
+                #f8f9fb;
+    pointer-events: none;
+  }
+  .hero-page h1 {
+    font-size: clamp(1.9rem, 4vw, 3rem);
+    font-weight: 800;
+    letter-spacing: -.04em;
+    line-height: 1.12;
+    color: #111827;
+    margin-bottom: 1.25rem;
+    max-width: 760px;
+  }
+  .hero-sub { font-size: 1.0625rem; color: #6b7280; line-height: 1.75; max-width: 620px; }
+
+  /* ── Steps ── */
+  .section-steps { padding: 3rem 0 7rem; }
+  .steps-list { display: flex; flex-direction: column; gap: 1.25rem; }
+  .step-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.75rem;
+    background: rgba(255,255,255,.8);
+    border: 1px solid #e5e7eb;
+    border-radius: 18px;
+    padding: 1.75rem 2rem;
+    backdrop-filter: blur(8px);
+    transition: box-shadow .2s, transform .2s, border-color .2s;
+  }
+  .step-row:hover { box-shadow: 0 12px 32px rgba(0,0,0,.08); transform: translateY(-2px); border-color: #bfd4e8; }
+  .step-num {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: #c9dff0;
+    letter-spacing: -.02em;
+    flex-shrink: 0;
+    min-width: 3rem;
+  }
+  .step-body h3 { font-size: 1.1875rem; font-weight: 700; color: #111827; margin-bottom: .5rem; letter-spacing: -.01em; }
+
+  .steps-cta { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 3rem; }
+  .btn-primary {
+    display: inline-block;
+    background: #1a1a2e;
+    color: #fff;
+    padding: .8rem 1.9rem;
+    border-radius: 50px;
+    font-size: .9375rem;
+    font-weight: 600;
+    transition: opacity .2s, transform .2s, box-shadow .2s;
+    box-shadow: 0 4px 16px rgba(0,0,0,.2);
+  }
+  .btn-primary:hover { opacity: .85; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.25); }
+  .btn-ghost {
+    display: inline-block;
+    color: #374151;
+    padding: .8rem 1.9rem;
+    border-radius: 50px;
+    font-size: .9375rem;
+    font-weight: 500;
+    border: 1.5px solid #d1d5db;
+    transition: border-color .2s, color .2s, background .2s;
+  }
+  .btn-ghost:hover { border-color: #1a1a2e; color: #1a1a2e; }
+
+  @media (max-width: 640px) {
+    .step-row { flex-direction: column; gap: .75rem; padding: 1.5rem; }
+    .step-num { font-size: 1.375rem; }
+  }
+
+  /* ── Battalion ── */
+  .section-battalion { padding: 4rem 0; }
+  .battalion-card {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    background: #1a1a2e;
+    border-radius: 20px;
+    padding: 2rem 2.5rem;
+    color: #fff;
+  }
+  .battalion-shevron { width: 80px; height: 80px; object-fit: contain; flex-shrink: 0; }
+  .battalion-text { flex: 1; font-size: 1.125rem; font-weight: 600; line-height: 1.5; }
+  @media (max-width: 640px) {
+    .battalion-card { flex-direction: column; text-align: center; padding: 2rem 1.5rem; }
+  }
+
+  /* ── CTA ── */
+  .section-cta { padding: 3rem 0 8rem; }
+  .cta-card {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%);
+    border-radius: 28px; padding: 5rem 3rem; text-align: center; color: #fff;
+    box-shadow: 0 24px 64px rgba(0,0,0,.25);
+    position: relative; overflow: hidden;
+  }
+  .cta-card::before {
+    content: '';
+    position: absolute;
+    top: -80px; right: -80px;
+    width: 320px; height: 320px;
+    background: radial-gradient(circle, rgba(255,213,0,.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .cta-card::after {
+    content: '';
+    position: absolute;
+    bottom: -60px; left: -60px;
+    width: 280px; height: 280px;
+    background: radial-gradient(circle, rgba(0,91,187,.2) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .cta-eyebrow { color: rgba(255,255,255,.5) !important; }
+  .cta-card h2 {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 800; letter-spacing: -.04em; line-height: 1.1; margin-bottom: 1rem;
+    position: relative; z-index: 1;
+  }
+  .cta-sub { font-size: 1.0625rem; color: rgba(255,255,255,.7); margin-bottom: 2.5rem; line-height: 1.6; position: relative; z-index: 1; }
+  @media (max-width: 640px) {
+    .cta-card { padding: 3rem 1.5rem; }
+  }
+</style>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+</script>
