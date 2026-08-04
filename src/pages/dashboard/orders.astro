@@ -94,7 +94,7 @@ function fmtUAH(n: number) {
               </div>
 
               {o.status === 'Виконано' && o.hasDownload && (
-                <a href={`/api/download-font/${o.id}`} class="btn-download-font">Завантажити шрифт →</a>
+                <button type="button" class="btn-download-font" data-order-id={o.id}>Завантажити шрифт →</button>
               )}
             </section>
           ))}
@@ -162,9 +162,13 @@ function fmtUAH(n: number) {
     border-radius: 50px;
     font-size: .875rem;
     font-weight: 600;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
     transition: opacity .2s;
   }
   .btn-download-font:hover { opacity: .85; }
+  .btn-download-font:disabled { opacity: .6; cursor: default; }
 
   .no-data { color: #6b7280; font-size: .9375rem; }
   .inline-link { color: #1a1a2e; font-weight: 600; }
@@ -178,3 +182,44 @@ function fmtUAH(n: number) {
     .dash-main { padding: 1.25rem 1rem; }
   }
 </style>
+
+<script>
+  function extractFilename(contentDisposition: string | null): string {
+    if (!contentDisposition) return 'font.zip';
+    const match = contentDisposition.match(/filename="?([^"]+)"?/);
+    return match?.[1] ?? 'font.zip';
+  }
+
+  document.querySelectorAll<HTMLButtonElement>('.btn-download-font').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const orderId = btn.dataset.orderId;
+      if (!orderId) return;
+
+      const original = btn.textContent;
+      btn.disabled = true;
+      btn.textContent = 'Завантаження…';
+
+      try {
+        const res = await fetch(`/api/download-font/${orderId}`);
+        if (!res.ok) throw new Error('download failed');
+
+        const blob = await res.blob();
+        const filename = extractFilename(res.headers.get('content-disposition'));
+        const blobUrl = URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.href = blobUrl;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(blobUrl);
+      } catch {
+        alert('Не вдалося завантажити файл. Спробуйте ще раз.');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = original;
+      }
+    });
+  });
+</script>
