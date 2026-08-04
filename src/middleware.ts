@@ -1,6 +1,6 @@
 import { defineMiddleware } from 'astro:middleware';
 
-const PROTECTED = ['/dashboard', '/koshyk', '/oformlennia'];
+const PROTECTED = ['/dashboard', '/koshyk', '/oformlennia', '/admin'];
 
 export const onRequest = defineMiddleware(async (context, next) => {
   const { pathname } = context.url;
