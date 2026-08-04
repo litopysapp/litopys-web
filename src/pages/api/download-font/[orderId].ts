@@ -14,7 +14,7 @@ export const GET: APIRoute = async ({ params, cookies }) => {
     return new Response('Not found', { status: tokenRes.status || 404 });
   }
 
-  const fileRes = await fetch(`https://api.litopys.win/download/${tokenData.token}`);
+  const fileRes = await fetch(`https://api.litopys.win/dl/${tokenData.token}`);
 
   if (!fileRes.ok || !fileRes.body) {
     return new Response('Not found', { status: fileRes.status || 404 });
