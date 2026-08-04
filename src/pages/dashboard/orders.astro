@@ -93,8 +93,8 @@ function fmtUAH(n: number) {
                 <p>{fmtUAH(o.total)}</p>
               </div>
 
-              {o.status === 'Виконано' && o.downloadUrl && (
-                <a href={o.downloadUrl} class="btn-download-font">Завантажити шрифт →</a>
+              {o.status === 'Виконано' && o.hasDownload && (
+                <a href={`/api/download-font/${o.id}`} class="btn-download-font">Завантажити шрифт →</a>
               )}
             </section>
           ))}
