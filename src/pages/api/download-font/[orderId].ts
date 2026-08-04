@@ -10,6 +10,9 @@ export const GET: APIRoute = async ({ params, cookies }) => {
   });
   const tokenData = await tokenRes.json().catch(() => null);
 
+  if (tokenRes.status === 401 || tokenRes.status === 403) {
+    return new Response('Unauthorized', { status: 401 });
+  }
   if (!tokenRes.ok || !tokenData?.token) {
     return new Response('Not found', { status: tokenRes.status || 404 });
   }
