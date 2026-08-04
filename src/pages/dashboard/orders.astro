@@ -1,0 +1,180 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const { user } = Astro.locals;
+const token = Astro.cookies.get('litopys_token')?.value ?? '';
+
+let orders: any[] = [];
+
+try {
+  const res = await fetch('https://api.litopys.win/orders', {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  const data = await res.json();
+  if (data.ok) orders = data.orders ?? [];
+} catch {}
+
+const statusBadge: Record<string, string> = {
+  'Оформлено': 'badge-gray',
+  'В роботі': 'badge-blue',
+  'Виконано': 'badge-green',
+};
+
+function fmtDate(d: string | null | undefined) {
+  if (!d) return '—';
+  return new Date(d).toLocaleString('uk-UA', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+}
+
+function fmtUAH(n: number) {
+  return n.toLocaleString('uk-UA') + ' грн';
+}
+---
+
+<Layout title="Мої замовлення — Літопис" noHeader={true}>
+  <div class="dash-wrap">
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <img src="/litopys-logo-launcher.gif" alt="Літопис" />
+      </div>
+      <nav class="sidebar-nav">
+        <a href="/dashboard" class="nav-item">
+          <span class="nav-icon-svg"><img src="/icon-user.svg" alt="" /></span> Акаунт
+        </a>
+        <a href="/dashboard/licenses" class="nav-item">
+          <span class="nav-icon-svg"><img src="/icon-key.svg" alt="" /></span> Ліцензія
+        </a>
+        <a href="/dashboard/orders" class="nav-item active">
+          <span class="nav-icon-svg"><img src="/icon-cart.svg" alt="" /></span> Мої замовлення
+        </a>
+        <a href="/dashboard/security" class="nav-item">
+          <span class="nav-icon-svg"><img src="/icon-fingerprint.svg" alt="" /></span> Безпека
+        </a>
+      </nav>
+      <div class="sidebar-bottom-links">
+        <a href="https://api.litopys.win/download" class="sidebar-ext-link sidebar-download"><img src="/icon-download.svg" alt="" />Завантажити</a>
+        <a href="/" class="sidebar-ext-link"><img src="/icon-question.svg" alt="" />Про застосунок</a>
+        <a href="/demo" class="sidebar-ext-link"><img src="/icon-play.svg" alt="" />Спробувати</a>
+        <a href="https://github.com/litopysapp/LitoScan/releases/download/v0.2.3/LitoScan-Setup-0.2.3.exe" class="sidebar-ext-link sidebar-litoscan"><img src="/litoscan-logo.ico" alt="" />LitoScan — безкоштовно</a>
+      </div>
+      <form method="POST" action="/api/logout" class="sidebar-logout">
+        <button type="submit" class="logout-btn">Вийти</button>
+      </form>
+    </aside>
+
+    <main class="dash-main">
+      <div class="dash-header">
+        <p class="dash-greeting">Мої замовлення</p>
+        <p class="dash-email">{user?.name} · {user?.email}</p>
+      </div>
+
+      {orders.length === 0 ? (
+        <section class="card">
+          <p class="no-data">Замовлень поки немає. <a href="/tsiny" class="inline-link">Переглянути ціни →</a></p>
+        </section>
+      ) : (
+        <div class="orders-list">
+          {orders.map((o: any) => (
+            <section class="card order-card">
+              <div class="card-header">
+                <h2>Замовлення №{o.orderNumber}</h2>
+                <span class:list={['badge', statusBadge[o.status] ?? 'badge-gray']}>{o.status}</span>
+              </div>
+
+              <p class="order-date">{fmtDate(o.createdAt)}</p>
+
+              <ul class="order-items">
+                {o.items.map((i: any) => (
+                  <li><span>{i.name}</span><span>{fmtUAH(i.price * (i.qty || 1))}</span></li>
+                ))}
+              </ul>
+
+              <div class="order-total">
+                <p>Разом</p>
+                <p>{fmtUAH(o.total)}</p>
+              </div>
+
+              {o.status === 'Виконано' && o.downloadUrl && (
+                <a href={o.downloadUrl} class="btn-download-font">Завантажити шрифт →</a>
+              )}
+            </section>
+          ))}
+        </div>
+      )}
+    </main>
+  </div>
+</Layout>
+
+<style>
+  .dash-wrap { display: grid; grid-template-columns: 220px 1fr; min-height: 100vh; }
+  .sidebar { border-right: 1px solid #e5e7eb; padding: 1.5rem 1rem; display: flex; flex-direction: column; background: #fafafa; }
+  .sidebar-logo img { height: 36px; margin-bottom: 2rem; }
+  .sidebar-nav { display: flex; flex-direction: column; gap: .25rem; flex: 1; }
+  .nav-item { display: flex; align-items: center; gap: .6rem; padding: .6rem .85rem; border-radius: 10px; font-size: .875rem; font-weight: 500; color: #374151; transition: background .15s, color .15s; }
+  .nav-item:hover { background: #f3f4f6; color: #111827; }
+  .nav-item.active { background: #1a1a2e; color: #fff; }
+  .nav-icon-svg img { width: 16px; height: 16px; display: block; filter: brightness(0) saturate(100%); }
+  .nav-item.active .nav-icon-svg img { filter: brightness(0) invert(1); }
+  .sidebar-bottom-links { display: flex; flex-direction: column; gap: .15rem; margin-bottom: .5rem; }
+  .sidebar-ext-link { display: flex; align-items: center; gap: .6rem; font-size: .8125rem; color: #6b7280; padding: .4rem .85rem; border-radius: 8px; transition: color .15s, background .15s; }
+  .sidebar-ext-link:hover { color: #111827; background: #f3f4f6; }
+  .sidebar-ext-link img { width: 15px; height: 15px; display: block; filter: brightness(0) saturate(100%) invert(47%) sepia(7%) saturate(400%) hue-rotate(180deg); flex-shrink: 0; }
+  .sidebar-ext-link:hover img { filter: brightness(0); }
+  .sidebar-download { color: #1a1a2e; font-weight: 600; }
+  .sidebar-download img { filter: brightness(0) !important; }
+  .sidebar-litoscan img { border-radius: 4px; filter: none; }
+  .sidebar-litoscan:hover img { filter: none; }
+  .sidebar-logout { margin-top: 0; }
+  .logout-btn { width: 100%; background: none; border: 1.5px solid #e5e7eb; border-radius: 10px; padding: .55rem; font-size: .8125rem; color: #6b7280; cursor: pointer; font-family: inherit; transition: border-color .15s, color .15s; }
+  .logout-btn:hover { border-color: #dc2626; color: #dc2626; }
+
+  .dash-main { padding: 2rem 2.5rem; max-width: 760px; }
+  .dash-header { margin-bottom: 2rem; }
+  .dash-greeting { font-size: 1.25rem; font-weight: 800; color: #111827; letter-spacing: -.02em; }
+  .dash-email { font-size: .875rem; color: #6b7280; margin-top: .2rem; }
+
+  .card { background: #fff; border: 1px solid #e5e7eb; border-radius: 16px; padding: 1.5rem; margin-bottom: 1.25rem; }
+  .card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: .5rem; }
+  .card-header h2 { font-size: 1rem; font-weight: 700; color: #111827; }
+
+  .badge { font-size: .75rem; font-weight: 700; padding: .25rem .65rem; border-radius: 20px; white-space: nowrap; }
+  .badge-green { background: #dcfce7; color: #15803d; }
+  .badge-blue { background: #dbeafe; color: #1d4ed8; }
+  .badge-gray { background: #f3f4f6; color: #6b7280; }
+
+  .orders-list { display: flex; flex-direction: column; gap: 1.25rem; }
+  .order-date { font-size: .8125rem; color: #9ca3af; margin-bottom: 1.1rem; }
+
+  .order-items { list-style: none; display: flex; flex-direction: column; gap: .5rem; margin-bottom: 1rem; }
+  .order-items li { display: flex; justify-content: space-between; font-size: .9375rem; color: #4b5563; gap: 1rem; }
+
+  .order-total {
+    display: flex; justify-content: space-between; align-items: baseline;
+    border-top: 1px solid #e5e7eb; padding-top: .85rem;
+    font-weight: 800; font-size: 1.0625rem; color: #111827;
+  }
+
+  .btn-download-font {
+    display: inline-block;
+    margin-top: 1.1rem;
+    background: #1a1a2e;
+    color: #fff;
+    padding: .6rem 1.3rem;
+    border-radius: 50px;
+    font-size: .875rem;
+    font-weight: 600;
+    transition: opacity .2s;
+  }
+  .btn-download-font:hover { opacity: .85; }
+
+  .no-data { color: #6b7280; font-size: .9375rem; }
+  .inline-link { color: #1a1a2e; font-weight: 600; }
+
+  @media (max-width: 700px) {
+    .dash-wrap { grid-template-columns: 1fr; }
+    .sidebar { flex-direction: row; flex-wrap: wrap; border-right: none; border-bottom: 1px solid #e5e7eb; padding: 1rem; }
+    .sidebar-logo { display: none; }
+    .sidebar-nav { flex-direction: row; flex-wrap: wrap; }
+    .sidebar-logout { margin-top: 0; margin-left: auto; }
+    .dash-main { padding: 1.25rem 1rem; }
+  }
+</style>
