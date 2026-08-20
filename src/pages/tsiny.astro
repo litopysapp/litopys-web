@@ -31,9 +31,9 @@ import Layout from '../layouts/Layout.astro';
         </div>
 
         <div class="plan-card plan-featured fade-up" style="--d:.08s">
-          <div class="plan-badge">Разова покупка</div>
+          <div class="plan-badge plan-badge-sale">−33% знижка</div>
           <p class="plan-name">Повна ліцензія</p>
-          <p class="plan-price">10 000 <span class="plan-currency">грн</span></p>
+          <p class="plan-price"><span class="plan-price-old">15 000 грн</span> 10 000 <span class="plan-currency">грн</span></p>
           <p class="plan-period">одноразово, безстроково</p>
           <ul class="plan-features">
             <li>Ліцензія назавжди на 1 ПК</li>
@@ -209,11 +209,23 @@ import Layout from '../layouts/Layout.astro';
     border-radius: 50px;
   }
   .plan-badge-soon { background: #e5e7eb; color: #6b7280; }
+  .plan-badge-sale { background: #dc2626; color: #fff; }
 
   .plan-name { font-size: 1.0625rem; font-weight: 600; color: #6b7280; margin-bottom: .75rem; }
   .plan-featured .plan-name { color: rgba(255,255,255,.7); }
   .plan-price { font-size: 2.5rem; font-weight: 800; letter-spacing: -.03em; color: #111827; }
   .plan-featured .plan-price { color: #fff; }
+  .plan-price-old {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #9ca3af;
+    text-decoration: line-through;
+    text-decoration-color: #dc2626;
+    text-decoration-thickness: 2px;
+    margin-right: .5rem;
+    letter-spacing: -.01em;
+  }
+  .plan-featured .plan-price-old { color: rgba(255,255,255,.45); }
   .plan-currency { font-size: 1.125rem; font-weight: 600; }
   .plan-period { font-size: .875rem; color: #9ca3af; margin-bottom: 1.75rem; }
   .plan-featured .plan-period { color: rgba(255,255,255,.6); }
