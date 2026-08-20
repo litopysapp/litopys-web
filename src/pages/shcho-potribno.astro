@@ -36,16 +36,6 @@ import Layout from '../layouts/Layout.astro';
     </div>
   </section>
 
-  <!-- ══ BATTALION ══ -->
-  <section class="section-battalion">
-    <div class="container">
-      <div class="battalion-card fade-up">
-        <img src="/shevron-battalion.png" alt="Шеврон батальйону" class="battalion-shevron" />
-        <p class="battalion-text">Долучайся до Першого окремого батальйону безпілотних писарів та збережи свої руки!</p>
-        <a href="/register" class="btn-primary">Долучитись →</a>
-      </div>
-    </div>
-  </section>
 
   <!-- ══ CTA ══ -->
   <section class="section-cta">
@@ -154,23 +144,6 @@ import Layout from '../layouts/Layout.astro';
 
   @media (max-width: 900px) {
     .reqs-grid { grid-template-columns: 1fr; }
-  }
-
-  /* ── Battalion ── */
-  .section-battalion { padding: 4rem 0; }
-  .battalion-card {
-    display: flex;
-    align-items: center;
-    gap: 2rem;
-    background: #1a1a2e;
-    border-radius: 20px;
-    padding: 2rem 2.5rem;
-    color: #fff;
-  }
-  .battalion-shevron { width: 80px; height: 80px; object-fit: contain; flex-shrink: 0; }
-  .battalion-text { flex: 1; font-size: 1.125rem; font-weight: 600; line-height: 1.5; }
-  @media (max-width: 640px) {
-    .battalion-card { flex-direction: column; text-align: center; padding: 2rem 1.5rem; }
   }
 
   /* ── CTA ── */

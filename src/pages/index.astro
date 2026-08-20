@@ -31,13 +31,10 @@ import Layout from '../layouts/Layout.astro';
         <div class="lnc-header">
           <div class="lnc-logo-row">
             <div class="lnc-logo">
-              <img src="/litopys-logo-launcher.gif" alt="Litopys" class="lnc-logo-img">
-            </div>
-            <div class="lnc-patch">
-              <img src="/shevron.png" alt="Шеврон" class="lnc-shevron-img">
+              <img src="/litopys-logo-dark.png" alt="Litopys" class="lnc-logo-img">
             </div>
           </div>
-          <div class="lnc-subtitle-pill">Перший окремий батальйон безпілотних писарів</div>
+          <div class="lnc-subtitle-pill">Litopys — писар, який не втомлюється</div>
           <div class="lnc-license-row">
             <div class="lnc-license">
               <span class="lnc-lic-line green">Ліцензія: активна (повна) безстроково</span>
@@ -98,7 +95,7 @@ import Layout from '../layouts/Layout.astro';
       <div class="what-grid">
         <div class="what-text fade-up">
           <p class="eyebrow">Що це таке</p>
-          <h2>Редактор,<br/>зроблений для УПА —<br/>Української Паперової Армії.</h2>
+          <h2>Редактор,<br/>зроблений для тих,<br/>хто береже свої руки.</h2>
           <p class="body-text">Літопис — настільна програма для Windows, яка дозволяє швидко та легко писати Журнал бойових дій і Журнал відданих та отриманих розпоряджень без мозолів на руках.</p>
           <p class="body-text">Все офлайн. Відкрив — і одразу до роботи.</p>
           <a href="/demo" class="btn-primary" style="margin-top:2rem;display:inline-block;">Спробувати демо →</a>
@@ -170,17 +167,6 @@ import Layout from '../layouts/Layout.astro';
           <div class="feature-header"><img src="/icon-globe-off.svg" alt="" class="feature-svg" /><h3>Повністю офлайн</h3></div>
           <p>Жодних серверів. Працює без інтернету.</p>
         </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ══ BATTALION ══ -->
-  <section class="section-battalion">
-    <div class="container">
-      <div class="battalion-card fade-up">
-        <img src="/shevron-battalion.png" alt="Шеврон батальйону" class="battalion-shevron" />
-        <p class="battalion-text">Долучайся до Першого окремого батальйону безпілотних писарів та збережи свої руки!</p>
-        <a href="/register" class="btn-primary">Долучитись →</a>
       </div>
     </div>
   </section>
@@ -391,7 +377,6 @@ import Layout from '../layouts/Layout.astro';
   .lnc-logo-row { display: flex; align-items: center; justify-content: space-between; }
   .lnc-logo { display: flex; align-items: center; gap: .6rem; }
   .lnc-logo-img { height: 52px; width: auto; display: block; }
-  .lnc-shevron-img { height: 72px; width: 72px; object-fit: contain; }
 
 
   /* підзаголовок */
@@ -552,23 +537,6 @@ import Layout from '../layouts/Layout.astro';
   }
 
   .stat-ua-img { height: 48px; width: auto; display: block; margin: 0 auto; }
-
-  /* ── Battalion ── */
-  .section-battalion { padding: 4rem 0; }
-  .battalion-card {
-    display: flex;
-    align-items: center;
-    gap: 2rem;
-    background: #1a1a2e;
-    border-radius: 20px;
-    padding: 2rem 2.5rem;
-    color: #fff;
-  }
-  .battalion-shevron { width: 80px; height: 80px; object-fit: contain; flex-shrink: 0; }
-  .battalion-text { flex: 1; font-size: 1.125rem; font-weight: 600; line-height: 1.5; }
-  @media (max-width: 640px) {
-    .battalion-card { flex-direction: column; text-align: center; padding: 2rem 1.5rem; }
-  }
 
   /* ── LitoScan promo toast ── */
   .ls-toast {
