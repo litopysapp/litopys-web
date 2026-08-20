@@ -96,6 +96,21 @@ import Layout from '../layouts/Layout.astro';
           <a href="/shrifty" class="btn-primary">Обрати →</a>
         </div>
 
+        <div class="plan-card fade-up" style="--d:.16s">
+          <div class="plan-badge plan-badge-soon">В розробці</div>
+          <p class="plan-name">Litograph</p>
+          <p class="plan-price">0 <span class="plan-currency">грн</span></p>
+          <p class="plan-period">в розробці</p>
+          <ul class="plan-features">
+            <li>Створюй свої власні шрифти</li>
+            <li>Одна покупка — безлімітне користування</li>
+            <li>Безлімітна кількість українських шрифтів</li>
+            <li>Без ефекту "друкованого" тексту</li>
+            <li>Готовий шрифт для роботи в Litopys</li>
+          </ul>
+          <button class="btn-primary" disabled title="Продукт в розробці">Купити →</button>
+        </div>
+
       </div>
     </div>
   </section>
@@ -204,6 +219,7 @@ import Layout from '../layouts/Layout.astro';
     padding: .3rem .9rem;
     border-radius: 50px;
   }
+  .plan-badge-soon { background: #e5e7eb; color: #6b7280; }
 
   .plan-name { font-size: 1.0625rem; font-weight: 600; color: #6b7280; margin-bottom: .75rem; }
   .plan-featured .plan-name { color: rgba(255,255,255,.7); }
@@ -251,6 +267,13 @@ import Layout from '../layouts/Layout.astro';
     box-shadow: 0 4px 16px rgba(0,0,0,.2);
   }
   .btn-primary:hover { opacity: .85; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.25); }
+  .btn-primary:disabled {
+    opacity: .5;
+    cursor: default;
+    transform: none;
+    box-shadow: none;
+  }
+  .btn-primary:disabled:hover { opacity: .5; transform: none; box-shadow: none; }
   .btn-white {
     display: inline-block;
     background: #fff;
