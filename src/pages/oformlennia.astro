@@ -207,7 +207,7 @@ if (Astro.request.method === 'POST') {
     } else {
       content.style.display = 'block';
       const list = document.getElementById('order-items')!;
-      list.innerHTML = items.map((i: any) => `<p><span>${i.name}</span><span>${formatUAH(i.price)}</span></p>`).join('');
+      list.innerHTML = items.map((i: any) => `<p><span>${i.name}${i.qty > 1 ? ` × ${i.qty}` : ''}</span><span>${formatUAH(i.price * i.qty)}</span></p>`).join('');
       document.getElementById('order-total-value')!.textContent = formatUAH(cart.cartTotal());
       (document.getElementById('order-items-input') as HTMLInputElement).value = JSON.stringify(items);
     }

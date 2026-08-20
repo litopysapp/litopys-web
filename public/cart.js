@@ -17,13 +17,25 @@
     window.dispatchEvent(new CustomEvent('litopys-cart-updated', { detail: items }));
   }
 
-  const MAX_QTY = 1; // кожен товар — унікальна одноразова покупка (ліцензія, шрифт)
+  const MULTI_QTY_IDS = ['litopys-extra-user']; // товари, що можна купувати в кількості > 1
+  const MAX_QTY = 20;
+
+  function maxQtyFor(id) {
+    return MULTI_QTY_IDS.includes(id) ? MAX_QTY : 1;
+  }
+
+  function isMultiQty(id) {
+    return MULTI_QTY_IDS.includes(id);
+  }
 
   function addToCart(item) {
     const items = readCart();
     const existing = items.find(i => i.id === item.id);
     if (!existing) {
       items.push({ id: item.id, name: item.name, price: item.price, qty: 1 });
+      writeCart(items);
+    } else if (isMultiQty(item.id)) {
+      existing.qty = Math.min(existing.qty + 1, maxQtyFor(item.id));
       writeCart(items);
     }
   }
@@ -39,7 +51,7 @@
     if (qty <= 0) {
       writeCart(items.filter(i => i.id !== id));
     } else {
-      item.qty = Math.min(qty, MAX_QTY);
+      item.qty = Math.min(qty, maxQtyFor(id));
       writeCart(items);
     }
   }
@@ -64,7 +76,7 @@
     badge.style.display = count > 0 ? 'flex' : 'none';
   }
 
-  window.LitopysCart = { readCart, addToCart, removeFromCart, setQty, clearCart, cartCount, cartTotal };
+  window.LitopysCart = { readCart, addToCart, removeFromCart, setQty, clearCart, cartCount, cartTotal, isMultiQty, maxQtyFor };
 
   document.addEventListener('DOMContentLoaded', updateBadge);
   window.addEventListener('storage', (e) => { if (e.key === KEY) updateBadge(); });

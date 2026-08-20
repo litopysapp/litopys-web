@@ -98,6 +98,34 @@ import Layout from '../layouts/Layout.astro';
   .cart-items :global(.cart-item-name) { font-size: 1rem; font-weight: 700; color: #111827; flex: 1; }
   .cart-items :global(.cart-item-price) { font-size: .9375rem; color: #6b7280; white-space: nowrap; }
 
+  .cart-items :global(.cart-item-qty) {
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+    flex-shrink: 0;
+  }
+  .cart-items :global(.qty-btn) {
+    width: 28px; height: 28px;
+    display: flex; align-items: center; justify-content: center;
+    border: 1px solid #d1d5db;
+    border-radius: 50%;
+    background: #fff;
+    color: #1a1a2e;
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1;
+    cursor: pointer;
+    transition: border-color .15s, color .15s;
+  }
+  .cart-items :global(.qty-btn:hover) { border-color: #1a1a2e; }
+  .cart-items :global(.qty-value) {
+    min-width: 1.5rem;
+    text-align: center;
+    font-size: .9375rem;
+    font-weight: 700;
+    color: #111827;
+  }
+
   .cart-items :global(.cart-remove) {
     width: 28px; height: 28px;
     display: flex; align-items: center; justify-content: center;
@@ -139,6 +167,7 @@ import Layout from '../layouts/Layout.astro';
   @media (max-width: 560px) {
     .cart-items :global(.cart-item) { flex-wrap: wrap; }
     .cart-items :global(.cart-item-name) { width: 100%; }
+    .cart-items :global(.cart-item-qty) { order: 1; }
   }
 </style>
 
@@ -164,13 +193,24 @@ import Layout from '../layouts/Layout.astro';
     empty.style.display = 'none';
     content.style.display = 'block';
 
-    list.innerHTML = items.map((i: any) => `
+    list.innerHTML = items.map((i: any) => {
+      const multiQty = cart.isMultiQty(i.id);
+      const qtyControl = multiQty ? `
+        <div class="cart-item-qty">
+          <button class="qty-btn" data-action="dec" aria-label="Зменшити кількість">−</button>
+          <span class="qty-value">${i.qty}</span>
+          <button class="qty-btn" data-action="inc" aria-label="Збільшити кількість">+</button>
+        </div>
+      ` : '';
+      return `
       <div class="cart-item" data-id="${i.id}">
         <p class="cart-item-name">${i.name}</p>
-        <p class="cart-item-price">${formatUAH(i.price)}</p>
+        ${qtyControl}
+        <p class="cart-item-price">${formatUAH(i.price * i.qty)}</p>
         <button class="cart-remove" data-action="remove" aria-label="Видалити">✕</button>
       </div>
-    `).join('');
+    `;
+    }).join('');
 
     totalEl.textContent = formatUAH(cart.cartTotal());
 
@@ -178,6 +218,16 @@ import Layout from '../layouts/Layout.astro';
       const id = (row as HTMLElement).dataset.id!;
       row.querySelector('[data-action="remove"]')?.addEventListener('click', () => {
         cart.removeFromCart(id);
+        render();
+      });
+      row.querySelector('[data-action="inc"]')?.addEventListener('click', () => {
+        const item = cart.readCart().find((i: any) => i.id === id);
+        if (item) cart.setQty(id, item.qty + 1);
+        render();
+      });
+      row.querySelector('[data-action="dec"]')?.addEventListener('click', () => {
+        const item = cart.readCart().find((i: any) => i.id === id);
+        if (item) cart.setQty(id, item.qty - 1);
         render();
       });
     });
