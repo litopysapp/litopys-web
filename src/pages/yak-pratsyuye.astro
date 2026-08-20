@@ -68,6 +68,57 @@ import Layout from '../layouts/Layout.astro';
     </div>
   </section>
 
+  <!-- ══ EXTRA FEATURES ══ -->
+  <section class="section-steps section-extra">
+    <div class="container">
+      <p class="eyebrow fade-up">Додаткові можливості</p>
+      <div class="steps-list">
+        <div class="step-row fade-up">
+          <div class="step-num">01</div>
+          <div class="step-body">
+            <h3>Бланки таблиці</h3>
+            <p class="body-text">Створюй сторінки таблиці із потрібними розмірами і кількістю сторінок.</p>
+          </div>
+        </div>
+        <div class="step-row fade-up" style="--d:.08s">
+          <div class="step-num">02</div>
+          <div class="step-body">
+            <h3>Розміщення тексту</h3>
+            <p class="body-text">Налаштуй розташування тексту на сторінці, згідно із твоїм шаблоном бланку.</p>
+          </div>
+        </div>
+        <div class="step-row fade-up" style="--d:.16s">
+          <div class="step-num">03</div>
+          <div class="step-body">
+            <h3>Друк бланку</h3>
+            <p class="body-text">Після повних налаштувань надрукуй сторінки журналів з інтерфейсу Litopys.</p>
+          </div>
+        </div>
+        <div class="step-row fade-up" style="--d:.24s">
+          <div class="step-num">04</div>
+          <div class="step-body">
+            <h3>Друк копій</h3>
+            <p class="body-text">Надрукуй повні копії сторінок для перевірки — буде виглядати, як копія написаної сторінки.</p>
+          </div>
+        </div>
+        <div class="step-row fade-up" style="--d:.32s">
+          <div class="step-num">05</div>
+          <div class="step-body">
+            <h3>Експорт документу</h3>
+            <p class="body-text">Експортуй свій журнал у форматі PDF — зможеш у подальшому його надрукувати.</p>
+          </div>
+        </div>
+        <div class="step-row fade-up" style="--d:.4s">
+          <div class="step-num">06</div>
+          <div class="step-body">
+            <h3>Збережи проект</h3>
+            <p class="body-text">Зберігай і доповнюй свій проект новим текстом.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- ══ BATTALION ══ -->
   <section class="section-battalion">
     <div class="container">
@@ -139,6 +190,8 @@ import Layout from '../layouts/Layout.astro';
 
   /* ── Steps ── */
   .section-steps { padding: 3rem 0 7rem; }
+  .section-extra { padding-top: 0; }
+  .section-extra .eyebrow { margin-bottom: 1.5rem; }
   .steps-list { display: flex; flex-direction: column; gap: 1.25rem; }
   .step-row {
     display: flex;
