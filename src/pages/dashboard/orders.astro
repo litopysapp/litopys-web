@@ -83,8 +83,16 @@ function fmtUAH(n: number) {
               <p class="order-date">{fmtDate(o.createdAt)}</p>
 
               <ul class="order-items">
-                {o.items.map((i: any) => (
-                  <li><span>{i.name}</span><span>{fmtUAH(i.price * (i.qty || 1))}</span></li>
+                {o.items.map((i: any, idx: number) => (
+                  <li>
+                    <span>{i.name}{i.qty > 1 ? ` × ${i.qty}` : ''}</span>
+                    <span class="order-item-right">
+                      {i.confirmed && i.downloadFile && (
+                        <button type="button" class="btn-download-font" data-order-id={o.id} data-item-index={idx}>Завантажити →</button>
+                      )}
+                      {fmtUAH(i.price * (i.qty || 1))}
+                    </span>
+                  </li>
                 ))}
               </ul>
 
@@ -92,10 +100,6 @@ function fmtUAH(n: number) {
                 <p>Разом</p>
                 <p>{fmtUAH(o.total)}</p>
               </div>
-
-              {o.status === 'Виконано' && o.hasDownload && (
-                <button type="button" class="btn-download-font" data-order-id={o.id}>Завантажити шрифт →</button>
-              )}
             </section>
           ))}
         </div>
@@ -145,7 +149,8 @@ function fmtUAH(n: number) {
   .order-date { font-size: .8125rem; color: #9ca3af; margin-bottom: 1.1rem; }
 
   .order-items { list-style: none; display: flex; flex-direction: column; gap: .5rem; margin-bottom: 1rem; }
-  .order-items li { display: flex; justify-content: space-between; font-size: .9375rem; color: #4b5563; gap: 1rem; }
+  .order-items li { display: flex; justify-content: space-between; align-items: center; font-size: .9375rem; color: #4b5563; gap: 1rem; }
+  .order-item-right { display: flex; align-items: center; gap: .75rem; white-space: nowrap; }
 
   .order-total {
     display: flex; justify-content: space-between; align-items: baseline;
@@ -155,12 +160,11 @@ function fmtUAH(n: number) {
 
   .btn-download-font {
     display: inline-block;
-    margin-top: 1.1rem;
     background: #1a1a2e;
     color: #fff;
-    padding: .6rem 1.3rem;
+    padding: .35rem .9rem;
     border-radius: 50px;
-    font-size: .875rem;
+    font-size: .8125rem;
     font-weight: 600;
     border: none;
     cursor: pointer;
@@ -193,6 +197,7 @@ function fmtUAH(n: number) {
   document.querySelectorAll<HTMLButtonElement>('.btn-download-font').forEach((btn) => {
     btn.addEventListener('click', async () => {
       const orderId = btn.dataset.orderId;
+      const itemIndex = btn.dataset.itemIndex;
       if (!orderId) return;
 
       const original = btn.textContent;
@@ -200,7 +205,8 @@ function fmtUAH(n: number) {
       btn.textContent = 'Завантаження…';
 
       try {
-        const res = await fetch(`/api/download-font/${orderId}`);
+        const query = itemIndex !== undefined ? `?item=${itemIndex}` : '';
+        const res = await fetch(`/api/download-font/${orderId}${query}`);
         if (res.status === 401) {
           window.location.href = `/login?next=${encodeURIComponent('/dashboard/orders')}`;
           return;

@@ -1,15 +1,20 @@
 import type { APIRoute } from 'astro';
 
-export const GET: APIRoute = async ({ params, cookies, request, redirect }) => {
+export const GET: APIRoute = async ({ params, url, cookies, request, redirect }) => {
   const wantsHtml = (request.headers.get('accept') ?? '').includes('text/html');
   const loginRedirect = () => redirect(`/login?next=${encodeURIComponent('/dashboard/orders')}`);
 
   const token = cookies.get('litopys_token')?.value;
   if (!token) return wantsHtml ? loginRedirect() : new Response('Unauthorized', { status: 401 });
 
+  const itemIndexParam = url.searchParams.get('item');
+  const body: Record<string, unknown> = {};
+  if (itemIndexParam !== null) body.itemIndex = Number(itemIndexParam);
+
   const tokenRes = await fetch(`https://api.litopys.win/orders/${params.orderId}/download-token`, {
     method: 'POST',
-    headers: { Authorization: `Bearer ${token}` },
+    headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
   });
   const tokenData = await tokenRes.json().catch(() => null);
 
