@@ -112,6 +112,13 @@ if (Astro.request.method === 'POST') {
         <a href="/dashboard/security" class="nav-item active">
           <span class="nav-icon-svg"><img src="/icon-fingerprint.svg" alt="" /></span> Безпека
         </a>
+        {user?.role === 'admin' && (
+          <a href="/dashboard/site-stats" class="nav-item">
+            <span class="nav-icon-svg nav-icon-chart">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg>
+            </span> Статистика сайту
+          </a>
+        )}
       </nav>
       <div class="sidebar-bottom-links">
         <a href="https://api.litopys.win/download" class="sidebar-ext-link sidebar-download"><img src="/icon-download.svg" alt="" />Завантажити</a>
@@ -247,6 +254,9 @@ if (Astro.request.method === 'POST') {
   .nav-icon { font-size: 1rem; }
   .nav-icon-svg img { width: 16px; height: 16px; display: block; filter: brightness(0) saturate(100%); }
   .nav-item.active .nav-icon-svg img { filter: brightness(0) invert(1); }
+  .nav-icon-chart { width: 16px; height: 16px; display: flex; color: #374151; }
+  .nav-icon-chart svg { width: 16px; height: 16px; }
+  .nav-item.active .nav-icon-chart { color: #fff; }
   .sidebar-bottom-links { display: flex; flex-direction: column; gap: .15rem; margin-bottom: .5rem; }
   .sidebar-ext-link { display: flex; align-items: center; gap: .6rem; font-size: .8125rem; color: #6b7280; padding: .4rem .85rem; border-radius: 8px; transition: color .15s, background .15s; }
   .sidebar-ext-link:hover { color: #111827; background: #f3f4f6; }

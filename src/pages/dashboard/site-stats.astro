@@ -1,0 +1,312 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const { user } = Astro.locals;
+if (user?.role !== 'admin') {
+  return Astro.redirect('/dashboard');
+}
+
+const token = Astro.cookies.get('litopys_token')?.value ?? '';
+
+type RangeKey = 'day' | 'week' | 'month' | 'year';
+const RANGES: { key: RangeKey; label: string }[] = [
+  { key: 'day', label: 'Доба' },
+  { key: 'week', label: 'Тиждень' },
+  { key: 'month', label: 'Місяць' },
+  { key: 'year', label: 'Рік' },
+];
+
+const activeRange = (Astro.url.searchParams.get('range') as RangeKey) || 'week';
+const activeKey: RangeKey = RANGES.some(r => r.key === activeRange) ? activeRange : 'week';
+
+type StatsResponse = {
+  ok: boolean;
+  uniqueVisitors: number;
+  returningVisitors: number;
+  daily: { day: string; uniqueVisitors: number; pageViews: number }[];
+};
+
+async function fetchStats(range: RangeKey): Promise<StatsResponse | null> {
+  try {
+    const res = await fetch(`https://api.litopys.win/admin/site-stats?range=${range}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    if (!res.ok) return null;
+    return await res.json();
+  } catch {
+    return null;
+  }
+}
+
+const [dayStats, weekStats, monthStats, yearStats] = await Promise.all([
+  fetchStats('day'),
+  fetchStats('week'),
+  fetchStats('month'),
+  fetchStats('year'),
+]);
+
+const statsByRange: Record<RangeKey, StatsResponse | null> = {
+  day: dayStats,
+  week: weekStats,
+  month: monthStats,
+  year: yearStats,
+};
+
+const activeStats = statsByRange[activeKey];
+const daily = activeStats?.daily ?? [];
+
+// Будуємо просту SVG-ламану лінію унікальних відвідувачів по днях
+const chartWidth = 720;
+const chartHeight = 220;
+const padding = { top: 16, right: 16, bottom: 28, left: 36 };
+const innerWidth = chartWidth - padding.left - padding.right;
+const innerHeight = chartHeight - padding.top - padding.bottom;
+
+const maxUnique = Math.max(1, ...daily.map(d => d.uniqueVisitors));
+const points = daily.map((d, i) => {
+  const x = daily.length > 1 ? (i / (daily.length - 1)) * innerWidth : innerWidth / 2;
+  const y = innerHeight - (d.uniqueVisitors / maxUnique) * innerHeight;
+  return { x: x + padding.left, y: y + padding.top, ...d };
+});
+const linePath = points.map((p, i) => `${i === 0 ? 'M' : 'L'}${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ');
+const areaPath = points.length
+  ? `${linePath} L${points[points.length - 1].x.toFixed(1)},${(chartHeight - padding.bottom).toFixed(1)} L${points[0].x.toFixed(1)},${(chartHeight - padding.bottom).toFixed(1)} Z`
+  : '';
+
+function fmtDay(day: string) {
+  const d = new Date(day + 'T00:00:00Z');
+  return d.toLocaleDateString('uk-UA', { day: 'numeric', month: 'short', timeZone: 'UTC' });
+}
+---
+
+<Layout title="Статистика сайту — Літопис" noHeader={true}>
+  <div class="dash-wrap">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <img src="/litopys-logo-dark.png" alt="Літопис" />
+      </div>
+      <nav class="sidebar-nav">
+        <a href="/dashboard" class="nav-item">
+          <span class="nav-icon-svg"><img src="/icon-user.svg" alt="" /></span> Акаунт
+        </a>
+        <a href="/dashboard/licenses" class="nav-item">
+          <span class="nav-icon-svg"><img src="/icon-key.svg" alt="" /></span> Ліцензія
+        </a>
+        <a href="/dashboard/orders" class="nav-item">
+          <span class="nav-icon-svg"><img src="/icon-cart.svg" alt="" /></span> Мої замовлення
+        </a>
+        <a href="/dashboard/security" class="nav-item">
+          <span class="nav-icon-svg"><img src="/icon-fingerprint.svg" alt="" /></span> Безпека
+        </a>
+        <a href="/dashboard/site-stats" class="nav-item active">
+          <span class="nav-icon-svg nav-icon-chart">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg>
+          </span> Статистика сайту
+        </a>
+      </nav>
+      <div class="sidebar-bottom-links">
+        <a href="https://api.litopys.win/download" class="sidebar-ext-link sidebar-download"><img src="/icon-download.svg" alt="" />Завантажити</a>
+        <a href="/" class="sidebar-ext-link"><img src="/icon-question.svg" alt="" />Про застосунок</a>
+        <a href="/demo" class="sidebar-ext-link"><img src="/icon-play.svg" alt="" />Спробувати</a>
+      </div>
+      <form method="POST" action="/api/logout" class="sidebar-logout">
+        <button type="submit" class="logout-btn">Вийти</button>
+      </form>
+    </aside>
+
+    <!-- Main -->
+    <main class="dash-main">
+      <div class="dash-header">
+        <p class="dash-greeting">Статистика сайту</p>
+        <p class="dash-email">Дані невидимі клієнтам, лише для адміністратора</p>
+      </div>
+
+      <!-- Картки за всі періоди -->
+      <div class="stat-grid">
+        {RANGES.map(r => {
+          const s = statsByRange[r.key];
+          return (
+            <div class:list={['stat-card', { 'stat-card-active': r.key === activeKey }]}>
+              <p class="stat-label">{r.label}</p>
+              <p class="stat-value">{s ? s.uniqueVisitors : '—'}</p>
+              <p class="stat-sub">унікальних переглядів</p>
+              <p class="stat-value stat-value-secondary">{s ? s.returningVisitors : '—'}</p>
+              <p class="stat-sub">повернулись</p>
+            </div>
+          );
+        })}
+      </div>
+
+      <!-- Графік -->
+      <section class="card">
+        <div class="card-header">
+          <h2>Динаміка унікальних відвідувачів</h2>
+          <div class="range-tabs">
+            {RANGES.map(r => (
+              <a
+                href={`/dashboard/site-stats?range=${r.key}`}
+                class:list={['range-tab', { 'range-tab-active': r.key === activeKey }]}
+              >
+                {r.label}
+              </a>
+            ))}
+          </div>
+        </div>
+
+        {!activeStats && <p class="card-desc">Не вдалося завантажити дані статистики.</p>}
+
+        {activeStats && daily.length === 0 && (
+          <p class="card-desc">Ще немає даних за цей період.</p>
+        )}
+
+        {activeStats && daily.length > 0 && (
+          <div class="chart-wrap">
+            <svg viewBox={`0 0 ${chartWidth} ${chartHeight}`} class="chart-svg" preserveAspectRatio="none">
+              <line x1={padding.left} y1={chartHeight - padding.bottom} x2={chartWidth - padding.right} y2={chartHeight - padding.bottom} class="chart-axis" />
+              <path d={areaPath} class="chart-area" />
+              <path d={linePath} class="chart-line" />
+              {points.map(p => (
+                <circle cx={p.x} cy={p.y} r="3" class="chart-dot">
+                  <title>{`${fmtDay(p.day)}: ${p.uniqueVisitors} унікальних, ${p.pageViews} переглядів`}</title>
+                </circle>
+              ))}
+            </svg>
+            <div class="chart-x-labels">
+              {points.map((p, i) => (
+                (points.length <= 10 || i === 0 || i === points.length - 1 || i % Math.ceil(points.length / 8) === 0) && (
+                  <span class="chart-x-label" style={`left:${(p.x / chartWidth) * 100}%`}>{fmtDay(p.day)}</span>
+                )
+              ))}
+            </div>
+          </div>
+        )}
+      </section>
+    </main>
+  </div>
+</Layout>
+
+<style>
+  .dash-wrap {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    min-height: 100vh;
+  }
+  .sidebar {
+    border-right: 1px solid #e5e7eb;
+    padding: 1.5rem 1rem;
+    display: flex;
+    flex-direction: column;
+    background: #fafafa;
+  }
+  .sidebar-logo img { height: 36px; margin-bottom: 2rem; }
+  .sidebar-nav { display: flex; flex-direction: column; gap: .25rem; flex: 1; }
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+    padding: .6rem .85rem;
+    border-radius: 10px;
+    font-size: .875rem;
+    font-weight: 500;
+    color: #374151;
+    transition: background .15s, color .15s;
+  }
+  .nav-item:hover { background: #f3f4f6; color: #111827; }
+  .nav-item.active { background: #1a1a2e; color: #fff; }
+  .nav-icon-svg img { width: 16px; height: 16px; display: block; filter: brightness(0) saturate(100%); }
+  .nav-item.active .nav-icon-svg img { filter: brightness(0) invert(1); }
+  .nav-icon-chart { width: 16px; height: 16px; display: flex; color: #374151; }
+  .nav-icon-chart svg { width: 16px; height: 16px; }
+  .nav-item.active .nav-icon-chart { color: #fff; }
+  .sidebar-bottom-links { display: flex; flex-direction: column; gap: .15rem; margin-bottom: .5rem; }
+  .sidebar-ext-link { display: flex; align-items: center; gap: .6rem; font-size: .8125rem; color: #6b7280; padding: .4rem .85rem; border-radius: 8px; transition: color .15s, background .15s; }
+  .sidebar-ext-link:hover { color: #111827; background: #f3f4f6; }
+  .sidebar-ext-link img { width: 15px; height: 15px; display: block; filter: brightness(0) saturate(100%) invert(47%) sepia(7%) saturate(400%) hue-rotate(180deg); flex-shrink: 0; }
+  .sidebar-ext-link:hover img { filter: brightness(0); }
+  .sidebar-download { color: #1a1a2e; font-weight: 600; }
+  .sidebar-download img { filter: brightness(0) !important; }
+  .sidebar-logout { margin-top: 0; }
+  .logout-btn {
+    width: 100%;
+    background: none;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 10px;
+    padding: .55rem;
+    font-size: .8125rem;
+    color: #6b7280;
+    cursor: pointer;
+    font-family: inherit;
+    transition: border-color .15s, color .15s;
+  }
+  .logout-btn:hover { border-color: #dc2626; color: #dc2626; }
+
+  .dash-main { padding: 2rem 2.5rem; max-width: 800px; }
+  .dash-header { margin-bottom: 2rem; }
+  .dash-greeting { font-size: 1.25rem; font-weight: 800; color: #111827; letter-spacing: -.02em; }
+  .dash-email { font-size: .875rem; color: #6b7280; margin-top: .2rem; }
+
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  .stat-card {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    padding: 1.1rem 1.1rem 1.25rem;
+  }
+  .stat-card-active { border-color: #1a1a2e; box-shadow: 0 0 0 1px #1a1a2e; }
+  .stat-label { font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: #9ca3af; margin-bottom: .5rem; }
+  .stat-value { font-size: 1.75rem; font-weight: 800; color: #111827; letter-spacing: -.02em; line-height: 1.1; }
+  .stat-value-secondary { font-size: 1.25rem; color: #4b5563; margin-top: .5rem; }
+  .stat-sub { font-size: .75rem; color: #9ca3af; margin-top: .15rem; }
+
+  .card {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-bottom: 1.25rem;
+  }
+  .card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: .75rem;
+    margin-bottom: 1.25rem;
+  }
+  .card-header h2 { font-size: 1rem; font-weight: 700; color: #111827; }
+  .card-desc { font-size: .875rem; color: #6b7280; }
+
+  .range-tabs { display: flex; gap: .25rem; background: #f3f4f6; padding: .25rem; border-radius: 10px; }
+  .range-tab { font-size: .8125rem; font-weight: 600; color: #6b7280; padding: .4rem .8rem; border-radius: 8px; transition: background .15s, color .15s; }
+  .range-tab:hover { color: #111827; }
+  .range-tab-active { background: #1a1a2e; color: #fff; }
+
+  .chart-wrap { position: relative; }
+  .chart-svg { width: 100%; height: auto; display: block; }
+  .chart-axis { stroke: #e5e7eb; stroke-width: 1; }
+  .chart-area { fill: rgba(26, 26, 46, 0.06); stroke: none; }
+  .chart-line { fill: none; stroke: #1a1a2e; stroke-width: 2; }
+  .chart-dot { fill: #1a1a2e; }
+  .chart-x-labels { position: relative; height: 1.25rem; margin-top: .25rem; }
+  .chart-x-label { position: absolute; transform: translateX(-50%); font-size: .6875rem; color: #9ca3af; white-space: nowrap; }
+
+  @media (max-width: 900px) {
+    .stat-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (max-width: 700px) {
+    .dash-wrap { grid-template-columns: 1fr; }
+    .sidebar { flex-direction: row; flex-wrap: wrap; border-right: none; border-bottom: 1px solid #e5e7eb; padding: 1rem; }
+    .sidebar-logo { display: none; }
+    .sidebar-nav { flex-direction: row; flex-wrap: wrap; }
+    .sidebar-logout { margin-top: 0; margin-left: auto; }
+    .dash-main { padding: 1.25rem 1rem; }
+    .stat-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
