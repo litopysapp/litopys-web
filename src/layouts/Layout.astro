@@ -99,6 +99,13 @@ const { title, description = "Літопис — редактор докумен
         </div>
       </footer>
     )}
+
+    <div id="cookie-banner" class="cookie-banner" hidden>
+      <p class="cookie-banner-text">
+        Ми використовуємо файли cookie: анонімний лічильник переглядів сайту та сесію входу в кабінет. Жодних рекламних трекерів.
+      </p>
+      <button type="button" id="cookie-banner-ok" class="cookie-banner-btn">Зрозуміло</button>
+    </div>
   </body>
 </html>
 
@@ -151,6 +158,51 @@ const { title, description = "Літопис — редактор докумен
   }
   .nav-dropdown-item:hover { background: var(--bg-subtle); }
   .nav-dropdown-item + .nav-dropdown-item { border-top: 1px solid var(--border-subtle); }
+
+  .cookie-banner {
+    position: fixed;
+    left: 1rem;
+    right: 1rem;
+    bottom: 1rem;
+    z-index: 300;
+    max-width: 640px;
+    margin: 0 auto;
+    background: #1d1d1f;
+    color: #fff;
+    border-radius: var(--radius);
+    padding: 1rem 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    box-shadow: 0 12px 32px rgba(0,0,0,.2);
+    animation: cookieFadeIn .3s ease;
+  }
+  .cookie-banner[hidden] { display: none; }
+  .cookie-banner-text {
+    flex: 1 1 320px;
+    font-size: .8125rem;
+    line-height: 1.5;
+    color: rgba(255,255,255,.85);
+  }
+  .cookie-banner-btn {
+    flex-shrink: 0;
+    background: #fff;
+    color: #1d1d1f;
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: .55rem 1.25rem;
+    font-size: .8125rem;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: opacity .15s;
+  }
+  .cookie-banner-btn:hover { opacity: .85; }
+  @keyframes cookieFadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: none; }
+  }
 </style>
 
 <script>
@@ -199,4 +251,15 @@ const { title, description = "Літопис — редактор докумен
       }
     });
   }
+
+  const COOKIE_NOTICE_KEY = 'litopys_cookie_notice_seen';
+  const cookieBanner = document.getElementById('cookie-banner');
+  const cookieBannerOk = document.getElementById('cookie-banner-ok');
+  if (cookieBanner && !localStorage.getItem(COOKIE_NOTICE_KEY)) {
+    cookieBanner.hidden = false;
+  }
+  cookieBannerOk?.addEventListener('click', () => {
+    localStorage.setItem(COOKIE_NOTICE_KEY, '1');
+    if (cookieBanner) cookieBanner.hidden = true;
+  });
 </script>

@@ -195,7 +195,7 @@ import Layout from '../layouts/Layout.astro';
       <h2 id="ls-modal-title">Знайомтесь — LitoScan</h2>
       <p class="ls-toast-text">Безкоштовна програма для сканування документів. Ідеально доповнює Літопис.</p>
       <div class="ls-toast-actions">
-        <a href="https://github.com/litopysapp/LitoScan/releases/download/v0.2.3/LitoScan-Setup-0.2.3.exe" id="ls-modal-download" class="ls-toast-btn">Завантажити →</a>
+        <a href="https://api.litopys.win/download/litoscan" id="ls-modal-download" class="ls-toast-btn">Завантажити →</a>
         <button type="button" class="ls-modal-later" id="ls-modal-later">Може пізніше</button>
       </div>
     </div>
@@ -666,21 +666,6 @@ import Layout from '../layouts/Layout.astro';
   const lsLater = document.getElementById('ls-modal-later');
   const lsDownload = document.getElementById('ls-modal-download');
   const LS_SEEN_KEY = 'litoscan_promo_seen';
-
-  // Підтягуємо актуальний Setup.exe з останнього релізу LitoScan
-  (async () => {
-    try {
-      const res = await fetch('https://api.github.com/repos/litopysapp/LitoScan/releases/latest', {
-        headers: { 'Accept': 'application/vnd.github+json' }
-      });
-      if (res.ok) {
-        const data = await res.json();
-        const assets: { name: string; browser_download_url: string }[] = data.assets ?? [];
-        const setup = assets.find((a: any) => a.name.includes('Setup'))?.browser_download_url;
-        if (setup && lsDownload) (lsDownload as HTMLAnchorElement).href = setup;
-      }
-    } catch {}
-  })();
 
   function hideLsModal() {
     lsModal?.setAttribute('hidden', '');
