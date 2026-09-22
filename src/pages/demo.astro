@@ -870,11 +870,19 @@ const sampleRows = [
 
 function $(id){ return document.getElementById(id); }
 
-// ── Синхронізація firstRowTop і rowHeight з blank.rows/bottom (як syncTextFlowToBlankRows) ──
+// ── Синхронізація firstRowTop/rowHeight з blank.rows/bottom ──
+// У реальному застосунку (app-monolith.js: syncTextFlowToBlankRows) це
+// одностороння дія, яка виконується лише коли міняється сам БЛАНК (права
+// панель: кількість рядків/межі таблиці) — вона підлаштовує калібрування
+// тексту під нову сітку. Вона НЕ виконується на кожен render(), інакше
+// бігунки лівої панелі "Текст" (firstRowTop/rowHeight) миттєво стираються
+// власним обчисленим значенням і стають нередагованими — саме це було
+// причиною того, що ці повзунки візуально нічого не міняли.
 function syncCalFromBlank(){
   const textRows = Math.max(1, blank.rows - blank.headerRows);
-  cal.rowHeight = (blank.bottom - blank.top) / blank.rows;
-  cal.firstRowTop = blank.bottom - textRows * cal.rowHeight;
+  const rowH = Number.isFinite(cal.rowHeight) && cal.rowHeight >= 2.5 ? cal.rowHeight : 6.084;
+  cal.rowHeight = rowH;
+  cal.firstRowTop = blank.bottom - textRows * rowH;
   // оновлюємо відповідні елементи лівої панелі
   const rh = $('rowHeight'); if(rh){ rh.value = cal.rowHeight.toFixed(3); const v=$('rowHeightValue'); if(v) v.textContent=cal.rowHeight.toFixed(3); }
   const ft = $('firstRowTop'); if(ft){ ft.value = cal.firstRowTop.toFixed(2); const v=$('firstRowTopValue'); if(v) v.textContent=cal.firstRowTop.toFixed(2); }
@@ -973,27 +981,73 @@ function splitTextIntoRows(text, fontStr, fontSizePt, colWidthMm) {
   return lines;
 }
 
+// ── Детермінований псевдо-рандом (стабільний між рендерами, без "стрибків") ──
+// Простий рядковий хеш → [0,1). Той самий підхід за духом, що й
+// litopysSeededRandom у реальному застосунку: seed залежить від тексту й
+// позиції символу, тому повторний render() з тими самими даними дає той
+// самий результат, а не "тремтіння" на кожен кадр.
+function seededRandom(seed, step){
+  let h = 0;
+  const s = seed + '|' + step;
+  for(let i = 0; i < s.length; i++){
+    h = (h * 31 + s.charCodeAt(i)) | 0;
+  }
+  h = Math.sin(h) * 10000;
+  return h - Math.floor(h);
+}
+
+// Розбиває текст на <span> по символах, застосовуючи letter-rotate/jitter/
+// spacing з панелі "Текст" — CSS-наближення рукописного вигляду замість
+// повного canvas-рушія гліфів реального застосунку.
+function renderHandChars(text, seedBase){
+  const maxRot = cal.letterRotate || 0;
+  const maxY   = cal.letterJitterY || 0;
+  const micro  = cal.charMicroSpacing || 0;
+  let step = 0;
+  let out = '';
+  for(const ch of text){
+    if(ch === ' '){ out += ' '; continue; }
+    const rot = maxRot ? (-maxRot + seededRandom(seedBase, step++) * maxRot * 2) : 0;
+    const dy  = maxY   ? (-maxY   + seededRandom(seedBase, step++) * maxY * 2)   : 0;
+    const extra = micro ? seededRandom(seedBase, step++) * micro : 0;
+    const transform = (rot || dy) ? ` transform:rotate(${rot.toFixed(2)}deg) translateY(${dy.toFixed(2)}mm);` : '';
+    const spacing = extra ? ` margin-right:${extra.toFixed(3)}mm;` : '';
+    out += `<span style="display:inline-block;${transform}${spacing}">${esc(ch)}</span>`;
+  }
+  return out;
+}
+
 // ── Текст-шар (зразкові дані) ──
+// ВАЖЛИВО: позиція рядків тексту рахується з cal.firstRowTop/cal.rowHeight
+// (ліва панель "Текст"), а НЕ з сітки blank.top/blank.bottom/blank.rows
+// (права панель "Бланк"). Сітка бланка малює лише лінії/заголовки в
+// buildBlankLayer(); калібрування тексту — окрема, незалежно
+// регульована прив'язка "рукопису" до цієї сітки (як у реальному
+// застосунку: одна лінійка на бланку, калібрування друку регулюється
+// окремо, щоб влучити в надрукований фізичний бланк).
 function buildTextLayer(){
   const L  = blank.innerMargin;
   const DW = blank.dateWidth;
   const TW = blank.textWidth;
   const NW = blank.noteWidth;
-  const ROW_H = (blank.bottom - blank.top) / blank.rows;
-  const HR = Math.max(1, Math.round(blank.headerRows));
 
   const font = cal.useHandFont
     ? 'OleksiiFull,Times New Roman,Times,serif'
     : 'Times New Roman,Times,serif';
-  const fs   = cal.textFontSize + 'pt';
-
   const fontStr = font.replace(/,/g,', ');
+
+  // Приблизний ascent рукописного шрифту відносно em — щоб top блоку
+  // (а не base line) був вирахуваний з baselineOffset так само, як
+  // getPreviewTextTop() у реальному застосунку.
+  const ASCENT_RATIO = 0.78;
+  const mmPerPt = 0.3528;
 
   // Будуємо список рядків таблиці з розбиттям тексту
   // Колонка "Дата": перший рядок = дата (відступ oddDateX),
   //                 другий рядок = час (відступ oddTimeX),
   //                 далі порожньо
-  // Колонка "Текст": рядки тексту з переносом
+  // Колонка "Текст": рядки тексту з переносом, розмір шрифту — textFontSize
+  // Колонка "Примітка": розмір шрифту — noteFontSize
   const tableRows = [];
 
   sampleRows.forEach(row => {
@@ -1017,24 +1071,36 @@ function buildTextLayer(){
     }
   });
 
+  const wordSpacing = (cal.spaceFactor||0) * cal.textFontSize * mmPerPt;
+
   let html = '';
   tableRows.forEach((row, i) => {
-    const rowIndex = HR + i;
-    const rowTop   = blank.top + rowIndex * ROW_H;
+    // rowTop рахується від cal.firstRowTop/cal.rowHeight — не від сітки бланка.
+    const rowTop = cal.firstRowTop + i * cal.rowHeight;
     if(rowTop >= blank.bottom) return;
 
-    const rowBottom = rowTop + ROW_H;
-    const base = `position:absolute;box-sizing:border-box;`
-      + `font-family:${font};font-size:${fs};line-height:1;`
-      + `overflow:hidden;white-space:nowrap;`
-      + `bottom:${(297 - rowBottom - 2.73).toFixed(3)}mm;`;
+    const styleFor = (fontSizePt) => {
+      const ascentMm = fontSizePt * mmPerPt * ASCENT_RATIO;
+      const top = rowTop + cal.baselineOffset - ascentMm;
+      return `position:absolute;box-sizing:border-box;`
+        + `font-family:${font};font-size:${fontSizePt}pt;line-height:1;`
+        + `overflow:hidden;white-space:nowrap;word-spacing:${wordSpacing.toFixed(3)}mm;`
+        + `top:${top.toFixed(3)}mm;`;
+    };
 
     if(row.dateCell){
       const xOff = row.dateCell.xOff;
-      html += `<div style="${base}left:${(L+xOff).toFixed(2)}mm;width:${(DW-xOff-0.5).toFixed(2)}mm;">${esc(row.dateCell.val)}</div>`;
+      const seed = `date|${i}|${row.dateCell.val}`;
+      html += `<div style="${styleFor(cal.dateFontSize)}left:${(L+xOff).toFixed(2)}mm;width:${(DW-xOff-0.5).toFixed(2)}mm;">${renderHandChars(row.dateCell.val, seed)}</div>`;
     }
-    if(row.text) html += `<div style="${base}left:${(L+DW+cal.oddTextX).toFixed(2)}mm;width:${(TW-cal.oddTextX-0.5).toFixed(2)}mm;">${esc(row.text)}</div>`;
-    if(row.note) html += `<div style="${base}left:${(L+DW+TW+0.5).toFixed(2)}mm;width:${(NW-1).toFixed(2)}mm;">${esc(row.note)}</div>`;
+    if(row.text){
+      const seed = `text|${i}|${row.text}`;
+      html += `<div style="${styleFor(cal.textFontSize)}left:${(L+DW+cal.oddTextX).toFixed(2)}mm;width:${(TW-cal.oddTextX-0.5).toFixed(2)}mm;">${renderHandChars(row.text, seed)}</div>`;
+    }
+    if(row.note){
+      const seed = `note|${i}|${row.note}`;
+      html += `<div style="${styleFor(cal.noteFontSize)}left:${(L+DW+TW+0.5).toFixed(2)}mm;width:${(NW-1).toFixed(2)}mm;">${renderHandChars(row.note, seed)}</div>`;
+    }
   });
 
   $('jbd-text-layer').innerHTML = html;
@@ -1043,7 +1109,6 @@ function buildTextLayer(){
 function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
 function render(){
-  syncCalFromBlank();
   syncActualXInfo();
   buildBlankLayer();
   buildTextLayer();
@@ -1074,6 +1139,8 @@ function bindCal(id, key, decimals){
 bindCal('oddDateX','oddDateX',1);
 bindCal('oddTimeX','oddTimeX',1);
 bindCal('oddTextX','oddTextX',1);
+bindCal('firstRowTop','firstRowTop',2);
+bindCal('rowHeight','rowHeight',3);
 bindCal('baselineOffset','baselineOffset',2);
 bindCal('dateFontSize','dateFontSize',1);
 bindCal('textFontSize','textFontSize',1);
@@ -1082,7 +1149,17 @@ bindCal('letterRotate','letterRotate',1);
 bindCal('letterJitterY','letterJitterY',1);
 bindCal('spaceFactor','spaceFactor',2);
 bindCal('charMicroSpacing','charMicroSpacing',2);
-// rowHeight і firstRowTop — тільки для читання (обраховуються з blank)
+// rowHeight і firstRowTop керуються бігунками лівої панелі "Текст" (bindCal
+// вище), але перераховуються заново (syncCalFromBlank), коли міняється сама
+// сітка бланка (кількість рядків / межі таблиці) — див. ROW_FLOW_BLANK_KEYS
+// нижче, так само як updateBlankTemplateFromControls() у реальному
+// застосунку викликає syncTextFlowToBlankRows() лише на зміну бланка.
+
+// Поля бланка, від яких залежить розкладка текстових рядків (аналог
+// PAGE_FIT_BLANK_IDS/syncTextFlowToBlankRows у app-monolith.js) — зміна
+// будь-якого з них підлаштовує cal.firstRowTop/cal.rowHeight під нову
+// сітку, не чіпаючи решту калібрування тексту.
+const ROW_FLOW_BLANK_KEYS = new Set(['rows','bottom','headerRows']);
 
 // ── Прив'язка бігунків правої панелі (Бланк) ──
 function bindRight(id, key, isText){
@@ -1092,6 +1169,7 @@ function bindRight(id, key, isText){
     if(isText){ blank[key] = el.value; }
     else { blank[key] = parseFloat(el.value); }
     if(val && !isText) val.textContent = parseFloat(el.value).toFixed(2);
+    if(ROW_FLOW_BLANK_KEYS.has(key)) syncCalFromBlank();
     render();
   });
 }
@@ -1166,7 +1244,7 @@ function resetGroup(ids, store, defaults){
 }
 $('btn-reset-text')?.addEventListener('click', ()=>{
   Object.assign(cal, defaultsCal);
-  ['oddDateX','oddTimeX','oddTextX','baselineOffset','dateFontSize','textFontSize','noteFontSize','letterRotate','letterJitterY','spaceFactor','charMicroSpacing'].forEach(id=>{
+  ['oddDateX','oddTimeX','oddTextX','firstRowTop','rowHeight','baselineOffset','dateFontSize','textFontSize','noteFontSize','letterRotate','letterJitterY','spaceFactor','charMicroSpacing'].forEach(id=>{
     const el=$(id); if(!el) return;
     const key=id; el.value = cal[key];
     const v=$(id+'Value'); if(v) v.textContent = el.value;
@@ -1182,6 +1260,7 @@ $('btn-reset-blank')?.addEventListener('click', ()=>{
     if(mapped in blank){ el.value = blank[mapped]; const v=$(id+'Value'); if(v) v.textContent = el.value; }
   });
   const oneSided = $('blankOneSided'); if(oneSided) oneSided.checked = blank.oneSided;
+  syncCalFromBlank();
   render();
 });
 
@@ -1217,6 +1296,10 @@ $('btn-collapse-right')?.addEventListener('click', ()=>{
 });
 
 // ── Перший рендер ──
+// Один раз на завантаження підлаштовуємо firstRowTop/rowHeight під
+// дефолтну сітку бланка (як loadBlankTemplate() у реальному застосунку) —
+// далі це вже незалежне, редаговане калібрування.
+syncCalFromBlank();
 render();
 scalePreview();
 window.addEventListener('resize', scalePreview);
