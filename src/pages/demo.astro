@@ -1,4 +1,4 @@
-﻿---
+---
 import Layout from '../layouts/Layout.astro';
 ---
 <Layout title="Демо редактора — Літопис" description="Спробуйте Літопис прямо в браузері." fullPage={true}>
@@ -13,21 +13,13 @@ import Layout from '../layouts/Layout.astro';
       </a>
     </div>
 
-    <div class="litopys-module-switch locked">
-      <span class="litopys-module-switch-label active-label">ЖБД</span>
-      <button type="button" class="litopys-module-switch-toggle" title="Доступно у повній версії">
-        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#3c3c3c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="12" r="3"/><rect width="20" height="14" x="2" y="5" rx="7"/></svg>
-      </button>
-      <span class="litopys-module-switch-label">БР</span>
-    </div>
-
     <div class="controls topbar-actions">
       <!-- Undo/Redo -->
       <div class="document-history-actions">
-        <button id="btn-undo" class="icon-only" title="Скасувати">
+        <button id="btn-undo" class="icon-only" title="Скасувати останню зміну" aria-label="Скасувати останню зміну">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg>
         </button>
-        <button id="btn-redo" class="icon-only" title="Повторити">
+        <button id="btn-redo" class="icon-only" title="Повернути зміну" aria-label="Повернути зміну">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 14 5-5-5-5"/><path d="M20 9H9.5a5.5 5.5 0 0 0 0 11H13"/></svg>
         </button>
       </div>
@@ -35,52 +27,98 @@ import Layout from '../layouts/Layout.astro';
 
       <!-- "Робота з текстом" -->
       <div class="text-work-menu" id="twm-wrap">
-        <button class="manual-text-import-button" id="btn-twm">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 21h8"/><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/></svg>
-          <span>Робота з текстом</span>
-          <span class="dropdown-caret">▾</span>
+        <button class="manual-text-import-button icon-only" id="btn-twm" title="Робота з текстом" aria-label="Робота з текстом">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 21h8"/><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/></svg>
         </button>
         <div id="textWorkMenu" class="compact-dropdown">
-          <div class="compact-dropdown-label">Доступно у повній версії</div>
-          <button disabled style="opacity:.45;cursor:default;">
+          <button class="demo-locked" title="Доступно у повній версії">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M8 12h8M12 8v8"/></svg>
             <span>Вставити текст</span>
           </button>
-          <button disabled style="opacity:.45;cursor:default;">
+          <button class="demo-locked" title="Доступно у повній версії">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>
             <span>Внести правки</span>
+          </button>
+          <button class="demo-locked" title="Доступно у повній версії">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+            <span>Скинути правки</span>
           </button>
         </div>
       </div>
 
       <!-- DOCX pill -->
-      <button id="btn-export-docx" class="file-picker-pill" title="Завантажити DOCX">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-        <span class="file-picker-name">DOCX</span>
+      <button id="btn-export-docx" class="file-picker-pill" title="Обрати DOCX">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5v14"/></svg>
+        <span class="file-picker-name" id="selectedFileLabel">DOCX</span>
       </button>
 
-      <!-- Зберегти / Друк (декор) -->
-      <button class="icon-only" title="Зберегти PDF (повна версія)">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/><path d="M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7"/><path d="M7 3v4a1 1 0 0 0 1 1h7"/></svg>
+      <button id="btn-load-docx" class="icon-only demo-locked" title="Завантажити DOCX" aria-label="Завантажити DOCX">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><path d="M10 17l5-5-5-5"/><path d="M15 12H3"/></svg>
       </button>
-      <button class="icon-only" title="Друк (повна версія)">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 9V3a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6"/><rect x="6" y="14" width="12" height="8" rx="1"/></svg>
+
+      <!-- "Зберегти PDF" -->
+      <div class="pdf-save-menu pdf-action-menu" id="pdfSaveWrap">
+        <button class="icon-only" id="btn-pdf-save" title="Зберегти PDF" aria-label="Зберегти PDF">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
+        </button>
+        <div id="pdfSaveMenu" class="compact-dropdown pdf-export-menu">
+          <div class="compact-dropdown-label">Зберегти PDF</div>
+          <button class="demo-locked" title="Доступно у повній версії"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg><span>Бланк</span></button>
+          <button class="demo-locked" title="Доступно у повній версії"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h10"/></svg><span>Текст</span></button>
+          <button class="demo-locked" title="Доступно у повній версії"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg><span>Бланк + текст</span></button>
+        </div>
+      </div>
+
+      <!-- "Друк PDF" -->
+      <div class="pdf-save-menu pdf-print-menu" id="pdfPrintWrap">
+        <button class="icon-only" id="btn-pdf-print" title="Друк PDF" aria-label="Друк PDF">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 9V3a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6"/><rect x="6" y="14" width="12" height="8" rx="1"/></svg>
+        </button>
+        <div id="pdfPrintMenu" class="compact-dropdown pdf-export-menu">
+          <div class="compact-dropdown-label">Друк</div>
+          <button class="demo-locked" title="Доступно у повній версії"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/></svg><span>Бланк</span></button>
+          <button class="demo-locked" title="Доступно у повній версії"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h10"/></svg><span>Текст</span></button>
+          <button class="demo-locked" title="Доступно у повній версії"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/></svg><span>Бланк + текст</span></button>
+        </div>
+      </div>
+
+      <!-- "Проект" -->
+      <div class="pdf-save-menu pdf-action-menu" id="projectWrap">
+        <button class="icon-only" id="btn-project" title="Проект" aria-label="Проект">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h5l2 3h9a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/></svg>
+        </button>
+        <div id="projectMenu" class="compact-dropdown pdf-export-menu">
+          <div class="compact-dropdown-label">Проект</div>
+          <button class="demo-locked" title="Доступно у повній версії"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/></svg><span>Зберегти проект</span></button>
+          <button class="demo-locked" title="Доступно у повній версії"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/><path d="M7 3v4h7"/></svg><span>Зберегти як...</span></button>
+          <button class="demo-locked" title="Доступно у повній версії"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 3h9l5 5v13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/><path d="M9 12l3 3 3-3"/></svg><span>Відкрити проект</span></button>
+        </div>
+      </div>
+
+      <!-- Плотер -->
+      <button id="btn-plotter" class="icon-only demo-locked" title="Написати плотером" aria-label="Написати плотером">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19 7-7 3 3-7 7-3-3z"/><path d="m18 13-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="m2 2 7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg>
       </button>
     </div>
 
     <div class="topbar-profile">
-      <button class="icon-only menu-button" id="btn-menu" title="Меню">
+      <button class="icon-only menu-button" id="btn-menu" title="Меню" aria-label="Меню">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16"/><path d="M4 12h16"/><path d="M4 19h16"/></svg>
       </button>
       <div id="profileMenu" class="profile-menu">
         <div class="compact-dropdown-label">Демо-версія</div>
+        <button class="demo-locked" title="Доступно у повній версії">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21a8 8 0 0 0-16 0"/><circle cx="12" cy="7" r="4"/></svg>
+          <span>Профіль</span>
+        </button>
+        <button class="demo-locked" title="Доступно у повній версії">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          <span>Налаштування</span>
+        </button>
+        <div class="profile-menu-divider"></div>
         <a href="/" class="pmenu-link">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
           <span>На головну</span>
-        </a>
-        <a href="/" class="pmenu-link">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
-          <span>Про Літопис</span>
         </a>
       </div>
     </div>
@@ -89,65 +127,61 @@ import Layout from '../layouts/Layout.astro';
   <!-- ═══ APP SHELL — три колонки як у JBD ═══ -->
   <div class="app-shell">
 
-    <!-- Ліва панель — Налаштування -->
+    <!-- Ліва панель — Текст -->
     <aside class="settings-panel" id="left-panel">
       <h2>
-        <span class="panel-title-text">Налаштування</span>
+        <span class="panel-title-text">Текст</span>
         <span class="panel-menu-icon" id="btn-collapse-left" title="Згорнути панель">☰</span>
       </h2>
 
       <div class="settings-block">
-        <h3>Preview / PDF</h3>
-        <label class="template-toggle">
-          <input type="checkbox" id="showGrid" checked>
-          Показати бланк у preview
-        </label>
+        <h3>Відступи<span class="settings-info-icon" title="Налаштування відступів тексту">ⓘ</span></h3>
         <label>
-          Прозорість сітки
-          <input type="range" id="gridOpacity" min="0" max="1" step="0.01" value="0.42">
-          <span id="gridOpacityValue">0.42</span>
-        </label>
-        <label class="template-toggle">
-          <input type="checkbox" id="hideText">
-          Приховати текст
-        </label>
-      </div>
-
-      <div class="settings-block">
-        <h3>Непарні сторінки</h3>
-        <label>
-          Випадковий відступ дати, мм
+          Відступ дати
           <input type="range" id="oddDateX" min="0" max="40" step="0.1" value="0.5">
-          <span id="oddDateXVal">0.5</span>
+          <span id="oddDateXValue">0.5</span>
+        </label>
+        <label class="template-toggle">
+          <input type="checkbox" id="dateOffsetRandomEnabled" checked>
+          Випадковий відступ дати
         </label>
         <label>
-          Випадковий відступ часу, мм
+          Відступ часу
           <input type="range" id="oddTimeX" min="0" max="40" step="0.1" value="0.5">
-          <span id="oddTimeXVal">0.5</span>
+          <span id="oddTimeXValue">0.5</span>
+        </label>
+        <label class="template-toggle">
+          <input type="checkbox" id="timeOffsetRandomEnabled" checked>
+          Випадковий відступ часу
         </label>
         <label>
-          Відступ тексту від лівої межі стовпчика, мм
+          Відступ середнього стовпчика
           <input type="range" id="oddTextX" min="0" max="80" step="0.1" value="0.5">
-          <span id="oddTextXVal">0.5</span>
+          <span id="oddTextXValue">0.5</span>
         </label>
       </div>
 
       <div class="settings-block">
-        <h3>Рядки</h3>
+        <h3>Рядки<span class="settings-info-icon" title="Налаштування положення тексту по рядкам">ⓘ</span></h3>
         <label>
           Верх першого рядка, мм
           <input type="range" id="firstRowTop" min="15" max="35" step="0.01" value="31.47">
-          <span id="firstRowTopVal">31.47</span>
+          <span id="firstRowTopValue">31.47</span>
         </label>
         <label>
           Крок рядків, мм
           <input type="range" id="rowHeight" min="2.5" max="6.5" step="0.001" value="6.084">
-          <span id="rowHeightVal">6.084</span>
+          <span id="rowHeightValue">6.084</span>
+        </label>
+        <label>
+          Відступ тексту від верху рядка, мм
+          <input type="range" id="baselineOffset" min="3" max="9" step="0.01" value="6.07">
+          <span id="baselineOffsetValue">6.07</span>
         </label>
       </div>
 
       <div class="settings-block">
-        <h3>Початок генерації</h3>
+        <h3>Початок генерації<span class="settings-info-icon" title="Вибір сторінки та номеру першого рядка">ⓘ</span></h3>
         <label>
           Починати з типу сторінки
           <select id="startPageNumber">
@@ -155,37 +189,122 @@ import Layout from '../layouts/Layout.astro';
             <option value="2">2 — парна</option>
           </select>
         </label>
-        <label>
-          Початковий рядок на першій сторінці
-          <input type="number" id="startRowNumber" min="1" max="60" step="1" value="1">
+        <label class="inline-number-label">
+          Початковий рядок
+          <input type="number" id="startRowNumber" class="inline-number-input" min="1" max="60" step="1" value="1">
         </label>
       </div>
 
       <div class="settings-block">
-        <h3>Рукопис</h3>
-        <label class="template-toggle">
-          <input type="checkbox" id="useHandFont" checked>
-          Рукописний шрифт OleksiiFull
+        <h3>Рукопис<span class="settings-info-icon" title="Налаштування відображення тексту">ⓘ</span></h3>
+        <label>
+          Набір шрифту для тексту
+          <select id="handwritingFontPack">
+            <option value="Litopys">Litopys</option>
+          </select>
+        </label>
+        <div class="fontpack-actions">
+          <button class="icon-only demo-locked" type="button" title="Додати шрифт" aria-label="Додати шрифт">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5v14"/></svg>
+          </button>
+          <button class="icon-only demo-locked" type="button" title="Видалити шрифт" aria-label="Видалити шрифт">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/></svg>
+          </button>
+          <button class="icon-only demo-locked" type="button" title="Експорт шрифту" aria-label="Експорт шрифту">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          </button>
+          <button class="icon-only demo-locked" type="button" title="Імпорт шрифту" aria-label="Імпорт шрифту">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          </button>
+        </div>
+        <label>
+          Перенос рядків
+          <select id="wrapMode">
+            <option value="auto" selected>Автоматично за шириною колонки</option>
+            <option value="manual">Вручну за кількістю символів</option>
+          </select>
         </label>
         <label>
-          Розмір тексту, pt
-          <input type="range" id="textFontSize" min="6" max="48" step="0.5" value="24">
-          <span id="textFontSizeVal">24</span>
+          Символів у рядку
+          <input type="number" id="charLimit" min="20" max="200" step="1" value="50">
+        </label>
+        <label>
+          Розмір дати/часу, pt
+          <input type="range" id="dateFontSize" min="6" max="24" step="0.1" value="12">
+          <span id="dateFontSizeValue">12</span>
+        </label>
+        <label>
+          Розмір середнього тексту, pt
+          <input type="range" id="textFontSize" min="6" max="24" step="0.1" value="12">
+          <span id="textFontSizeValue">12</span>
+        </label>
+        <label>
+          Розмір правого стовпчика, pt
+          <input type="range" id="noteFontSize" min="6" max="24" step="0.1" value="12">
+          <span id="noteFontSizeValue">12</span>
         </label>
         <label>
           Нахил літер, ±°
-          <input type="range" id="letterRotate" min="0" max="5" step="0.1" value="0">
-          <span id="letterRotateVal">0</span>
+          <input type="range" id="letterRotate" min="0" max="15" step="0.1" value="0">
+          <span id="letterRotateValue">0</span>
+        </label>
+        <label>
+          Вертикальна випадковість, ±px/pt
+          <input type="range" id="letterJitterY" min="0" max="3" step="0.1" value="0">
+          <span id="letterJitterYValue">0</span>
+        </label>
+        <label>
+          Ширина пробілу між словами
+          <input type="range" id="spaceFactor" min="0" max="2.5" step="0.05" value="0.25">
+          <span id="spaceFactorValue">0.25</span>
+        </label>
+        <label>
+          Мікропробіли між символами, ±px/pt
+          <input type="range" id="charMicroSpacing" min="0" max="2.5" step="0.05" value="0">
+          <span id="charMicroSpacingValue">0</span>
         </label>
       </div>
 
-      <div class="settings-actions">
-        <button class="icon-only" title="Зберегти налаштування">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/><path d="M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7"/><path d="M7 3v4a1 1 0 0 0 1 1h7"/></svg>
-        </button>
-        <button class="icon-only" title="Скинути налаштування">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
-        </button>
+      <div class="settings-block">
+        <h3>Підписи<span class="settings-info-icon" title="Налаштування підписів для додавання в документ">ⓘ</span></h3>
+        <label>
+          Збережені підписи
+          <select id="signatureLibrarySelect">
+            <option value="">— немає збережених —</option>
+          </select>
+        </label>
+        <div class="fontpack-actions">
+          <button class="icon-only demo-locked" type="button" title="Імпортувати підпис" aria-label="Імпортувати підпис">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          </button>
+          <button class="icon-only demo-locked" type="button" title="Редагувати підпис" aria-label="Редагувати підпис">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 21h8"/><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/></svg>
+          </button>
+          <button class="icon-only demo-locked" type="button" title="Перейменувати підпис" aria-label="Перейменувати підпис">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>
+          </button>
+          <button class="icon-only demo-locked" type="button" title="Видалити підпис" aria-label="Видалити підпис">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="settings-block">
+        <h3>Налаштування<span class="settings-info-icon" title="Імпорт/експорт налаштувань тексту">ⓘ</span></h3>
+        <div class="settings-actions">
+          <button class="icon-only demo-locked" title="Зберегти налаштування" aria-label="Зберегти налаштування">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/><path d="M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7"/><path d="M7 3v4a1 1 0 0 0 1 1h7"/></svg>
+          </button>
+          <button class="icon-only demo-locked" title="Експорт профілю" aria-label="Експорт профілю">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          </button>
+          <button class="icon-only demo-locked" title="Імпорт профілю" aria-label="Імпорт профілю">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          </button>
+          <button class="icon-only" id="btn-reset-text" title="Скинути налаштування тексту" aria-label="Скинути налаштування тексту">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+          </button>
+        </div>
       </div>
     </aside>
 
@@ -204,22 +323,45 @@ import Layout from '../layouts/Layout.astro';
       </div>
     </main>
 
-    <!-- Права панель — Редактор бланка -->
+    <!-- Права панель — Бланк -->
     <aside class="blank-editor-panel" id="right-panel">
       <h2>
-        <span class="panel-title-text">Редактор бланка</span>
+        <span class="panel-title-text">Бланк</span>
         <span class="panel-menu-icon" id="btn-collapse-right" title="Згорнути панель">☰</span>
       </h2>
 
       <div class="settings-block">
-        <h3>Блок: заголовки</h3>
+        <h3>Бланк<span class="settings-info-icon" title="Блок налаштувань попереднього перегляду бланку">ⓘ</span></h3>
+        <button type="button" class="demo-locked full-width-btn" title="Доступно у повній версії">Налаштувати сторінку</button>
+        <label class="template-toggle">
+          <input type="checkbox" id="showTemplateGrid" checked>
+          Показати бланк у preview
+        </label>
+        <label class="template-toggle">
+          <input type="checkbox" id="hidePreviewText">
+          Приховати текст
+        </label>
+        <label>
+          Прозорість сітки
+          <input type="range" id="gridOpacity" min="0" max="1" step="0.01" value="0.42">
+          <span id="gridOpacityValue">0.42</span>
+        </label>
+        <label>
+          Товщина ліній
+          <input type="range" id="blankLineWidth" min="0.1" max="0.8" step="0.05" value="0.25">
+          <span id="blankLineWidthValue">0.25</span>
+        </label>
+      </div>
+
+      <div class="settings-block">
+        <h3>Заголовки<span class="settings-info-icon" title="Корегування шапки бланку">ⓘ</span></h3>
         <label>
           Заголовок колонки 1
-          <input type="text" id="blankHeader1" value="Дата">
+          <input type="text" id="blankHeader1" value="Дата, час">
         </label>
         <label>
           Заголовок колонки 2
-          <input type="text" id="blankHeader2" value="Зміст розпорядження">
+          <input type="text" id="blankHeader2" value="Завдання військ та стисле висвітлення бойових дій">
         </label>
         <label>
           Заголовок колонки 3
@@ -232,54 +374,63 @@ import Layout from '../layouts/Layout.astro';
         <label>
           Висота шапки (1–3 рядки)
           <input type="range" id="blankHeaderRows" min="1" max="3" step="1" value="2">
-          <span id="blankHeaderRowsVal">2</span>
+          <span id="blankHeaderRowsValue">2</span>
         </label>
       </div>
 
       <div class="settings-block">
-        <h3>Блок: позиція таблиці</h3>
+        <h3>Позиція таблиці<span class="settings-info-icon" title="Позиція бланку на листі">ⓘ</span></h3>
         <label>
           Внутрішній відступ від краю, мм
           <input type="range" id="blankInnerMargin" min="0" max="30" step="0.1" value="10">
-          <span id="blankInnerMarginVal">10</span>
+          <span id="blankInnerMarginValue">10</span>
+        </label>
+        <label>
+          Дзеркальне зміщення, мм
+          <input type="range" id="blankMirrorOffset" min="-30" max="30" step="0.1" value="0">
+          <span id="blankMirrorOffsetValue">0</span>
+        </label>
+        <label class="template-toggle">
+          <input type="checkbox" id="blankOneSided">
+          Односторонній шаблон (без дзеркалення, всі листи однакові)
+        </label>
+        <label>
+          Фактичний X: непарна / парна
+          <input type="text" id="blankActualXInfo" value="25.0 мм / 10.0 мм" readonly>
         </label>
         <label>
           Верх таблиці, мм
           <input type="range" id="blankTop" min="5" max="35" step="0.1" value="20">
-          <span id="blankTopVal">20</span>
+          <span id="blankTopValue">20</span>
         </label>
         <label>
           Низ таблиці, мм
           <input type="range" id="blankBottom" min="250" max="295" step="0.1" value="287">
-          <span id="blankBottomVal">287</span>
-        </label>
-        <label>
-          Фактичний X: непарна / парна
-          <input type="text" id="blankActualX" value="25.0 мм / 10.0 мм" readonly>
+          <span id="blankBottomValue">287</span>
         </label>
       </div>
 
       <div class="settings-block">
-        <h3>Блок: колонки і рядки</h3>
+        <h3>Колонки і рядки<span class="settings-info-icon" title="Розміри бланку, кількість рядків">ⓘ</span></h3>
         <label>
           Ширина колонки 1, мм
           <input type="range" id="blankDateWidth" min="15" max="60" step="0.1" value="30">
-          <span id="blankDateWidthVal">30</span>
+          <span id="blankDateWidthValue">30</span>
         </label>
         <label>
           Ширина колонки 2, мм
           <input type="range" id="blankTextWidth" min="80" max="150" step="0.1" value="120">
-          <span id="blankTextWidthVal">120</span>
+          <span id="blankTextWidthValue">120</span>
         </label>
         <label>
           Ширина колонки 3, мм
           <input type="range" id="blankNoteWidth" min="15" max="50" step="0.1" value="25">
-          <span id="blankNoteWidthVal">25</span>
+          <span id="blankNoteWidthValue">25</span>
         </label>
         <label>
           Загальна кількість рядків таблиці
           <input type="range" id="blankRows" min="40" max="55" step="1" value="44">
-          <span id="blankRowsVal">44</span>
+          <span id="blankRowsValue">44</span>
         </label>
         <label>
           Доступно рядків для тексту
@@ -288,20 +439,18 @@ import Layout from '../layouts/Layout.astro';
       </div>
 
       <div class="settings-block">
-        <h3>Блок: експорт і профілі</h3>
-        <label>
-          Товщина ліній
-          <input type="range" id="blankLineWidth" min="0.1" max="0.8" step="0.05" value="0.25">
-          <span id="blankLineWidthVal">0.25</span>
-        </label>
-        <div class="settings-actions" style="margin-top:10px;padding-top:10px;">
-          <button class="icon-only" title="Згенерувати PDF-бланк (повна версія)">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        <h3>Налаштування<span class="settings-info-icon" title="Імпорт/експорт налаштувань бланку">ⓘ</span></h3>
+        <div class="settings-actions">
+          <button class="icon-only demo-locked" title="Зберегти налаштування" aria-label="Зберегти налаштування">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/><path d="M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7"/><path d="M7 3v4a1 1 0 0 0 1 1h7"/></svg>
           </button>
-          <button class="icon-only" title="Зберегти профіль бланка (повна версія)">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/><path d="M17 21v-7H7v7"/><path d="M7 3v4h7"/></svg>
+          <button class="icon-only demo-locked" title="Експорт профілю бланка" aria-label="Експорт профілю бланка">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
           </button>
-          <button class="icon-only" title="Скинути бланк (повна версія)">
+          <button class="icon-only demo-locked" title="Імпорт профілю бланка" aria-label="Імпорт профілю бланка">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          </button>
+          <button class="icon-only" id="btn-reset-blank" title="Скинути бланк" aria-label="Скинути бланк">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
           </button>
         </div>
@@ -359,21 +508,13 @@ import Layout from '../layouts/Layout.astro';
     flex-wrap: wrap; min-height: 56px;
     position: relative; z-index: 100;
   }
-  .app-title { display: flex; align-items: center; gap: 7px; flex-shrink: 0; }
+  .app-title { display: flex; align-items: center; gap: 7px; flex-shrink: 0; margin-right: 10px; }
   .brand-logo-link { display: flex; align-items: center; text-decoration: none; }
   .brand-logo-img { height: 32px; width: auto; display: block; }
   .demo-chip {
     font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em;
     color: #64748b; background: #f1f5f9; border: 1px solid #e2e8f0;
     border-radius: 4px; padding: 2px 5px;
-  }
-  .litopys-module-switch { display: inline-flex; align-items: center; gap: 8px; margin-left: 10px; flex-shrink: 0; }
-  .litopys-module-switch-label { font-weight: 700; font-size: 15px; color: #94a3b8; user-select: none; }
-  .litopys-module-switch-label.active-label { color: #0f172a; }
-  .litopys-module-switch-toggle {
-    width: 30px; height: 30px; display: inline-flex; align-items: center; justify-content: center;
-    border: 0 !important; background: transparent !important; padding: 0 !important;
-    cursor: default !important; box-shadow: none !important; opacity: .5; border-radius: 0 !important;
   }
   .controls { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
   .topbar-actions { flex: 1; }
@@ -394,19 +535,8 @@ import Layout from '../layouts/Layout.astro';
     background: #f1f5f9 !important; border-color: #e2e8f0 !important; transform: none !important;
   }
 
-  /* "Робота з текстом" */
+  /* "Робота з текстом" — тепер icon-only кнопка, як в реальному застосунку */
   .text-work-menu { position: relative; }
-  .manual-text-import-button {
-    height: 34px !important; padding: 0 11px !important;
-    display: inline-flex !important; align-items: center !important; gap: 6px !important;
-    border-radius: 9px !important; border: 1px solid #2f2f2f !important;
-    background: #3c3c3c !important; color: #fff !important;
-    font-size: 12.5px !important; font-weight: 600 !important; font-family: inherit !important;
-    white-space: nowrap !important; cursor: pointer;
-    box-shadow: 0 3px 10px rgba(15,23,42,.18) !important;
-    transform: none !important; transition: background .12s !important;
-  }
-  .manual-text-import-button:hover { background: #4a4a4a !important; transform: none !important; }
   .dropdown-caret { font-size: 10px; opacity: .8; }
 
   /* File picker pill */
@@ -423,6 +553,7 @@ import Layout from '../layouts/Layout.astro';
   .file-picker-name { font-size: 12.5px; }
 
   /* Compact dropdown */
+  .pdf-save-menu, .pdf-action-menu, .text-work-menu { position: relative; }
   .compact-dropdown {
     display: none; position: absolute; top: calc(100% + 7px); left: 0;
     min-width: 200px; background: #fff; border: 1px solid #e2e8f0;
@@ -443,16 +574,28 @@ import Layout from '../layouts/Layout.astro';
     border: 1px solid transparent !important; box-shadow: none !important;
     cursor: pointer !important; transform: none !important;
   }
+  .compact-dropdown button:hover { background: #f1f5f9 !important; }
+
+  /* Demo-locked affordance — decorative controls that show "full version only" */
+  .demo-locked { cursor: not-allowed !important; opacity: .55; }
+  .demo-locked:hover { background: transparent !important; }
+  .full-width-btn {
+    display: block; width: 100%; margin: 8px 0;
+    padding: 7px 9px; border: 1px solid #cbd5e1 !important; border-radius: 8px !important;
+    background: #fff !important; color: #334155 !important;
+    font-size: 12px; font-weight: 500; font-family: inherit;
+  }
 
   /* Profile menu */
   .topbar-profile { margin-left: auto; position: relative; }
   .profile-menu {
     display: none; position: absolute; right: 0; top: calc(100% + 8px);
-    min-width: 180px; background: #fff; border: 1px solid #e2e8f0;
+    min-width: 190px; background: #fff; border: 1px solid #e2e8f0;
     border-radius: 13px; box-shadow: 0 16px 40px rgba(15,23,42,.16);
     padding: 7px; z-index: 3000;
   }
   .profile-menu.open { display: block; }
+  .profile-menu-divider { height: 1px; background: #e2e8f0; margin: 5px 2px; }
   .pmenu-link {
     display: flex; align-items: center; gap: 8px; padding: 8px 9px;
     border-radius: 8px; color: #0f172a; font-size: 12.5px; font-weight: 500;
@@ -508,10 +651,21 @@ import Layout from '../layouts/Layout.astro';
   .settings-block h3 {
     font-size: 11.5px; font-weight: 800; color: #334155;
     letter-spacing: -.01em; margin-bottom: 8px;
+    display: flex; align-items: center; gap: 5px;
+  }
+  .settings-info-icon {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 14px; height: 14px; border-radius: 50%;
+    background: #e2e8f0; color: #64748b; font-size: 9.5px; font-weight: 700;
+    cursor: help; flex-shrink: 0;
   }
   .settings-block label {
     display: block; margin: 8px 0; font-size: 12px; color: #1e293b; line-height: 1.4;
   }
+  .settings-block label.inline-number-label {
+    display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  }
+  .inline-number-input { width: 70px !important; margin-top: 0 !important; }
   .settings-block input[type=text],
   .settings-block input[type=number],
   .settings-block select {
@@ -521,6 +675,7 @@ import Layout from '../layouts/Layout.astro';
     font-size: 12px; font-family: inherit;
     box-shadow: none !important; transform: none !important;
   }
+  .settings-block input[readonly] { color: #64748b !important; background: #f1f5f9 !important; }
   .settings-block input[type=range] { width: 100%; margin-top: 5px; accent-color: #334155; }
   .settings-block span {
     display: inline-block; min-width: 40px;
@@ -531,6 +686,10 @@ import Layout from '../layouts/Layout.astro';
     padding: 7px 9px; background: #fff; border: 1px solid #e2e8f0;
     border-radius: 8px; color: #0f172a; font-size: 12px; cursor: pointer;
   }
+  .fontpack-actions {
+    display: flex; gap: 6px; flex-wrap: wrap; margin: 8px 0;
+  }
+  .fontpack-actions button.icon-only { width: auto !important; flex: 1; min-width: 30px !important; height: 30px !important; }
   .settings-actions {
     display: flex; gap: 6px; flex-wrap: wrap;
     margin-top: 12px; padding-top: 10px; border-top: 1px solid #e2e8f0;
@@ -654,11 +813,13 @@ import Layout from '../layouts/Layout.astro';
 //  Стан — точно як DEFAULT_BLANK_TEMPLATE та DEFAULT_CALIBRATION у застосунку
 // ══════════════════════════════════════════════════════
 const blank = {
-  header1: 'Дата',
-  header2: 'Зміст розпорядження',
+  header1: 'Дата, час',
+  header2: 'Завдання військ та стисле висвітлення бойових дій',
   header3: 'Примітка',
   nums: '1,2,3',
   innerMargin: 10,   // мм від краю аркуша до таблиці
+  mirrorOffset: 0,   // мм дзеркальне зміщення непарних/парних сторінок
+  oneSided: false,   // односторонній шаблон (без дзеркалення)
   top: 20,           // мм зверху аркуша де починається таблиця
   bottom: 287,       // мм зверху аркуша де закінчується таблиця
   dateWidth: 30,     // мм
@@ -676,8 +837,14 @@ const cal = {
   oddTextX: 0.5,
   firstRowTop: 31.47,
   rowHeight: 6.084,
-  textFontSize: 24,
+  baselineOffset: 6.07,
+  textFontSize: 12,
+  dateFontSize: 12,
+  noteFontSize: 12,
   letterRotate: 0,
+  letterJitterY: 0,
+  spaceFactor: 0.25,
+  charMicroSpacing: 0,
   useHandFont: true,
 };
 
@@ -709,8 +876,17 @@ function syncCalFromBlank(){
   cal.rowHeight = (blank.bottom - blank.top) / blank.rows;
   cal.firstRowTop = blank.bottom - textRows * cal.rowHeight;
   // оновлюємо відповідні елементи лівої панелі
-  const rh = $('rowHeight'); if(rh){ rh.value = cal.rowHeight.toFixed(3); const v=$('rowHeightVal'); if(v) v.textContent=cal.rowHeight.toFixed(3); }
-  const ft = $('firstRowTop'); if(ft){ ft.value = cal.firstRowTop.toFixed(2); const v=$('firstRowTopVal'); if(v) v.textContent=cal.firstRowTop.toFixed(2); }
+  const rh = $('rowHeight'); if(rh){ rh.value = cal.rowHeight.toFixed(3); const v=$('rowHeightValue'); if(v) v.textContent=cal.rowHeight.toFixed(3); }
+  const ft = $('firstRowTop'); if(ft){ ft.value = cal.firstRowTop.toFixed(2); const v=$('firstRowTopValue'); if(v) v.textContent=cal.firstRowTop.toFixed(2); }
+}
+
+// ── Фактичний X (дзеркалення непарна/парна) ──
+function syncActualXInfo(){
+  const info = $('blankActualXInfo');
+  if(!info) return;
+  const oddX = blank.innerMargin;
+  const evenX = blank.oneSided ? blank.innerMargin : Math.max(0, blank.innerMargin + blank.mirrorOffset);
+  info.value = `${oddX.toFixed(1)} мм / ${evenX.toFixed(1)} мм`;
 }
 
 // ── Таблиця: побудова бланк-шару (лінії, заголовки, нумери) ──
@@ -810,7 +986,6 @@ function buildTextLayer(){
     ? 'OleksiiFull,Times New Roman,Times,serif'
     : 'Times New Roman,Times,serif';
   const fs   = cal.textFontSize + 'pt';
-  const fsPx = cal.textFontSize * (96/72);
 
   const fontStr = font.replace(/,/g,', ');
 
@@ -825,7 +1000,7 @@ function buildTextLayer(){
     const dateStr = row.date || '';
     const timeStr = row.time || '';
     const textLines = splitTextIntoRows(row.text||'', fontStr, cal.textFontSize, TW - cal.oddTextX - 1);
-    const noteLines = splitTextIntoRows(row.note||'', fontStr, cal.textFontSize, NW - 1.5);
+    const noteLines = splitTextIntoRows(row.note||'', fontStr, cal.noteFontSize, NW - 1.5);
 
     // Колонка дати: дата на 1-му рядку, час на 2-му, решта порожньо
     const dateCol = [];
@@ -869,8 +1044,11 @@ function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/
 
 function render(){
   syncCalFromBlank();
+  syncActualXInfo();
   buildBlankLayer();
   buildTextLayer();
+  const ti = $('blankTextRowsInfo');
+  if(ti) ti.value = Math.max(0, blank.rows - blank.headerRows);
 }
 
 // ── Масштабування ──
@@ -883,41 +1061,47 @@ function scalePreview(){
   preview.style.transformOrigin = 'top center';
 }
 
-// ── Прив'язка бігунків лівої панелі ──
-function bindLeft(id, key, decimals){
+// ── Прив'язка бігунків лівої панелі (Текст) ──
+function bindCal(id, key, decimals){
   const el = $(id); if(!el) return;
-  const val = $(id+'Val')||$(id+'Value');
+  const val = $(id+'Value')||$(id+'Val');
   el.addEventListener('input', ()=>{
     cal[key] = parseFloat(el.value);
-    if(val) val.textContent = parseFloat(el.value).toFixed(decimals||2);
+    if(val) val.textContent = parseFloat(el.value).toFixed(decimals==null?2:decimals);
     render();
   });
 }
-bindLeft('gridOpacity','gridOpacity',2);
-bindLeft('oddDateX','oddDateX',1);
-bindLeft('oddTimeX','oddTimeX',1);
-bindLeft('oddTextX','oddTextX',1);
+bindCal('oddDateX','oddDateX',1);
+bindCal('oddTimeX','oddTimeX',1);
+bindCal('oddTextX','oddTextX',1);
+bindCal('baselineOffset','baselineOffset',2);
+bindCal('dateFontSize','dateFontSize',1);
+bindCal('textFontSize','textFontSize',1);
+bindCal('noteFontSize','noteFontSize',1);
+bindCal('letterRotate','letterRotate',1);
+bindCal('letterJitterY','letterJitterY',1);
+bindCal('spaceFactor','spaceFactor',2);
+bindCal('charMicroSpacing','charMicroSpacing',2);
 // rowHeight і firstRowTop — тільки для читання (обраховуються з blank)
 
-// ── Прив'язка бігунків правої панелі ──
+// ── Прив'язка бігунків правої панелі (Бланк) ──
 function bindRight(id, key, isText){
   const el = $(id); if(!el) return;
-  const val = $(id+'Val')||($(id+'Value'));
+  const val = $(id+'Value')||$(id+'Val');
   el.addEventListener('input', ()=>{
     if(isText){ blank[key] = el.value; }
     else { blank[key] = parseFloat(el.value); }
     if(val && !isText) val.textContent = parseFloat(el.value).toFixed(2);
     render();
-    // доступно рядків для тексту
-    const ti = $('blankTextRowsInfo');
-    if(ti) ti.value = Math.max(0, blank.rows - blank.headerRows);
   });
 }
 
 bindRight('blankHeader1','header1',true);
 bindRight('blankHeader2','header2',true);
 bindRight('blankHeader3','header3',true);
+bindRight('blankNums','nums',true);
 bindRight('blankInnerMargin','innerMargin');
+bindRight('blankMirrorOffset','mirrorOffset');
 bindRight('blankTop','top');
 bindRight('blankBottom','bottom');
 bindRight('blankDateWidth','dateWidth');
@@ -927,52 +1111,118 @@ bindRight('blankRows','rows');
 bindRight('blankHeaderRows','headerRows');
 bindRight('blankLineWidth','lineWidth');
 
-// Рукопис
-const textFontSizeEl = $('textFontSize');
-if(textFontSizeEl){
-  textFontSizeEl.addEventListener('input', ()=>{
-    cal.textFontSize = parseFloat(textFontSizeEl.value);
-    const v=$('textFontSizeVal'); if(v) v.textContent=textFontSizeEl.value;
-    render();
-  });
-}
-const letterRotateEl = $('letterRotate');
-if(letterRotateEl){
-  letterRotateEl.addEventListener('input', ()=>{
-    cal.letterRotate = parseFloat(letterRotateEl.value);
-    const v=$('letterRotateVal'); if(v) v.textContent=letterRotateEl.value;
-    render();
-  });
-}
-const useHandFontEl = $('useHandFont');
-if(useHandFontEl){
-  useHandFontEl.addEventListener('change', ()=>{
-    cal.useHandFont = useHandFontEl.checked;
+// Checkbox: односторонній шаблон
+const oneSidedEl = $('blankOneSided');
+if(oneSidedEl){
+  oneSidedEl.addEventListener('change', ()=>{
+    blank.oneSided = oneSidedEl.checked;
     render();
   });
 }
 
-// Range → span для всіх інших
+// Grid opacity (Бланк block, right panel)
+bindCal('gridOpacity','gridOpacity',2);
+
+// Checkboxes — preview toggles
+const showGridEl = $('showTemplateGrid');
+if(showGridEl){
+  showGridEl.addEventListener('change', ()=>{
+    const layer = $('jbd-blank-layer');
+    if(layer) layer.style.display = showGridEl.checked ? '' : 'none';
+  });
+}
+const hideTextEl = $('hidePreviewText');
+if(hideTextEl){
+  hideTextEl.addEventListener('change', ()=>{
+    const layer = $('jbd-text-layer');
+    if(layer) layer.style.display = hideTextEl.checked ? 'none' : '';
+  });
+}
+
+// Рукопис: перемикач шрифту (декоративний — впливає лише на прев'ю)
+const useHandFontEl = $('handwritingFontPack');
+if(useHandFontEl){
+  useHandFontEl.addEventListener('change', ()=>{
+    cal.useHandFont = true; // єдиний доступний набір у демо
+    render();
+  });
+}
+
+// Range → span для будь-яких інших повзунків (запасний варіант)
 document.querySelectorAll('input[type=range]').forEach(inp=>{
-  const span=$(inp.id+'Val')||$(inp.id+'Value');
+  const span=$(inp.id+'Value')||$(inp.id+'Val');
   if(span && !span.textContent) span.textContent=inp.value;
   // Не перепризначаємо — вже прив'язано вище
 });
 
-// Dropdown toggles
-$('btn-twm').addEventListener('click', e=>{ e.stopPropagation(); $('textWorkMenu').classList.toggle('open'); });
-$('btn-menu').addEventListener('click', e=>{ e.stopPropagation(); $('profileMenu').classList.toggle('open'); });
-document.addEventListener('click', ()=>{ $('textWorkMenu').classList.remove('open'); $('profileMenu').classList.remove('open'); });
-$('btn-undo').addEventListener('click', ()=>{});
-$('btn-redo').addEventListener('click', ()=>{});
+// ── Скидання налаштувань (демо: повертає значення за замовчуванням) ──
+const defaultsCal = { ...cal };
+const defaultsBlank = { ...blank };
+function resetGroup(ids, store, defaults){
+  ids.forEach(id=>{
+    const el = $(id); if(!el) return;
+    const key = el.dataset.key || id;
+  });
+}
+$('btn-reset-text')?.addEventListener('click', ()=>{
+  Object.assign(cal, defaultsCal);
+  ['oddDateX','oddTimeX','oddTextX','baselineOffset','dateFontSize','textFontSize','noteFontSize','letterRotate','letterJitterY','spaceFactor','charMicroSpacing'].forEach(id=>{
+    const el=$(id); if(!el) return;
+    const key=id; el.value = cal[key];
+    const v=$(id+'Value'); if(v) v.textContent = el.value;
+  });
+  render();
+});
+$('btn-reset-blank')?.addEventListener('click', ()=>{
+  Object.assign(blank, defaultsBlank);
+  ['blankHeader1','blankHeader2','blankHeader3','blankNums','blankInnerMargin','blankMirrorOffset','blankTop','blankBottom','blankDateWidth','blankTextWidth','blankNoteWidth','blankRows','blankHeaderRows','blankLineWidth'].forEach(id=>{
+    const el=$(id); if(!el) return;
+    const key = id.replace('blank','');
+    const mapped = key.charAt(0).toLowerCase()+key.slice(1);
+    if(mapped in blank){ el.value = blank[mapped]; const v=$(id+'Value'); if(v) v.textContent = el.value; }
+  });
+  const oneSided = $('blankOneSided'); if(oneSided) oneSided.checked = blank.oneSided;
+  render();
+});
+
+// ── Dropdown toggles (топбар) ──
+function closeAllDropdowns(){
+  document.querySelectorAll('.compact-dropdown.open').forEach(el=>el.classList.remove('open'));
+  $('profileMenu')?.classList.remove('open');
+}
+function toggleDropdown(id){
+  const el = $(id);
+  if(!el) return;
+  const wasOpen = el.classList.contains('open');
+  closeAllDropdowns();
+  if(!wasOpen) el.classList.add('open');
+}
+$('btn-twm')?.addEventListener('click', e=>{ e.stopPropagation(); toggleDropdown('textWorkMenu'); });
+$('btn-pdf-save')?.addEventListener('click', e=>{ e.stopPropagation(); toggleDropdown('pdfSaveMenu'); });
+$('btn-pdf-print')?.addEventListener('click', e=>{ e.stopPropagation(); toggleDropdown('pdfPrintMenu'); });
+$('btn-project')?.addEventListener('click', e=>{ e.stopPropagation(); toggleDropdown('projectMenu'); });
+$('btn-menu')?.addEventListener('click', e=>{ e.stopPropagation(); $('profileMenu')?.classList.toggle('open'); });
+document.addEventListener('click', ()=>{ closeAllDropdowns(); });
+$('btn-undo')?.addEventListener('click', ()=>{});
+$('btn-redo')?.addEventListener('click', ()=>{});
+$('btn-plotter')?.addEventListener('click', ()=>{});
+$('btn-load-docx')?.addEventListener('click', ()=>{});
+
+// ── Панелі: згортання ──
+$('btn-collapse-left')?.addEventListener('click', ()=>{
+  $('left-panel')?.classList.toggle('collapsed');
+});
+$('btn-collapse-right')?.addEventListener('click', ()=>{
+  $('right-panel')?.classList.toggle('collapsed');
+});
 
 // ── Перший рендер ──
 render();
 scalePreview();
 window.addEventListener('resize', scalePreview);
 
-// ── DOCX export ──
-$('btn-export-docx').addEventListener('click', async ()=>{
+// ── DOCX export (декоративний файл-пікер лишається робочим — вже було у демо) ──
+$('btn-export-docx')?.addEventListener('click', async ()=>{
   const { Document, Packer, Paragraph, TextRun, Table, TableRow, TableCell, WidthType, BorderStyle } = await import('https://esm.sh/docx@8.5.0');
   const { saveAs } = await import('https://esm.sh/file-saver@2.0.5');
 
