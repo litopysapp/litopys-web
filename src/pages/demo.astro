@@ -702,7 +702,28 @@ import Layout from '../layouts/Layout.astro';
     outline: none;
   }
   .settings-block input[readonly] { color: #64748B !important; background: #F1F5F9 !important; }
-  .settings-block input[type=range] { width: 100%; margin-top: 5px; accent-color: #0d1024; }
+  /* Повзунки — 1:1 з реальним застосунком: тонкий темний трек, жовтий круглий thumb */
+  .settings-block input[type=range] {
+    width: 100%; margin-top: 5px;
+    -webkit-appearance: none; appearance: none;
+    height: 14px; background: transparent;
+  }
+  .settings-block input[type=range]::-webkit-slider-runnable-track {
+    height: 2px; background: #0d1024; border-radius: 2px;
+  }
+  .settings-block input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none;
+    width: 14px; height: 14px; margin-top: -6px;
+    border-radius: 50%; background: #f4c716; cursor: pointer;
+    border: none;
+  }
+  .settings-block input[type=range]::-moz-range-track {
+    height: 2px; background: #0d1024; border-radius: 2px;
+  }
+  .settings-block input[type=range]::-moz-range-thumb {
+    width: 14px; height: 14px; border-radius: 50%;
+    background: #f4c716; cursor: pointer; border: none;
+  }
   .settings-block span {
     display: inline-block; min-width: 40px;
     font-variant-numeric: tabular-nums; color: #0d1024; font-weight: 600;
