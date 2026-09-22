@@ -37,29 +37,29 @@ import Layout from '../layouts/Layout.astro';
               <img src="/litopys-badge.png" alt="Litopys" class="lnc-badge-img">
             </div>
           </div>
-          <div class="lnc-subtitle-pill">Litopys — писар, який не втомлюється</div>
+          <div class="lnc-subtitle-pill">Писар, який не втомлюється</div>
           <div class="lnc-license-row">
             <div class="lnc-license">
               <span class="lnc-lic-line green">Ліцензія: активна (повна) безстроково</span>
-              <span class="lnc-lic-line green">Власник: Litopys.</span>
+              <span class="lnc-lic-line green">Власник: Олексій. Видана: —.</span>
             </div>
             <button class="lnc-account-btn">Акаунт</button>
           </div>
         </div>
-        <!-- кнопки модулів -->
-        <div class="lnc-modules">
-          <div class="lnc-module">
-            <div class="lnc-module-stripe"></div>
-            <div class="lnc-module-body">
-              <p class="lnc-module-title">Відкрити ЖБД</p>
-              <p class="lnc-module-desc">Журнал бойових дій: підготуй,<br/>сформуй, запиши</p>
-            </div>
+        <!-- останні документи -->
+        <div class="lnc-docs">
+          <div class="lnc-docs-head">
+            <p class="lnc-docs-title">Останні документи</p>
+            <button class="lnc-new-doc-btn">+ Новий документ</button>
           </div>
-          <div class="lnc-module">
-            <div class="lnc-module-stripe"></div>
-            <div class="lnc-module-body">
-              <p class="lnc-module-title">Відкрити ЖОВтР</p>
-              <p class="lnc-module-desc">Бойове розпорядження: підготуй,<br/>сформуй, запиши</p>
+          <div class="lnc-doc-list">
+            <div class="lnc-doc-row">
+              <svg class="lnc-doc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 13h6"/><path d="M9 17h6"/></svg>
+              <span>Документ</span>
+            </div>
+            <div class="lnc-doc-row">
+              <svg class="lnc-doc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 13h6"/><path d="M9 17h6"/></svg>
+              <span>Документ 2</span>
             </div>
           </div>
         </div>
@@ -420,21 +420,35 @@ import Layout from '../layouts/Layout.astro';
     font-family: inherit;
   }
 
-  /* модулі */
-  .lnc-modules { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; margin-bottom: 1rem; }
-  .lnc-module {
+  /* останні документи */
+  .lnc-docs {
     border: 1px solid #e5e7eb;
-    border-radius: 12px;
-    overflow: hidden;
-    background: #fff;
-    transition: box-shadow .2s, transform .2s;
-    cursor: pointer;
+    border-radius: 14px;
+    padding: 1rem 1.1rem;
+    margin-bottom: 1rem;
   }
-  .lnc-module:hover { box-shadow: 0 6px 20px rgba(0,0,0,.1); transform: translateY(-2px); }
-  .lnc-module-stripe { height: 5px; background: linear-gradient(90deg, #005BBB 50%, #FFD500 50%); }
-  .lnc-module-body { padding: 1rem; text-align: center; }
-  .lnc-module-title { font-size: 1rem; font-weight: 700; color: #111827; margin-bottom: .35rem; }
-  .lnc-module-desc { font-size: .75rem; color: #9ca3af; line-height: 1.5; }
+  .lnc-docs-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: .75rem; }
+  .lnc-docs-title { font-size: .9375rem; color: #6b7280; }
+  .lnc-new-doc-btn {
+    background: #1a1a2e;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: .45rem 1rem;
+    font-size: .8rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .lnc-doc-list { display: flex; flex-direction: column; gap: .6rem; }
+  .lnc-doc-row {
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+    font-size: .9375rem;
+    color: #111827;
+  }
+  .lnc-doc-icon { width: 18px; height: 18px; flex-shrink: 0; color: #6b7280; }
 
   /* тегляйн */
   .lnc-tagline { text-align: center; font-size: .8rem; color: #9ca3af; }
