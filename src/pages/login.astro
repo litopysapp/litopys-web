@@ -81,6 +81,7 @@ if (Astro.request.method === 'POST') {
             Пароль
             <input type="password" name="password" required autocomplete="current-password" placeholder="••••••••" />
           </label>
+          <p class="forgot-link"><a href="/forgot-password">Забули пароль?</a></p>
           <button type="submit" class="btn-submit">Увійти</button>
         </form>
       ) : (
@@ -158,6 +159,9 @@ if (Astro.request.method === 'POST') {
     margin-bottom: 1rem;
     text-align: left;
   }
+  .forgot-link { font-size: .8125rem; margin-top: -.5rem; text-align: right; }
+  .forgot-link a { color: #6b7280; font-weight: 600; }
+  .forgot-link a:hover { color: #1a1a2e; }
   .mfa-hint { font-size: .875rem; color: #6b7280; margin-bottom: .5rem; }
   .register-link { font-size: .875rem; color: #6b7280; margin-bottom: 1.5rem; }
   .register-link a { color: #1a1a2e; font-weight: 600; }
