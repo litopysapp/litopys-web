@@ -119,6 +119,58 @@ import Layout from '../layouts/Layout.astro';
     </div>
   </section>
 
+  <!-- ══ ВЛАСНИЙ ШАБЛОН ══ -->
+  <section id="vlasnyi-shablon" class="section-steps section-extra">
+    <div class="container">
+      <p class="eyebrow fade-up">Нове у версії 2.0 · Власний шаблон документа</p>
+      <p class="section-lead body-text fade-up">Потрібен документ, якого немає серед готових журналів? Збери свій — у книжковому (А4, 210×297) або альбомному (А4, 297×210) варіанті.</p>
+      <div class="steps-list">
+        <div class="step-row fade-up">
+          <div class="step-num">01</div>
+          <div class="step-body">
+            <h3>Обери формат аркуша</h3>
+            <p class="body-text">Створи «Вільний документ» у книжковій або альбомній орієнтації — під той бланк, який тобі потрібен.</p>
+          </div>
+        </div>
+        <div class="step-row fade-up" style="--d:.08s">
+          <div class="step-num">02</div>
+          <div class="step-body">
+            <h3>Додай свою таблицю</h3>
+            <p class="body-text">Таблиці працюють як у Word: потрібна кількість рядків і колонок, власні розміри, автоматична підгонка під ширину листа.</p>
+          </div>
+        </div>
+        <div class="step-row fade-up" style="--d:.16s">
+          <div class="step-num">03</div>
+          <div class="step-body">
+            <h3>Зроби свою розмітку</h3>
+            <p class="body-text">Заголовки, колонтитули, нумерація, форматування тексту — розмісти все на сторінці так, як вимагає твій документ.</p>
+          </div>
+        </div>
+        <div class="step-row fade-up" style="--d:.24s">
+          <div class="step-num">04</div>
+          <div class="step-body">
+            <h3>Заповни власним текстом</h3>
+            <p class="body-text">Впиши зміст у таблицю та поля документа — Літопис одразу покаже, як він виглядатиме твоїм почерком.</p>
+          </div>
+        </div>
+        <div class="step-row fade-up" style="--d:.32s">
+          <div class="step-num">05</div>
+          <div class="step-body">
+            <h3>Окремо надрукуй бланки</h3>
+            <p class="body-text">Роздрукуй на принтері порожні бланки — лише таблицю і розмітку, без тексту.</p>
+          </div>
+        </div>
+        <div class="step-row fade-up" style="--d:.4s">
+          <div class="step-num">06</div>
+          <div class="step-body">
+            <h3>Текст — ручкою</h3>
+            <p class="body-text">Поклади бланк у плотер — і він впише твій текст справжньою ручкою, рівно в клітинки твоєї таблиці.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- ══ CTA ══ -->
   <section class="section-cta">
     <div class="container">
@@ -181,6 +233,8 @@ import Layout from '../layouts/Layout.astro';
   .section-steps { padding: 3rem 0 7rem; }
   .section-extra { padding-top: 0; }
   .section-extra .eyebrow { margin-bottom: 1.5rem; }
+  #vlasnyi-shablon { scroll-margin-top: 72px; }
+  .section-extra .section-lead { max-width: 680px; margin: -.75rem 0 1.75rem; }
   .steps-list { display: flex; flex-direction: column; gap: 1.25rem; }
   .step-row {
     display: flex;

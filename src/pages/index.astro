@@ -174,6 +174,51 @@ import Layout from '../layouts/Layout.astro';
     </div>
   </section>
 
+  <!-- ══ NEW: ВЛАСНИЙ ШАБЛОН ══ -->
+  <section class="section-new">
+    <div class="container">
+      <div class="new-card fade-up">
+        <div class="new-text">
+          <div class="new-badge"><img src="/icon-layout-template.svg" alt="" class="new-badge-icon" />Нове у версії 2.0</div>
+          <h2>Свій документ.<br/>Своя розмітка.</h2>
+          <p class="body-text">Не тільки ЖБД і ЖОВтР. Тепер у Літописі можна зібрати власний шаблон документа — у книжковому або альбомному форматі А4.</p>
+          <ul class="new-list">
+            <li>Додай свою таблицю — як у Word</li>
+            <li>Розмісти поля й текст так, як потрібно тобі</li>
+            <li>Заповни документ власним текстом</li>
+            <li>Окремо надрукуй бланки — і плотер впише в них текст ручкою</li>
+          </ul>
+          <a href="/yak-pratsyuye#vlasnyi-shablon" class="btn-primary" style="margin-top:2rem;display:inline-block;">Як це працює →</a>
+        </div>
+
+        <div class="new-sheets" aria-hidden="true">
+          <div class="sheet sheet-portrait">
+            <span class="sheet-label">Книжковий</span>
+            <div class="sheet-title"></div>
+            <div class="sheet-table">
+              <div class="st-row st-head"><span></span><span></span><span></span></div>
+              <div class="st-row"><span><i class="hw" style="--w:70%"></i></span><span><i class="hw" style="--w:85%"></i></span><span><i class="hw" style="--w:50%"></i></span></div>
+              <div class="st-row"><span><i class="hw" style="--w:55%"></i></span><span><i class="hw" style="--w:65%"></i></span><span><i class="hw" style="--w:75%"></i></span></div>
+              <div class="st-row"><span><i class="hw" style="--w:80%"></i></span><span><i class="hw" style="--w:45%"></i></span><span></span></div>
+              <div class="st-row"><span></span><span></span><span></span></div>
+            </div>
+            <div class="sheet-lines"><i class="hw" style="--w:90%"></i><i class="hw" style="--w:70%"></i></div>
+          </div>
+          <div class="sheet sheet-landscape">
+            <span class="sheet-label">Альбомний</span>
+            <div class="sheet-title"></div>
+            <div class="sheet-table st-wide">
+              <div class="st-row st-head"><span></span><span></span><span></span><span></span></div>
+              <div class="st-row"><span><i class="hw" style="--w:60%"></i></span><span><i class="hw" style="--w:80%"></i></span><span><i class="hw" style="--w:45%"></i></span><span><i class="hw" style="--w:70%"></i></span></div>
+              <div class="st-row"><span><i class="hw" style="--w:75%"></i></span><span><i class="hw" style="--w:50%"></i></span><span><i class="hw" style="--w:65%"></i></span><span></span></div>
+              <div class="st-row"><span></span><span></span><span></span><span></span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- ══ CTA ══ -->
   <section class="section-cta">
     <div class="container">
@@ -510,6 +555,106 @@ import Layout from '../layouts/Layout.astro';
   .feature-card h3 { font-size: 1.0625rem; font-weight: 700; margin-bottom: .6rem; color: #111827; letter-spacing: -.01em; }
   .feature-card p { font-size: .875rem; color: #6b7280; line-height: 1.7; }
 
+  /* ── New: власний шаблон ── */
+  .section-new { padding: 1rem 0 0; }
+  .new-card {
+    display: grid;
+    grid-template-columns: 1.05fr 1fr;
+    gap: 3.5rem;
+    align-items: center;
+    background: rgba(255,255,255,.85);
+    border: 1px solid #e5e7eb;
+    border-radius: 28px;
+    padding: 3.5rem;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 12px 40px rgba(0,0,0,.05);
+  }
+  .new-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: .45rem;
+    background: #fdfaf0;
+    color: #6b5a20;
+    border: 1px solid #c8b870;
+    font-size: .8rem;
+    font-weight: 600;
+    padding: .35rem .9rem;
+    border-radius: 50px;
+    margin-bottom: 1.25rem;
+  }
+  .new-badge-icon { width: 15px; height: 15px; display: block; opacity: .75; }
+  .new-text h2 {
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+    font-weight: 800; letter-spacing: -.03em; line-height: 1.12;
+    margin-bottom: 1.25rem; color: #111827;
+  }
+  .new-list { list-style: none; margin-top: 1.25rem; display: flex; flex-direction: column; gap: .6rem; }
+  .new-list li {
+    position: relative;
+    padding-left: 1.6rem;
+    color: #374151;
+    font-size: .9375rem;
+    line-height: 1.6;
+  }
+  .new-list li::before {
+    content: '';
+    position: absolute;
+    left: 0; top: .5em;
+    width: .7rem; height: .4rem;
+    border-left: 2px solid #4f7cac;
+    border-bottom: 2px solid #4f7cac;
+    transform: rotate(-45deg);
+  }
+
+  /* ілюстрація аркушів */
+  .new-sheets { position: relative; min-height: 340px; }
+  .sheet {
+    position: absolute;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    box-shadow: 0 18px 44px rgba(0,0,0,.1), 0 4px 12px rgba(0,0,0,.05);
+    padding: 1.1rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: .7rem;
+    transition: transform .35s ease;
+  }
+  .sheet-portrait { left: 0; top: 0; width: 55%; aspect-ratio: 210 / 297; transform: rotate(-3deg); }
+  .sheet-landscape { right: 0; bottom: 0; width: 70%; aspect-ratio: 297 / 210; transform: rotate(2deg); }
+  .new-card:hover .sheet-portrait { transform: rotate(-1deg) translateY(-4px); }
+  .new-card:hover .sheet-landscape { transform: rotate(0deg) translateY(-4px); }
+  .sheet-label {
+    position: absolute;
+    top: -.7rem; right: .75rem;
+    background: #1a1a2e;
+    color: #fff;
+    font-size: .6875rem;
+    font-weight: 600;
+    padding: .2rem .6rem;
+    border-radius: 50px;
+    letter-spacing: .02em;
+  }
+  .sheet-title { width: 45%; height: 6px; border-radius: 3px; background: #d1d5db; align-self: center; }
+  .sheet-table { border: 1px solid #9ca3af; display: flex; flex-direction: column; }
+  .st-row { display: grid; grid-template-columns: 1fr 2fr 1.2fr; min-height: 22px; }
+  .st-wide .st-row { grid-template-columns: .8fr 2fr 1.2fr 1fr; }
+  .st-row + .st-row { border-top: 1px solid #9ca3af; }
+  .st-row span { display: flex; align-items: center; padding: 0 .35rem; }
+  .st-row span + span { border-left: 1px solid #9ca3af; }
+  .st-head { background: #f3f4f6; min-height: 16px; }
+  .sheet-lines { display: flex; flex-direction: column; gap: .6rem; margin-top: auto; }
+  /* «рукописний» рядок — чорнило ручки */
+  .hw {
+    display: block;
+    width: var(--w, 80%);
+    height: 2px;
+    border-radius: 2px;
+    background: #2b4a8b;
+    opacity: .8;
+    transform: rotate(-.6deg);
+  }
+
   /* ── CTA ── */
   .section-cta { padding: 7rem 0 8rem; }
   .cta-card {
@@ -549,9 +694,13 @@ import Layout from '../layouts/Layout.astro';
     .launcher { transform: none; max-width: 100%; }
     .what-grid { grid-template-columns: 1fr; gap: 3rem; }
     .stats-grid { grid-template-columns: repeat(2,1fr); }
+    .new-card { grid-template-columns: 1fr; gap: 2.5rem; }
+    .new-sheets { max-width: 460px; width: 100%; margin: 0 auto; }
   }
   @media (max-width: 640px) {
     .features-grid { grid-template-columns: 1fr; }
+    .new-card { padding: 2rem 1.5rem; }
+    .new-sheets { min-height: 260px; }
     .cta-card { padding: 3rem 1.5rem; }
   }
 
