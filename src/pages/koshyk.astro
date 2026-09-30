@@ -18,7 +18,7 @@ import Layout from '../layouts/Layout.astro';
 
       <div id="cart-empty" class="cart-empty fade-up" style="display:none;">
         <p class="cart-empty-text">Кошик порожній.</p>
-        <a href="/tsiny" class="btn-primary">Переглянути ціни →</a>
+        <a href="/litopys/tsiny" class="btn-primary">Переглянути ціни →</a>
       </div>
 
       <div id="cart-content" style="display:none;">
@@ -96,7 +96,24 @@ import Layout from '../layouts/Layout.astro';
     backdrop-filter: blur(8px);
   }
   .cart-items :global(.cart-item-name) { font-size: 1rem; font-weight: 700; color: #111827; flex: 1; }
+  .cart-items :global(.cart-item-badge) {
+    display: inline-block;
+    background: #dc2626;
+    color: #fff;
+    font-size: .6875rem;
+    font-weight: 700;
+    padding: .1rem .45rem;
+    border-radius: 20px;
+    vertical-align: middle;
+    margin-left: .35rem;
+  }
   .cart-items :global(.cart-item-price) { font-size: .9375rem; color: #6b7280; white-space: nowrap; }
+  .cart-items :global(.cart-item-price-old) {
+    text-decoration: line-through;
+    text-decoration-color: #dc2626;
+    color: #9ca3af;
+    margin-right: .4rem;
+  }
 
   .cart-items :global(.cart-item-qty) {
     display: flex;
@@ -180,6 +197,7 @@ import Layout from '../layouts/Layout.astro';
     const cart = (window as any).LitopysCart;
     if (!cart) return;
     const items = cart.readCart();
+    const pricedItems = cart.pricedItemsWithDiscount();
     const empty = document.getElementById('cart-empty')!;
     const content = document.getElementById('cart-content')!;
     const list = document.getElementById('cart-items')!;
@@ -193,7 +211,7 @@ import Layout from '../layouts/Layout.astro';
     empty.style.display = 'none';
     content.style.display = 'block';
 
-    list.innerHTML = items.map((i: any) => {
+    list.innerHTML = pricedItems.map((i: any) => {
       const multiQty = cart.isMultiQty(i.id);
       const qtyControl = multiQty ? `
         <div class="cart-item-qty">
@@ -202,11 +220,14 @@ import Layout from '../layouts/Layout.astro';
           <button class="qty-btn" data-action="inc" aria-label="Збільшити кількість">+</button>
         </div>
       ` : '';
+      const priceHtml = i.discount > 0
+        ? `<p class="cart-item-price"><span class="cart-item-price-old">${formatUAH(i.unitPrice * i.qty)}</span> ${formatUAH(i.finalUnitPrice * i.qty)}</p>`
+        : `<p class="cart-item-price">${formatUAH(i.unitPrice * i.qty)}</p>`;
       return `
       <div class="cart-item" data-id="${i.id}">
-        <p class="cart-item-name">${i.name}</p>
+        <p class="cart-item-name">${i.name}${i.discount > 0 ? ' <span class="cart-item-badge">−50%</span>' : ''}</p>
         ${qtyControl}
-        <p class="cart-item-price">${formatUAH(i.price * i.qty)}</p>
+        ${priceHtml}
         <button class="cart-remove" data-action="remove" aria-label="Видалити">✕</button>
       </div>
     `;

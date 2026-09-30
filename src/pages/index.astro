@@ -1,219 +1,83 @@
 ---
 import Layout from '../layouts/Layout.astro';
+
+const products = [
+  {
+    slug: 'litopys',
+    name: 'Litopys',
+    tagline: 'Ручка — зброя писаря',
+    desc: 'Офлайн-редактор документів: готові журнали ЖБД і ЖОВтР або власний шаблон, з друком ручкою через плотер.',
+    icon: '/icon-book-open-check.svg',
+    cta: 'Перейти до Litopys',
+    accent: '#2b4a8b',
+  },
+  {
+    slug: 'litoscan',
+    name: 'LitoScan',
+    tagline: 'Сканування без клопоту',
+    desc: 'Сканування, об’єднання та редагування PDF: дуплекс, обертання і видалення сторінок, пошук у тексті, друк.',
+    icon: '/icon-scan-line.svg',
+    cta: 'Перейти до LitoScan',
+    accent: '#0f6b52',
+  },
+  {
+    slug: 'litograph',
+    name: 'LitoGraph',
+    tagline: 'Твій почерк — шрифтом',
+    desc: 'Створення рукописного шрифту зі сканів символів або малювання від руки — з редактором гліфів і збіркою шрифту.',
+    icon: '/icon-case-sensitive.svg',
+    cta: 'Перейти до LitoGraph',
+    accent: '#7c3a8a',
+  },
+];
 ---
-<Layout title="Літопис — редактор документів">
+<Layout title="Litopys Suite — Litopys, LitoScan, LitoGraph" description="Три офлайн-застосунки для роботи з документами: Litopys, LitoScan і LitoGraph.">
 
   <!-- ══ HERO ══ -->
-  <section class="hero">
+  <section class="hero-page">
     <div class="hero-bg"></div>
-    <div class="hero-content fade-up">
-      <div class="hero-badge">Настільний застосунок для Windows</div>
-      <h1>Ручка — зброя писаря.<br/>Дозволь пальцям вижити!</h1>
-      <p class="hero-sub">Litopys — офлайн-редактор твоїх журналів.<br class="br-d"/> Без хмар, без болі в руках — без зайвого.</p>
-      <div class="hero-cta">
-        <div class="hero-dl-wrap">
-          <button class="btn-primary btn-download" id="hero-dl-btn" aria-expanded="false" aria-haspopup="true">
-            <img src="/icon-download.svg" alt="" class="btn-icon" />Завантажити
-          </button>
-          <div class="hero-dl-menu" id="hero-dl-menu" role="menu">
-            <a href="#" id="hero-dl-setup" class="hero-dl-item" role="menuitem">Litopys <span class="hero-dl-hint">x64 Setup</span></a>
-            <a href="#" id="hero-dl-portable" class="hero-dl-item" role="menuitem">Litopys Portable <span class="hero-dl-hint">без встановлення</span></a>
-          </div>
-        </div>
-        <a href="/demo" class="btn-ghost">Спробувати онлайн</a>
-      </div>
+    <div class="container">
+      <p class="eyebrow fade-up">Litopys Suite</p>
+      <h1 class="fade-up" style="--d:.05s">Три застосунки.<br/>Один почерк.</h1>
+      <p class="hero-sub fade-up" style="--d:.1s">Litopys, LitoScan і LitoGraph — офлайн-програми для Windows, які пишуть, сканують і копіюють твій почерк, поки ти цього не робиш.</p>
     </div>
+  </section>
 
-    <!-- Намальований лаунчер -->
-    <div class="launcher-wrap fade-up fade-delay">
-      <div class="launcher">
-        <!-- шапка -->
-        <div class="lnc-header">
-          <div class="lnc-logo-row">
-            <div class="lnc-logo">
-              <img src="/litopys-logo-dark.png" alt="Litopys" class="lnc-logo-img">
-            </div>
-            <div class="lnc-patch">
-              <img src="/litopys-badge.png" alt="Litopys" class="lnc-badge-img">
-            </div>
-          </div>
-          <div class="lnc-subtitle-pill">Писар, який не втомлюється</div>
-          <div class="lnc-license-row">
-            <div class="lnc-license">
-              <span class="lnc-lic-line green">Ліцензія: активна (повна) безстроково</span>
-              <span class="lnc-lic-line green">Власник: Олексій. Видана: —.</span>
-            </div>
-            <button class="lnc-account-btn">Акаунт</button>
-          </div>
-        </div>
-        <!-- останні документи -->
-        <div class="lnc-docs">
-          <div class="lnc-docs-head">
-            <p class="lnc-docs-title">Останні документи</p>
-            <button class="lnc-new-doc-btn">+ Новий документ</button>
-          </div>
-          <div class="lnc-doc-list">
-            <div class="lnc-doc-row">
-              <svg class="lnc-doc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 13h6"/><path d="M9 17h6"/></svg>
-              <span>Документ</span>
-            </div>
-            <div class="lnc-doc-row">
-              <svg class="lnc-doc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 13h6"/><path d="M9 17h6"/></svg>
-              <span>Документ 2</span>
-            </div>
-          </div>
-        </div>
-        <p class="lnc-tagline">Забудь, як тримати ручку в руці!</p>
+  <!-- ══ PRODUCTS ══ -->
+  <section class="section-products">
+    <div class="container">
+      <div class="products-grid">
+        {products.map((p, i) => (
+          <a href={`/${p.slug}`} class="product-card fade-up" style={`--d:${i * 0.08}s; --accent:${p.accent}`}>
+            <div class="product-icon-wrap"><img src={p.icon} alt="" class="product-svg" /></div>
+            <p class="product-tagline">{p.tagline}</p>
+            <h2>{p.name}</h2>
+            <p class="product-desc">{p.desc}</p>
+            <span class="product-cta">{p.cta} →</span>
+          </a>
+        ))}
       </div>
     </div>
   </section>
 
-  <!-- ══ STATS ══ -->
-  <section class="section-stats">
+  <!-- ══ WHY ══ -->
+  <section class="section-why">
     <div class="container">
-      <div class="stats-grid">
-        <div class="stat-item fade-up">
-          <p class="stat-num">від 5 хв</p>
-          <p class="stat-label">на одну сторінку</p>
+      <div class="why-grid">
+        <div class="why-card fade-up">
+          <div class="why-icon-wrap"><img src="/icon-globe-off.svg" alt="" class="why-svg" /></div>
+          <p class="why-title">Повністю офлайн</p>
+          <p class="why-desc">Жодних хмар. Усі файли — на вашому диску, під вашим контролем.</p>
         </div>
-        <div class="stat-item fade-up" style="--d:.1s">
-          <p class="stat-num">100%</p>
-          <p class="stat-label">Офлайн</p>
+        <div class="why-card fade-up" style="--d:.08s">
+          <div class="why-icon-wrap"><img src="/icon-sparkles.svg" alt="" class="why-svg" /></div>
+          <p class="why-title">Один акаунт</p>
+          <p class="why-desc">Один вхід Litopys для всіх трьох застосунків — без повторної реєстрації.</p>
         </div>
-        <div class="stat-item fade-up" style="--d:.2s">
-          <p class="stat-num">DOCX</p>
-          <p class="stat-label">Сумісний формат</p>
-        </div>
-        <div class="stat-item fade-up" style="--d:.3s">
-          <p class="stat-num"><img src="/ukraine-map.gif" alt="Україна" class="stat-ua-img" /></p>
-          <p class="stat-label">Зроблено в Україні</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ══ ЩО ЦЕ ══ -->
-  <section class="section-what">
-    <div class="container">
-      <div class="what-grid">
-        <div class="what-text fade-up">
-          <p class="eyebrow">Що це таке</p>
-          <h2>Редактор,<br/>зроблений для тих,<br/>хто береже свої руки.</h2>
-          <p class="body-text">Літопис — настільна програма для Windows, яка дозволяє швидко та легко писати Журнал бойових дій і Журнал відданих та отриманих розпоряджень без мозолів на руках.</p>
-          <p class="body-text">Все офлайн. Відкрив — і одразу до роботи.</p>
-          <a href="/demo" class="btn-primary" style="margin-top:2rem;display:inline-block;">Спробувати демо →</a>
-        </div>
-        <div class="facts-col">
-          <div class="fact-card fade-up" style="--d:.05s">
-            <div class="fact-icon-wrap"><img src="/icon-sparkles.svg" alt="" class="fact-svg" /></div>
-            <div>
-              <p class="fact-title">Легкий старт</p>
-              <p class="fact-desc">Завантажив, зареєструвався, пишеш</p>
-            </div>
-          </div>
-          <div class="fact-card fade-up" style="--d:.1s">
-            <div class="fact-icon-wrap"><img src="/icon-book-key.svg" alt="" class="fact-svg" /></div>
-            <div>
-              <p class="fact-title">Ваші дані — ваші</p>
-              <p class="fact-desc">Усі файли зберігаються локально, нічого не йде в мережу</p>
-            </div>
-          </div>
-          <div class="fact-card fade-up" style="--d:.15s">
-            <div class="fact-icon-wrap"><img src="/icon-file-stack.svg" alt="" class="fact-svg" /></div>
-            <div>
-              <p class="fact-title">DOCX та PDF</p>
-              <p class="fact-desc">Приймає DOCX, експортує в PDF</p>
-            </div>
-          </div>
-          <div class="fact-card fade-up" style="--d:.2s">
-            <div class="fact-icon-wrap"><img src="/icon-pencil-sparkles.svg" alt="" class="fact-svg" /></div>
-            <div>
-              <p class="fact-title">Друк одним кліком</p>
-              <p class="fact-desc">Прямо з програми, з попереднім переглядом сторінки</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ══ FEATURES ══ -->
-  <section id="features" class="section-features">
-    <div class="container">
-      <div class="section-header fade-up">
-        <p class="eyebrow">Можливості</p>
-        <h2>Менше клопоту.<br/>Більше справи.</h2>
-        <p class="section-sub">Все що потрібно для роботи з документами — і нічого зайвого.</p>
-      </div>
-      <div class="features-grid">
-        <div class="feature-card fade-up" style="--d:.0s">
-          <div class="feature-header"><img src="/icon-book-open-check.svg" alt="" class="feature-svg" /><h3>ЖБД</h3></div>
-          <p>Журнал бойових дій з таблицею, датою та часом — заповнюй і друкуй.</p>
-        </div>
-        <div class="feature-card fade-up" style="--d:.08s">
-          <div class="feature-header"><img src="/icon-book-open-text.svg" alt="" class="feature-svg" /><h3>ЖОВтР</h3></div>
-          <p>Шаблон журналу з усіма необхідними полями. Готово за хвилини.</p>
-        </div>
-        <div class="feature-card fade-up" style="--d:.16s">
-          <div class="feature-header"><img src="/icon-case-sensitive.svg" alt="" class="feature-svg" /><h3>Персональний шрифт</h3></div>
-          <p>Оцифруємо твій почерк — зміни ніхто не помітить.</p>
-        </div>
-        <div class="feature-card fade-up" style="--d:.0s">
-          <div class="feature-header"><img src="/icon-brush-cleaning.svg" alt="" class="feature-svg" /><h3>Чистий інтерфейс</h3></div>
-          <p>Нічого зайвого. Тільки потрібні поля — без переповнених панелей.</p>
-        </div>
-        <div class="feature-card fade-up" style="--d:.08s">
-          <div class="feature-header"><img src="/icon-save-check.svg" alt="" class="feature-svg" /><h3>Автозбереження</h3></div>
-          <p>Дані не зникнуть. Файли на вашому диску, під вашим контролем.</p>
-        </div>
-        <div class="feature-card fade-up" style="--d:.16s">
-          <div class="feature-header"><img src="/icon-globe-off.svg" alt="" class="feature-svg" /><h3>Повністю офлайн</h3></div>
-          <p>Жодних серверів. Працює без інтернету.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ══ NEW: ВЛАСНИЙ ШАБЛОН ══ -->
-  <section class="section-new">
-    <div class="container">
-      <div class="new-card fade-up">
-        <div class="new-text">
-          <div class="new-badge"><img src="/icon-layout-template.svg" alt="" class="new-badge-icon" />Нове у версії 2.0</div>
-          <h2>Свій документ.<br/>Своя розмітка.</h2>
-          <p class="body-text">Не тільки ЖБД і ЖОВтР. Тепер у Літописі можна зібрати власний шаблон документа — у книжковому або альбомному форматі А4.</p>
-          <ul class="new-list">
-            <li>Додай свою таблицю — як у Word</li>
-            <li>Розмісти поля й текст так, як потрібно тобі</li>
-            <li>Заповни документ власним текстом</li>
-            <li>Окремо надрукуй бланки — і плотер впише в них текст ручкою</li>
-          </ul>
-          <a href="/yak-pratsyuye#vlasnyi-shablon" class="btn-primary" style="margin-top:2rem;display:inline-block;">Як це працює →</a>
-        </div>
-
-        <div class="new-sheets" aria-hidden="true">
-          <div class="sheet sheet-portrait">
-            <span class="sheet-label">Книжковий</span>
-            <div class="sheet-title"></div>
-            <div class="sheet-table">
-              <div class="st-row st-head"><span></span><span></span><span></span></div>
-              <div class="st-row"><span><i class="hw" style="--w:70%"></i></span><span><i class="hw" style="--w:85%"></i></span><span><i class="hw" style="--w:50%"></i></span></div>
-              <div class="st-row"><span><i class="hw" style="--w:55%"></i></span><span><i class="hw" style="--w:65%"></i></span><span><i class="hw" style="--w:75%"></i></span></div>
-              <div class="st-row"><span><i class="hw" style="--w:80%"></i></span><span><i class="hw" style="--w:45%"></i></span><span></span></div>
-              <div class="st-row"><span></span><span></span><span></span></div>
-            </div>
-            <div class="sheet-lines"><i class="hw" style="--w:90%"></i><i class="hw" style="--w:70%"></i></div>
-          </div>
-          <div class="sheet sheet-landscape">
-            <span class="sheet-label">Альбомний</span>
-            <div class="sheet-title"></div>
-            <div class="sheet-table st-wide">
-              <div class="st-row st-head"><span></span><span></span><span></span><span></span></div>
-              <div class="st-row"><span><i class="hw" style="--w:60%"></i></span><span><i class="hw" style="--w:80%"></i></span><span><i class="hw" style="--w:45%"></i></span><span><i class="hw" style="--w:70%"></i></span></div>
-              <div class="st-row"><span><i class="hw" style="--w:75%"></i></span><span><i class="hw" style="--w:50%"></i></span><span><i class="hw" style="--w:65%"></i></span><span></span></div>
-              <div class="st-row"><span></span><span></span><span></span><span></span></div>
-            </div>
-          </div>
+        <div class="why-card fade-up" style="--d:.16s">
+          <div class="why-icon-wrap"><img src="/icon-pencil-sparkles.svg" alt="" class="why-svg" /></div>
+          <p class="why-title">Зроблено в Україні</p>
+          <p class="why-desc">Розробляється й підтримується українською командою.</p>
         </div>
       </div>
     </div>
@@ -224,47 +88,26 @@ import Layout from '../layouts/Layout.astro';
     <div class="container">
       <div class="cta-card fade-up">
         <p class="eyebrow cta-eyebrow">Готові спробувати?</p>
-        <h2>Відкрийте Літопис<br/>прямо зараз</h2>
-        <p class="cta-sub">Протестуйте редактор у браузері — без реєстрації та завантажень.</p>
-        <a href="/demo" class="btn-white">Відкрити демо →</a>
+        <h2>Обери застосунок<br/>і почни зараз</h2>
+        <p class="cta-sub">Litopys можна протестувати прямо в браузері — без реєстрації та завантажень.</p>
+        <a href="/litopys/demo" class="btn-white">Відкрити демо Litopys →</a>
       </div>
     </div>
   </section>
 
-  <!-- ══ LITOSCAN PROMO TOAST ══ -->
-  <div id="litoscan-modal" class="ls-toast" role="dialog" aria-labelledby="ls-modal-title" hidden>
-    <button type="button" class="ls-toast-close" id="ls-modal-close" aria-label="Закрити">✕</button>
-    <div class="ls-toast-icon"><img src="/litoscan-badge.png" alt="LitoScan" /></div>
-    <div class="ls-toast-body">
-      <p class="ls-toast-eyebrow">Новий застосунок</p>
-      <h2 id="ls-modal-title">Знайомтесь — LitoScan</h2>
-      <p class="ls-toast-text">Безкоштовна програма для сканування документів. Ідеально доповнює Літопис.</p>
-      <div class="ls-toast-actions">
-        <a href="https://api.litopys.win/download/litoscan" id="ls-modal-download" class="ls-toast-btn">Завантажити →</a>
-        <button type="button" class="ls-modal-later" id="ls-modal-later">Може пізніше</button>
-      </div>
-    </div>
-  </div>
-
 </Layout>
 
 <style is:global>
-  /* ── Fade-up анімація ── */
   .fade-up {
     opacity: 0;
     transform: translateY(32px);
     transition: opacity .65s ease, transform .65s ease;
     transition-delay: var(--d, 0s);
   }
-  .fade-up.visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  .fade-delay { --d: .18s; }
+  .fade-up.visible { opacity: 1; transform: translateY(0); }
 </style>
 
 <style>
-  /* ── Tokens ── */
   .container { max-width: 1060px; margin: 0 auto; padding: 0 1.5rem; }
   .eyebrow {
     font-size: .75rem;
@@ -274,69 +117,83 @@ import Layout from '../layouts/Layout.astro';
     color: #4f7cac;
     margin-bottom: 1rem;
   }
-  .body-text { color: #4b5563; line-height: 1.8; font-size: 1rem; }
-  .body-text + .body-text { margin-top: .75rem; }
-  .ua-text { color: inherit; }
+
+  /* ── Hero ── */
+  .hero-page { position: relative; padding: 5rem 0 3.5rem; }
+  .hero-bg {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background: radial-gradient(ellipse at 20% 40%, #dce8f5 0%, transparent 55%),
+                radial-gradient(ellipse at 80% 60%, #f5ead8 0%, transparent 50%),
+                #f8f9fb;
+    pointer-events: none;
+  }
+  .hero-page h1 {
+    font-size: clamp(2rem, 4.5vw, 3.25rem);
+    font-weight: 800;
+    letter-spacing: -.04em;
+    line-height: 1.08;
+    margin-bottom: 1.25rem;
+    color: #111827;
+  }
+  .hero-sub { font-size: 1.0625rem; color: #6b7280; line-height: 1.75; max-width: 620px; }
+
+  /* ── Products ── */
+  .section-products { padding: 1.5rem 0 5rem; }
+  .products-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+  .product-card {
+    display: flex;
+    flex-direction: column;
+    background: rgba(255,255,255,.85);
+    border: 1px solid #e5e7eb;
+    border-radius: 22px;
+    padding: 2.25rem;
+    backdrop-filter: blur(8px);
+    transition: box-shadow .2s, transform .2s, border-color .2s;
+  }
+  .product-card:hover {
+    box-shadow: 0 16px 40px rgba(0,0,0,.09);
+    transform: translateY(-4px);
+    border-color: var(--accent);
+  }
+  .product-icon-wrap {
+    width: 48px; height: 48px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 14px;
+    background: color-mix(in srgb, var(--accent) 12%, transparent);
+    color: var(--accent);
+    margin-bottom: 1.25rem;
+  }
+  .product-svg { width: 24px; height: 24px; display: block; }
+  .product-tagline {
+    font-size: .75rem;
+    font-weight: 700;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: .4rem;
+  }
+  .product-card h2 { font-size: 1.375rem; font-weight: 800; letter-spacing: -.02em; color: #111827; margin-bottom: .6rem; }
+  .product-desc { font-size: .9375rem; color: #6b7280; line-height: 1.65; flex: 1; margin-bottom: 1.5rem; }
+  .product-cta { font-size: .875rem; font-weight: 700; color: var(--accent); }
+
+  /* ── Why ── */
+  .section-why { padding: 2rem 0 6rem; }
+  .why-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+  .why-card {
+    background: rgba(255,255,255,.7);
+    border: 1px solid #e5e7eb;
+    border-radius: 18px;
+    padding: 1.75rem;
+    backdrop-filter: blur(8px);
+  }
+  .why-icon-wrap { width: 32px; height: 32px; margin-bottom: 1rem; }
+  .why-svg { width: 28px; height: 28px; display: block; }
+  .why-title { font-weight: 700; font-size: 1rem; margin-bottom: .4rem; color: #111827; }
+  .why-desc { font-size: .875rem; color: #6b7280; line-height: 1.6; }
 
   /* ── Buttons ── */
-  .btn-primary {
-    display: inline-block;
-    background: #1a1a2e;
-    color: #fff;
-    padding: .8rem 1.9rem;
-    border-radius: 50px;
-    font-size: .9375rem;
-    font-weight: 600;
-    transition: opacity .2s, transform .2s, box-shadow .2s;
-    box-shadow: 0 4px 16px rgba(0,0,0,.2);
-  }
-  .btn-primary:hover { opacity: .85; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.25); }
-  .btn-download { display: inline-flex; align-items: center; gap: .5rem; cursor: pointer; }
-
-  .hero-dl-wrap { position: relative; }
-  .hero-dl-menu {
-    display: none;
-    position: absolute;
-    top: calc(100% + 8px);
-    left: 0;
-    background: #fff;
-    border: 1px solid #e5e7eb;
-    border-radius: 12px;
-    box-shadow: 0 12px 32px rgba(0,0,0,.15);
-    min-width: 220px;
-    z-index: 200;
-    overflow: hidden;
-    animation: ddFadeHero .13s ease;
-  }
-  .hero-dl-menu.open { display: block; }
-  @keyframes ddFadeHero { from { opacity:0; transform:translateY(-4px); } to { opacity:1; transform:none; } }
-  .hero-dl-item {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: .75rem;
-    padding: .75rem 1.1rem;
-    font-size: .9375rem;
-    font-weight: 600;
-    color: #111827;
-    transition: background .12s;
-    white-space: nowrap;
-  }
-  .hero-dl-item:hover { background: #f9fafb; }
-  .hero-dl-item + .hero-dl-item { border-top: 1px solid #f3f4f6; }
-  .hero-dl-hint { font-size: .75rem; font-weight: 400; color: #9ca3af; }
-  .btn-icon { width: 16px; height: 16px; display: block; filter: brightness(0) invert(1); flex-shrink: 0; }
-  .btn-ghost {
-    display: inline-block;
-    color: #374151;
-    padding: .8rem 1.9rem;
-    border-radius: 50px;
-    font-size: .9375rem;
-    font-weight: 500;
-    border: 1.5px solid #d1d5db;
-    transition: border-color .2s, color .2s, background .2s;
-  }
-  .btn-ghost:hover { border-color: #1a1a2e; color: #1a1a2e; }
   .btn-white {
     display: inline-block;
     background: #fff;
@@ -350,313 +207,8 @@ import Layout from '../layouts/Layout.astro';
   }
   .btn-white:hover { transform: translateY(-2px); box-shadow: 0 10px 32px rgba(0,0,0,.25); }
 
-  /* ── Hero ── */
-  .hero {
-    position: relative;
-    min-height: calc(100vh - 52px);
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    align-items: center;
-    gap: 4rem;
-    max-width: 1060px;
-    margin: 0 auto;
-    padding: 5rem 1.5rem 4rem;
-    overflow: visible;
-  }
-  .hero-bg {
-    position: fixed;
-    inset: 0;
-    z-index: -1;
-    background: radial-gradient(ellipse at 20% 40%, #dce8f5 0%, transparent 55%),
-                radial-gradient(ellipse at 80% 60%, #f5ead8 0%, transparent 50%),
-                #f8f9fb;
-    pointer-events: none;
-  }
-  .hero-badge {
-    display: inline-block;
-    background: rgba(255,255,255,.8);
-    color: #4f7cac;
-    font-size: .8rem;
-    font-weight: 600;
-    padding: .35rem 1rem;
-    border-radius: 50px;
-    border: 1px solid #c9dff0;
-    margin-bottom: 1.5rem;
-    letter-spacing: .03em;
-    backdrop-filter: blur(8px);
-  }
-  .hero h1 {
-    font-size: clamp(1.6rem, 3vw, 2.4rem);
-    font-weight: 800;
-    letter-spacing: -.04em;
-    line-height: 1.07;
-    margin-bottom: 1.5rem;
-    color: #111827;
-  }
-  .hero-sub { font-size: 1.0625rem; color: #6b7280; line-height: 1.75; margin-bottom: 2.5rem; }
-  .hero-cta { display: flex; gap: 1rem; flex-wrap: wrap; }
-  .br-d { display: none; }
-  @media (min-width: 640px) { .br-d { display: block; } }
-
-  /* ── Launcher ── */
-  .launcher-wrap {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    perspective: 1200px;
-  }
-  .launcher {
-    background: #fff;
-    border-radius: 20px;
-    box-shadow: 0 30px 80px rgba(0,0,0,.12), 0 8px 24px rgba(0,0,0,.06);
-    padding: 2rem;
-    width: 100%;
-    max-width: 440px;
-    transform: rotateY(-4deg) rotateX(2deg);
-    transition: transform .4s ease, box-shadow .4s ease;
-  }
-  .launcher:hover {
-    transform: rotateY(0deg) rotateX(0deg);
-    box-shadow: 0 40px 100px rgba(0,0,0,.15), 0 12px 32px rgba(0,0,0,.08);
-  }
-
-  /* лого рядок */
-  .lnc-header { display: flex; flex-direction: column; gap: .75rem; margin-bottom: 1.25rem; }
-  .lnc-logo-row { display: flex; align-items: center; justify-content: space-between; }
-  .lnc-logo { display: flex; align-items: center; gap: .6rem; }
-  .lnc-logo-img { height: 52px; width: auto; display: block; }
-  .lnc-patch { display: flex; align-items: center; }
-  .lnc-badge-img { height: 44px; width: 44px; object-fit: contain; border-radius: 10px; }
-
-
-  /* підзаголовок */
-  .lnc-subtitle-pill {
-    display: inline-block;
-    border: 1px solid #c8b870;
-    color: #6b5a20;
-    font-size: .8rem;
-    padding: .3rem .9rem;
-    border-radius: 20px;
-    background: #fdfaf0;
-  }
-
-  /* ліцензія */
-  .lnc-license-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: #f8faf8;
-    border: 1px solid #d1e8d1;
-    border-radius: 10px;
-    padding: .6rem .9rem;
-  }
-  .lnc-license { display: flex; flex-direction: column; gap: .1rem; }
-  .lnc-lic-line { font-size: .75rem; }
-  .lnc-lic-line.green { color: #2a7a2a; }
-  .lnc-account-btn {
-    background: #1a1a2e;
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    padding: .4rem 1rem;
-    font-size: .8rem;
-    font-weight: 600;
-    cursor: pointer;
-    font-family: inherit;
-  }
-
-  /* останні документи */
-  .lnc-docs {
-    border: 1px solid #e5e7eb;
-    border-radius: 14px;
-    padding: 1rem 1.1rem;
-    margin-bottom: 1rem;
-  }
-  .lnc-docs-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: .75rem; }
-  .lnc-docs-title { font-size: .9375rem; color: #6b7280; }
-  .lnc-new-doc-btn {
-    background: #1a1a2e;
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    padding: .45rem 1rem;
-    font-size: .8rem;
-    font-weight: 600;
-    cursor: pointer;
-    font-family: inherit;
-  }
-  .lnc-doc-list { display: flex; flex-direction: column; gap: .6rem; }
-  .lnc-doc-row {
-    display: flex;
-    align-items: center;
-    gap: .6rem;
-    font-size: .9375rem;
-    color: #111827;
-  }
-  .lnc-doc-icon { width: 18px; height: 18px; flex-shrink: 0; color: #6b7280; }
-
-  /* тегляйн */
-  .lnc-tagline { text-align: center; font-size: .8rem; color: #9ca3af; }
-
-  /* ── Stats ── */
-  .section-stats {
-    background: rgba(255,255,255,.7);
-    backdrop-filter: blur(12px);
-    border-top: 1px solid rgba(255,255,255,.8);
-    border-bottom: 1px solid #e5e7eb;
-    padding: 3rem 0;
-  }
-  .stats-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 2rem; text-align: center; }
-  .stat-num { font-size: 2rem; font-weight: 800; color: #111827; letter-spacing: -.03em; margin-bottom: .25rem; }
-  .stat-label { font-size: .875rem; color: #6b7280; font-weight: 500; }
-
-  /* ── What ── */
-  .section-what { padding: 7rem 0; }
-  .what-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; }
-  .what-text h2 {
-    font-size: clamp(1.75rem, 3vw, 2.5rem);
-    font-weight: 800; letter-spacing: -.03em; line-height: 1.12;
-    margin-bottom: 1.25rem; color: #111827;
-  }
-  .facts-col { display: flex; flex-direction: column; gap: 1rem; }
-  .fact-card {
-    display: flex; gap: 1rem; align-items: center;
-    background: rgba(255,255,255,.8);
-    border: 1px solid #e5e7eb; border-radius: 14px; padding: 1.25rem;
-    backdrop-filter: blur(8px);
-    transition: box-shadow .2s, transform .2s, border-color .2s;
-  }
-  .fact-card:hover { box-shadow: 0 8px 24px rgba(0,0,0,.08); transform: translateY(-2px); border-color: #bfd4e8; }
-  .fact-icon-wrap { font-size: 1.5rem; flex-shrink: 0; width: 24px; height: 24px; display: flex; align-items: center; }
-  .fact-svg { width: 24px; height: 24px; display: block; }
-  .fact-title { font-weight: 700; font-size: .9375rem; margin-bottom: .2rem; color: #111827; }
-  .fact-desc { font-size: .8125rem; color: #6b7280; line-height: 1.55; }
-
-  /* ── Features ── */
-  .section-features { padding: 7rem 0; }
-  .section-header { text-align: center; margin-bottom: 4rem; }
-  .section-header h2 {
-    font-size: clamp(2rem, 3.5vw, 3rem);
-    font-weight: 800; letter-spacing: -.04em; line-height: 1.1; color: #111827; margin-bottom: .75rem;
-  }
-  .section-sub { font-size: 1.0625rem; color: #6b7280; margin-top: .75rem; }
-  .features-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.25rem; }
-  .feature-card {
-    background: rgba(255,255,255,.85);
-    border: 1px solid #e5e7eb; border-radius: 18px; padding: 2rem;
-    backdrop-filter: blur(8px);
-    transition: box-shadow .2s, transform .2s, border-color .2s;
-  }
-  .feature-card:hover { box-shadow: 0 12px 32px rgba(0,0,0,.09); transform: translateY(-3px); border-color: #bfd4e8; }
-  .feature-icon { font-size: 2rem; margin-bottom: 1.25rem; width: 32px; height: 32px; }
-  .feature-svg { width: 28px; height: 28px; display: block; flex-shrink: 0; }
-  .feature-header { display: flex; align-items: center; gap: .75rem; margin-bottom: .75rem; }
-  .feature-header h3 { margin: 0; }
-  .feature-card h3 { font-size: 1.0625rem; font-weight: 700; margin-bottom: .6rem; color: #111827; letter-spacing: -.01em; }
-  .feature-card p { font-size: .875rem; color: #6b7280; line-height: 1.7; }
-
-  /* ── New: власний шаблон ── */
-  .section-new { padding: 1rem 0 0; }
-  .new-card {
-    display: grid;
-    grid-template-columns: 1.05fr 1fr;
-    gap: 3.5rem;
-    align-items: center;
-    background: rgba(255,255,255,.85);
-    border: 1px solid #e5e7eb;
-    border-radius: 28px;
-    padding: 3.5rem;
-    backdrop-filter: blur(8px);
-    box-shadow: 0 12px 40px rgba(0,0,0,.05);
-  }
-  .new-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: .45rem;
-    background: #fdfaf0;
-    color: #6b5a20;
-    border: 1px solid #c8b870;
-    font-size: .8rem;
-    font-weight: 600;
-    padding: .35rem .9rem;
-    border-radius: 50px;
-    margin-bottom: 1.25rem;
-  }
-  .new-badge-icon { width: 15px; height: 15px; display: block; opacity: .75; }
-  .new-text h2 {
-    font-size: clamp(1.75rem, 3vw, 2.5rem);
-    font-weight: 800; letter-spacing: -.03em; line-height: 1.12;
-    margin-bottom: 1.25rem; color: #111827;
-  }
-  .new-list { list-style: none; margin-top: 1.25rem; display: flex; flex-direction: column; gap: .6rem; }
-  .new-list li {
-    position: relative;
-    padding-left: 1.6rem;
-    color: #374151;
-    font-size: .9375rem;
-    line-height: 1.6;
-  }
-  .new-list li::before {
-    content: '';
-    position: absolute;
-    left: 0; top: .5em;
-    width: .7rem; height: .4rem;
-    border-left: 2px solid #4f7cac;
-    border-bottom: 2px solid #4f7cac;
-    transform: rotate(-45deg);
-  }
-
-  /* ілюстрація аркушів */
-  .new-sheets { position: relative; min-height: 340px; }
-  .sheet {
-    position: absolute;
-    background: #fff;
-    border: 1px solid #e5e7eb;
-    border-radius: 6px;
-    box-shadow: 0 18px 44px rgba(0,0,0,.1), 0 4px 12px rgba(0,0,0,.05);
-    padding: 1.1rem 1rem;
-    display: flex;
-    flex-direction: column;
-    gap: .7rem;
-    transition: transform .35s ease;
-  }
-  .sheet-portrait { left: 0; top: 0; width: 55%; aspect-ratio: 210 / 297; transform: rotate(-3deg); }
-  .sheet-landscape { right: 0; bottom: 0; width: 70%; aspect-ratio: 297 / 210; transform: rotate(2deg); }
-  .new-card:hover .sheet-portrait { transform: rotate(-1deg) translateY(-4px); }
-  .new-card:hover .sheet-landscape { transform: rotate(0deg) translateY(-4px); }
-  .sheet-label {
-    position: absolute;
-    top: -.7rem; right: .75rem;
-    background: #1a1a2e;
-    color: #fff;
-    font-size: .6875rem;
-    font-weight: 600;
-    padding: .2rem .6rem;
-    border-radius: 50px;
-    letter-spacing: .02em;
-  }
-  .sheet-title { width: 45%; height: 6px; border-radius: 3px; background: #d1d5db; align-self: center; }
-  .sheet-table { border: 1px solid #9ca3af; display: flex; flex-direction: column; }
-  .st-row { display: grid; grid-template-columns: 1fr 2fr 1.2fr; min-height: 22px; }
-  .st-wide .st-row { grid-template-columns: .8fr 2fr 1.2fr 1fr; }
-  .st-row + .st-row { border-top: 1px solid #9ca3af; }
-  .st-row span { display: flex; align-items: center; padding: 0 .35rem; }
-  .st-row span + span { border-left: 1px solid #9ca3af; }
-  .st-head { background: #f3f4f6; min-height: 16px; }
-  .sheet-lines { display: flex; flex-direction: column; gap: .6rem; margin-top: auto; }
-  /* «рукописний» рядок — чорнило ручки */
-  .hw {
-    display: block;
-    width: var(--w, 80%);
-    height: 2px;
-    border-radius: 2px;
-    background: #2b4a8b;
-    opacity: .8;
-    transform: rotate(-.6deg);
-  }
-
   /* ── CTA ── */
-  .section-cta { padding: 7rem 0 8rem; }
+  .section-cta { padding: 0 0 8rem; }
   .cta-card {
     background: linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%);
     border-radius: 28px; padding: 5rem 3rem; text-align: center; color: #fff;
@@ -689,111 +241,18 @@ import Layout from '../layouts/Layout.astro';
 
   /* ── Mobile ── */
   @media (max-width: 900px) {
-    .hero { grid-template-columns: 1fr; min-height: auto; padding-top: 3rem; }
-    .launcher-wrap { display: flex; }
-    .launcher { transform: none; max-width: 100%; }
-    .what-grid { grid-template-columns: 1fr; gap: 3rem; }
-    .stats-grid { grid-template-columns: repeat(2,1fr); }
-    .new-card { grid-template-columns: 1fr; gap: 2.5rem; }
-    .new-sheets { max-width: 460px; width: 100%; margin: 0 auto; }
+    .products-grid { grid-template-columns: 1fr; }
+    .why-grid { grid-template-columns: 1fr; }
   }
   @media (max-width: 640px) {
-    .features-grid { grid-template-columns: 1fr; }
-    .new-card { padding: 2rem 1.5rem; }
-    .new-sheets { min-height: 260px; }
     .cta-card { padding: 3rem 1.5rem; }
-  }
-
-  .stat-ua-img { height: 48px; width: auto; display: block; margin: 0 auto; }
-
-  /* ── LitoScan promo toast ── */
-  .ls-toast {
-    position: fixed;
-    right: 1.5rem;
-    bottom: 1.5rem;
-    z-index: 1000;
-    display: flex;
-    gap: .9rem;
-    background: #fff;
-    border: 1px solid #e5e7eb;
-    border-radius: 18px;
-    padding: 1.25rem;
-    max-width: 340px;
-    box-shadow: 0 16px 48px rgba(0,0,0,.16);
-    animation: lsToastUp .3s ease;
-  }
-  .ls-toast[hidden] { display: none; }
-  @keyframes lsToastUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
-
-  .ls-toast-close {
-    position: absolute;
-    top: .6rem; right: .6rem;
-    width: 24px; height: 24px;
-    border-radius: 50%;
-    border: none;
-    background: #f3f4f6;
-    color: #6b7280;
-    font-size: .75rem;
-    cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    transition: background .15s;
-  }
-  .ls-toast-close:hover { background: #e5e7eb; }
-
-  .ls-toast-icon {
-    width: 44px; height: 44px;
-    flex-shrink: 0;
-    border-radius: 12px;
-    overflow: hidden;
-    display: flex; align-items: center; justify-content: center;
-  }
-  .ls-toast-icon img { width: 100%; height: 100%; object-fit: cover; }
-
-  .ls-toast-body { flex: 1; padding-right: 1rem; }
-  .ls-toast-eyebrow {
-    font-size: .6875rem;
-    font-weight: 700;
-    letter-spacing: .08em;
-    text-transform: uppercase;
-    color: #4f7cac;
-    margin-bottom: .3rem;
-  }
-  .ls-toast h2 { font-size: 1rem; font-weight: 800; color: #111827; letter-spacing: -.01em; margin-bottom: .4rem; }
-  .ls-toast-text { font-size: .8125rem; color: #6b7280; line-height: 1.5; margin-bottom: 1rem; }
-
-  .ls-toast-actions { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
-  .ls-toast-btn {
-    display: inline-block;
-    background: #1a1a2e;
-    color: #fff;
-    padding: .5rem 1.1rem;
-    border-radius: 50px;
-    font-size: .8125rem;
-    font-weight: 600;
-    transition: opacity .2s;
-  }
-  .ls-toast-btn:hover { opacity: .85; }
-  .ls-modal-later {
-    background: none;
-    border: none;
-    color: #9ca3af;
-    font-size: .8125rem;
-    font-family: inherit;
-    cursor: pointer;
-    padding: .25rem;
-  }
-  .ls-modal-later:hover { color: #6b7280; }
-
-  @media (max-width: 480px) {
-    .ls-toast { left: 1rem; right: 1rem; max-width: none; }
   }
 </style>
 
 <script>
-  // Scroll fade-in via IntersectionObserver
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(e => {
-      if(e.isIntersecting) {
+      if (e.isIntersecting) {
         e.target.classList.add('visible');
         observer.unobserve(e.target);
       }
@@ -801,52 +260,4 @@ import Layout from '../layouts/Layout.astro';
   }, { threshold: 0.12 });
 
   document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
-
-  // Hero download dropdown
-  const heroBtn = document.getElementById('hero-dl-btn');
-  const heroMenu = document.getElementById('hero-dl-menu');
-  if (heroBtn && heroMenu) {
-    heroBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const open = heroMenu.classList.toggle('open');
-      heroBtn.setAttribute('aria-expanded', String(open));
-    });
-    document.addEventListener('click', () => {
-      heroMenu.classList.remove('open');
-      heroBtn?.setAttribute('aria-expanded', 'false');
-    });
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
-        heroMenu.classList.remove('open');
-        heroBtn?.setAttribute('aria-expanded', 'false');
-      }
-    });
-  }
-
-  // LitoScan promo modal — раз за сесію, з невеликою затримкою
-  const lsModal = document.getElementById('litoscan-modal');
-  const lsClose = document.getElementById('ls-modal-close');
-  const lsLater = document.getElementById('ls-modal-later');
-  const lsDownload = document.getElementById('ls-modal-download');
-  const LS_SEEN_KEY = 'litoscan_promo_seen';
-
-  function hideLsModal() {
-    lsModal?.setAttribute('hidden', '');
-    sessionStorage.setItem(LS_SEEN_KEY, '1');
-  }
-
-  if (lsModal && !sessionStorage.getItem(LS_SEEN_KEY)) {
-    setTimeout(() => {
-      lsModal.removeAttribute('hidden');
-    }, 4000);
-  }
-
-  lsClose?.addEventListener('click', hideLsModal);
-  lsLater?.addEventListener('click', hideLsModal);
-  lsModal?.addEventListener('click', (e) => {
-    if (e.target === lsModal) hideLsModal();
-  });
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && lsModal && !lsModal.hasAttribute('hidden')) hideLsModal();
-  });
 </script>

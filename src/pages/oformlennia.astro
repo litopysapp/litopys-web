@@ -60,7 +60,7 @@ if (Astro.request.method === 'POST') {
         <>
           <div id="order-empty" class="order-empty fade-up" style="display:none;">
             <p class="order-empty-text">Кошик порожній — спершу додайте товар.</p>
-            <a href="/tsiny" class="btn-primary">Переглянути ціни →</a>
+            <a href="/litopys/tsiny" class="btn-primary">Переглянути ціни →</a>
           </div>
 
           <div id="order-content" style="display:none;">
@@ -145,6 +145,23 @@ if (Astro.request.method === 'POST') {
   .order-summary-title { font-size: 1rem; font-weight: 700; color: #111827; margin-bottom: 1rem; }
   .order-items { display: flex; flex-direction: column; gap: .5rem; margin-bottom: 1rem; }
   .order-items :global(p) { display: flex; justify-content: space-between; gap: 1rem; font-size: .9375rem; color: #4b5563; }
+  .order-items :global(.order-item-badge) {
+    display: inline-block;
+    background: #dc2626;
+    color: #fff;
+    font-size: .625rem;
+    font-weight: 700;
+    padding: .05rem .4rem;
+    border-radius: 20px;
+    vertical-align: middle;
+    margin-left: .3rem;
+  }
+  .order-items :global(.order-item-price-old) {
+    text-decoration: line-through;
+    text-decoration-color: #dc2626;
+    color: #9ca3af;
+    margin-right: .35rem;
+  }
   .order-total {
     display: flex; justify-content: space-between; align-items: baseline;
     border-top: 1px solid #e5e7eb; padding-top: 1rem;
@@ -207,7 +224,14 @@ if (Astro.request.method === 'POST') {
     } else {
       content.style.display = 'block';
       const list = document.getElementById('order-items')!;
-      list.innerHTML = items.map((i: any) => `<p><span>${i.name}${i.qty > 1 ? ` × ${i.qty}` : ''}</span><span>${formatUAH(i.price * i.qty)}</span></p>`).join('');
+      const pricedItems = cart.pricedItemsWithDiscount();
+      list.innerHTML = pricedItems.map((i: any) => {
+        const label = `${i.name}${i.qty > 1 ? ` × ${i.qty}` : ''}${i.discount > 0 ? ' <span class="order-item-badge">−50%</span>' : ''}`;
+        const priceHtml = i.discount > 0
+          ? `<span class="order-item-price-old">${formatUAH(i.unitPrice * i.qty)}</span> ${formatUAH(i.finalUnitPrice * i.qty)}`
+          : formatUAH(i.unitPrice * i.qty);
+        return `<p><span>${label}</span><span>${priceHtml}</span></p>`;
+      }).join('');
       document.getElementById('order-total-value')!.textContent = formatUAH(cart.cartTotal());
       (document.getElementById('order-items-input') as HTMLInputElement).value = JSON.stringify(items);
     }

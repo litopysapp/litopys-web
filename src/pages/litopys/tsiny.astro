@@ -1,5 +1,5 @@
 ---
-import Layout from '../layouts/Layout.astro';
+import Layout from '../../layouts/Layout.astro';
 ---
 <Layout title="Ціни — Літопис" description="Вартість Літопису та рукописних шрифтів.">
 
@@ -10,6 +10,16 @@ import Layout from '../layouts/Layout.astro';
       <p class="eyebrow fade-up">Ціни</p>
       <h1 class="fade-up" style="--d:.05s">Скільки коштує<br/>Літопис.</h1>
       <p class="hero-sub fade-up" style="--d:.1s">Разова оплата, без підписок і прихованих платежів.</p>
+    </div>
+  </section>
+
+  <!-- ══ PROMO BANNER ══ -->
+  <section class="section-promo">
+    <div class="container">
+      <div class="promo-banner fade-up">
+        <span class="promo-banner-badge">Акція</span>
+        <p class="promo-banner-text">Купуй повну ліцензію на Літопис разом із будь-яким шрифтом — і перший шрифт коштуватиме <strong>−50%</strong>.</p>
+      </div>
     </div>
   </section>
 
@@ -60,7 +70,7 @@ import Layout from '../layouts/Layout.astro';
 
       </div>
 
-      <p class="plans-note fade-up">Плотер Silhouette Portrait 4 — окремо, не входить у вартість. Дивись розділ <a href="/shcho-potribno">«Що потрібно»</a>.</p>
+      <p class="plans-note fade-up">Плотер Silhouette Portrait 4 — окремо, не входить у вартість. Дивись розділ <a href="/litopys/shcho-potribno">«Що потрібно»</a>.</p>
     </div>
   </section>
 
@@ -94,7 +104,7 @@ import Layout from '../layouts/Layout.astro';
             <li>Без ефекту "друкованого" тексту</li>
             <li>Одразу готовий до використання</li>
           </ul>
-          <a href="/shrifty" class="btn-primary">Обрати →</a>
+          <a href="/litopys/shrifty" class="btn-primary">Обрати →</a>
         </div>
 
         <div class="plan-card fade-up" style="--d:.16s">
@@ -123,7 +133,7 @@ import Layout from '../layouts/Layout.astro';
         <p class="eyebrow cta-eyebrow">Готові спробувати?</p>
         <h2>Відкрийте Літопис<br/>прямо зараз</h2>
         <p class="cta-sub">Протестуйте редактор у браузері — без реєстрації та завантажень.</p>
-        <a href="/demo" class="btn-white">Відкрити демо →</a>
+        <a href="/litopys/demo" class="btn-white">Відкрити демо →</a>
       </div>
     </div>
   </section>
@@ -172,6 +182,32 @@ import Layout from '../layouts/Layout.astro';
     max-width: 760px;
   }
   .hero-sub { font-size: 1.0625rem; color: #6b7280; line-height: 1.75; max-width: 620px; }
+
+  /* ── Promo banner ── */
+  .section-promo { padding-top: 1rem; }
+  .promo-banner {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    background: linear-gradient(135deg, #fff7ed 0%, #fef2e8 100%);
+    border: 1px solid #fed7aa;
+    border-radius: 16px;
+    padding: 1.1rem 1.5rem;
+  }
+  .promo-banner-badge {
+    flex-shrink: 0;
+    background: #dc2626;
+    color: #fff;
+    font-size: .75rem;
+    font-weight: 700;
+    letter-spacing: .03em;
+    text-transform: uppercase;
+    padding: .3rem .8rem;
+    border-radius: 50px;
+  }
+  .promo-banner-text { font-size: .9375rem; color: #7c2d12; line-height: 1.5; }
+  .promo-banner-text strong { color: #dc2626; }
 
   /* ── Plans ── */
   .section-plans { padding: 3rem 0 5rem; }

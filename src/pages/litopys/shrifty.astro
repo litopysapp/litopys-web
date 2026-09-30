@@ -1,10 +1,9 @@
 ---
-import Layout from '../layouts/Layout.astro';
+import Layout from '../../layouts/Layout.astro';
 
 const fonts = [
   { name: 'Litopys-1', preview: '/font-previews/Litopys-1.gif' },
   { name: 'Litopys-2', preview: '/font-previews/Litopys-2.gif' },
-  { name: 'Litopys-3', preview: '/font-previews/Litopys-3.gif' },
   { name: 'Litopys-4', preview: '/font-previews/Litopys-4.gif' },
 ];
 ---
@@ -17,6 +16,16 @@ const fonts = [
       <p class="eyebrow fade-up">Шрифти</p>
       <h1 class="fade-up" style="--d:.05s">Обери готовий почерк<br/>для Літопису.</h1>
       <p class="hero-sub fade-up" style="--d:.1s">Кілька рукописних варіантів на вибір. Не підійшло жодне — замов індивідуальний зі свого почерку.</p>
+    </div>
+  </section>
+
+  <!-- ══ PROMO BANNER ══ -->
+  <section class="section-promo">
+    <div class="container">
+      <div class="promo-banner fade-up">
+        <span class="promo-banner-badge">Акція</span>
+        <p class="promo-banner-text">Купуй повну ліцензію на Літопис разом із будь-яким шрифтом — і перший шрифт коштуватиме <strong>−50%</strong>.</p>
+      </div>
     </div>
   </section>
 
@@ -38,7 +47,7 @@ const fonts = [
         ))}
       </div>
 
-      <p class="catalog-note fade-up">Не знайшли підходящий почерк? <a href="/tsiny">Замовте індивідуальний шрифт</a> зі свого власного.</p>
+      <p class="catalog-note fade-up">Не знайшли підходящий почерк? <a href="/litopys/tsiny">Замовте індивідуальний шрифт</a> зі свого власного.</p>
     </div>
   </section>
 
@@ -49,7 +58,7 @@ const fonts = [
         <p class="eyebrow cta-eyebrow">Готові спробувати?</p>
         <h2>Відкрийте Літопис<br/>прямо зараз</h2>
         <p class="cta-sub">Протестуйте редактор у браузері — без реєстрації та завантажень.</p>
-        <a href="/demo" class="btn-white">Відкрити демо →</a>
+        <a href="/litopys/demo" class="btn-white">Відкрити демо →</a>
       </div>
     </div>
   </section>
@@ -98,6 +107,32 @@ const fonts = [
     max-width: 760px;
   }
   .hero-sub { font-size: 1.0625rem; color: #6b7280; line-height: 1.75; max-width: 620px; }
+
+  /* ── Promo banner ── */
+  .section-promo { padding-top: 1rem; }
+  .promo-banner {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    background: linear-gradient(135deg, #fff7ed 0%, #fef2e8 100%);
+    border: 1px solid #fed7aa;
+    border-radius: 16px;
+    padding: 1.1rem 1.5rem;
+  }
+  .promo-banner-badge {
+    flex-shrink: 0;
+    background: #dc2626;
+    color: #fff;
+    font-size: .75rem;
+    font-weight: 700;
+    letter-spacing: .03em;
+    text-transform: uppercase;
+    padding: .3rem .8rem;
+    border-radius: 50px;
+  }
+  .promo-banner-text { font-size: .9375rem; color: #7c2d12; line-height: 1.5; }
+  .promo-banner-text strong { color: #dc2626; }
 
   /* ── Catalog ── */
   .section-catalog { padding: 3rem 0 5rem; }

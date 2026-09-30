@@ -1,0 +1,251 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const groups = [
+  {
+    icon: '/icon-case-sensitive.svg',
+    title: 'Створення шрифту',
+    items: [
+      { h: 'Зі сканів символів', p: 'Завантаж скан заповненого шаблону — програма сама розкладе його на окремі символи.' },
+      { h: 'Або з малювання від руки', p: 'Малюй кожен гліф прямо в редакторі пензлем, без сканера й принтера.' },
+      { h: 'Шаблон для заповнення', p: 'Завантаж і роздрукуй готовий PDF-шаблон з клітинками під кожен символ твого почерку.' },
+    ],
+  },
+  {
+    icon: '/icon-brush-cleaning.svg',
+    title: 'Редактор гліфів',
+    items: [
+      { h: 'Пензлі й ластики', p: 'Круглий або квадратний пензель і ластик, лінія, коло, квадрат — для ручної правки кожного символу.' },
+      { h: 'Поворот і розтяг', p: 'Точне обертання на кут, розтяг по висоті й ширині, керування товщиною ліній повзунками.' },
+      { h: 'Undo / redo по кожному символу', p: 'Історія змін окремо для редактора гліфа й для вирівнювання геометрії.' },
+    ],
+  },
+  {
+    icon: '/icon-layout-template.svg',
+    title: 'Геометрія і варіанти',
+    items: [
+      { h: 'Вирівнювання геометрії символу', p: 'Окремий інструмент підганяє базову лінію, висоту й нахил символу під решту шрифту.' },
+      { h: 'Додати варіант символу', p: 'Кілька написань однієї літери — щоб однакові слова не виглядали друкованими під копірку.' },
+      { h: 'Масові дії з усіма символами', p: 'Застосуй правку (нахил, товщину, розмір) одразу до всього набору гліфів.' },
+    ],
+  },
+  {
+    icon: '/icon-save-check.svg',
+    title: 'Збірка й перегляд',
+    items: [
+      { h: 'Зібрати шрифт', p: 'З відредагованих гліфів збирається готовий шрифтовий файл.' },
+      { h: 'Переглянути шрифт', p: 'Перевір, як виглядає довільний текст, надрукований твоїм шрифтом, ще до збірки в проект.' },
+      { h: 'Кілька проектів шрифтів', p: 'Новий шрифт, перейменування — керуй кількома почерками в одному застосунку.' },
+    ],
+  },
+  {
+    icon: '/icon-globe-off.svg',
+    title: 'Дані й безпека',
+    items: [
+      { h: 'Локальна обробка', p: 'Скани й гліфи обробляються на твоєму ПК, без завантаження зображень почерку на сервер.' },
+      { h: 'Один акаунт Litopys', p: 'Той самий вхід, що й у Litopys та LitoScan — готовий шрифт одразу можна використати в Litopys.' },
+    ],
+  },
+];
+---
+<Layout title="LitoGraph — рукописний шрифт із твого почерку" description="LitoGraph: створення рукописного шрифту зі сканів символів або малювання від руки. Редактор гліфів, вирівнювання геометрії, збірка шрифту.">
+
+  <!-- ══ HERO ══ -->
+  <section class="hero-page">
+    <div class="hero-bg"></div>
+    <div class="container">
+      <p class="eyebrow fade-up">LitoGraph</p>
+      <h1 class="fade-up" style="--d:.05s">Навіть принтер зможе<br/>писати твоїм почерком.</h1>
+      <p class="hero-sub fade-up" style="--d:.1s">Створюй рукописний шрифт зі своїх сканів або малюй символи від руки прямо в редакторі — і використовуй готовий почерк у Litopys.</p>
+      <div class="hero-cta fade-up" style="--d:.15s">
+        <a href="https://api.litopys.win/download/litograph" class="btn-primary">Завантажити LitoGraph →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ FUNCTION GROUPS ══ -->
+  <section class="section-groups">
+    <div class="container">
+      {groups.map((g, gi) => (
+        <div class="fgroup fade-up" style={`--d:${Math.min(gi * 0.05, 0.3).toFixed(2)}s`}>
+          <div class="fgroup-head">
+            <div class="fgroup-icon-wrap"><img src={g.icon} alt="" class="fgroup-svg" /></div>
+            <h2>{g.title}</h2>
+          </div>
+          <div class="fgroup-list">
+            {g.items.map((it) => (
+              <div class="fitem">
+                <h3>{it.h}</h3>
+                <p class="body-text">{it.p}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- ══ CTA ══ -->
+  <section class="section-cta">
+    <div class="container">
+      <div class="cta-card fade-up">
+        <p class="eyebrow cta-eyebrow">Готові спробувати?</p>
+        <h2>Оцифруй свій почерк<br/>уже сьогодні</h2>
+        <p class="cta-sub">Заповни шаблон або малюй символи від руки — готовий шрифт запрацює одразу в Litopys.</p>
+        <a href="https://api.litopys.win/download/litograph" class="btn-white">Завантажити →</a>
+      </div>
+    </div>
+  </section>
+
+</Layout>
+
+<style is:global>
+  .fade-up {
+    opacity: 0;
+    transform: translateY(32px);
+    transition: opacity .65s ease, transform .65s ease;
+    transition-delay: var(--d, 0s);
+  }
+  .fade-up.visible { opacity: 1; transform: translateY(0); }
+</style>
+
+<style>
+  .container { max-width: 1060px; margin: 0 auto; padding: 0 1.5rem; }
+  .eyebrow {
+    font-size: .75rem;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: #7c3a8a;
+    margin-bottom: 1rem;
+  }
+  .body-text { color: #4b5563; line-height: 1.75; font-size: .9375rem; }
+
+  /* ── Hero ── */
+  .hero-page { position: relative; padding: 6rem 0 3rem; }
+  .hero-bg {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background: radial-gradient(ellipse at 20% 40%, #ecdcf5 0%, transparent 55%),
+                radial-gradient(ellipse at 80% 60%, #f5ead8 0%, transparent 50%),
+                #f8f9fb;
+    pointer-events: none;
+  }
+  .hero-page h1 {
+    font-size: clamp(1.9rem, 4vw, 3rem);
+    font-weight: 800;
+    letter-spacing: -.04em;
+    line-height: 1.12;
+    color: #111827;
+    margin-bottom: 1.25rem;
+    max-width: 760px;
+  }
+  .hero-sub { font-size: 1.0625rem; color: #6b7280; line-height: 1.75; max-width: 620px; margin-bottom: 2rem; }
+  .hero-cta { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+  .btn-primary {
+    display: inline-block;
+    background: #7c3a8a;
+    color: #fff;
+    padding: .8rem 1.9rem;
+    border-radius: 50px;
+    font-size: .9375rem;
+    font-weight: 600;
+    transition: opacity .2s, transform .2s, box-shadow .2s;
+    box-shadow: 0 4px 16px rgba(124,58,138,.25);
+  }
+  .btn-primary:hover { opacity: .85; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(124,58,138,.3); }
+
+  /* ── Groups ── */
+  .section-groups { padding: 3rem 0 7rem; }
+  .fgroup {
+    background: rgba(255,255,255,.85);
+    border: 1px solid #e5e7eb;
+    border-radius: 22px;
+    padding: 2.25rem 2.5rem 2.5rem;
+    backdrop-filter: blur(8px);
+    transition: box-shadow .2s, border-color .2s;
+  }
+  .fgroup:hover { box-shadow: 0 12px 32px rgba(0,0,0,.06); border-color: #dcb8e5; }
+  .fgroup + .fgroup { margin-top: 1.5rem; }
+  .fgroup-head { display: flex; align-items: center; gap: .9rem; margin-bottom: 1.5rem; }
+  .fgroup-icon-wrap {
+    width: 44px; height: 44px;
+    display: flex; align-items: center; justify-content: center;
+    background: #f5ebf7;
+    color: #7c3a8a;
+    border-radius: 12px;
+    flex-shrink: 0;
+  }
+  .fgroup-svg { width: 22px; height: 22px; display: block; }
+  .fgroup-head h2 { font-size: 1.375rem; font-weight: 800; letter-spacing: -.02em; color: #111827; }
+
+  .fgroup-list { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem 2rem; }
+  .fitem h3 { font-size: 1rem; font-weight: 700; color: #111827; margin-bottom: .4rem; letter-spacing: -.005em; }
+
+  @media (max-width: 700px) {
+    .fgroup { padding: 1.75rem 1.5rem 2rem; }
+    .fgroup-list { grid-template-columns: 1fr; gap: 1.25rem; }
+  }
+
+  /* ── CTA ── */
+  .section-cta { padding: 3rem 0 8rem; }
+  .cta-card {
+    background: linear-gradient(135deg, #3d1345 0%, #7c3a8a 60%, #9c4fae 100%);
+    border-radius: 28px; padding: 5rem 3rem; text-align: center; color: #fff;
+    box-shadow: 0 24px 64px rgba(0,0,0,.25);
+    position: relative; overflow: hidden;
+  }
+  .cta-card::before {
+    content: '';
+    position: absolute;
+    top: -80px; right: -80px;
+    width: 320px; height: 320px;
+    background: radial-gradient(circle, rgba(255,255,255,.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .cta-card::after {
+    content: '';
+    position: absolute;
+    bottom: -60px; left: -60px;
+    width: 280px; height: 280px;
+    background: radial-gradient(circle, rgba(0,0,0,.15) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .cta-eyebrow { color: rgba(255,255,255,.6) !important; }
+  .cta-card h2 {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 800; letter-spacing: -.04em; line-height: 1.1; margin-bottom: 1rem;
+    position: relative; z-index: 1;
+  }
+  .cta-sub { font-size: 1.0625rem; color: rgba(255,255,255,.75); margin-bottom: 2.5rem; line-height: 1.6; position: relative; z-index: 1; }
+  .btn-white {
+    display: inline-block;
+    background: #fff;
+    color: #7c3a8a;
+    padding: .85rem 2.2rem;
+    border-radius: 50px;
+    font-size: 1rem;
+    font-weight: 700;
+    transition: transform .2s, box-shadow .2s;
+    box-shadow: 0 4px 20px rgba(0,0,0,.18);
+    position: relative; z-index: 1;
+  }
+  .btn-white:hover { transform: translateY(-2px); box-shadow: 0 10px 32px rgba(0,0,0,.25); }
+  @media (max-width: 640px) {
+    .cta-card { padding: 3rem 1.5rem; }
+  }
+</style>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+</script>

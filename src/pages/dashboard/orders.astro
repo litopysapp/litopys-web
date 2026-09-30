@@ -60,8 +60,8 @@ function fmtUAH(n: number) {
       </nav>
       <div class="sidebar-bottom-links">
         <a href="https://api.litopys.win/download" class="sidebar-ext-link sidebar-download"><img src="/icon-download.svg" alt="" />Завантажити</a>
-        <a href="/" class="sidebar-ext-link"><img src="/icon-question.svg" alt="" />Про застосунок</a>
-        <a href="/demo" class="sidebar-ext-link"><img src="/icon-play.svg" alt="" />Спробувати</a>
+        <a href="/litopys" class="sidebar-ext-link"><img src="/icon-question.svg" alt="" />Про застосунок</a>
+        <a href="/litopys/demo" class="sidebar-ext-link"><img src="/icon-play.svg" alt="" />Спробувати</a>
         <a href="https://api.litopys.win/download/litoscan" class="sidebar-ext-link sidebar-litoscan"><img src="/litoscan-badge.png" alt="" />LitoScan — безкоштовно</a>
       </div>
       <form method="POST" action="/api/logout" class="sidebar-logout">
@@ -77,7 +77,7 @@ function fmtUAH(n: number) {
 
       {orders.length === 0 ? (
         <section class="card">
-          <p class="no-data">Замовлень поки немає. <a href="/tsiny" class="inline-link">Переглянути ціни →</a></p>
+          <p class="no-data">Замовлень поки немає. <a href="/litopys/tsiny" class="inline-link">Переглянути ціни →</a></p>
         </section>
       ) : (
         <div class="orders-list">
