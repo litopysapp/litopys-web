@@ -58,7 +58,7 @@ const groups = [
       <h1 class="fade-up" style="--d:.05s">Навіть принтер зможе<br/>писати твоїм почерком.</h1>
       <p class="hero-sub fade-up" style="--d:.1s">Створюй рукописний шрифт зі своїх сканів або малюй символи від руки прямо в редакторі — і використовуй готовий почерк у Litopys.</p>
       <div class="hero-cta fade-up" style="--d:.15s">
-        <a href="https://api.litopys.win/download/litograph" class="btn-primary">Завантажити LitoGraph →</a>
+        <a href="https://github.com/litopysapp/LitoGraph/releases/latest" id="dl-litograph-hero" class="btn-primary">Завантажити LitoGraph →</a>
       </div>
     </div>
   </section>
@@ -92,7 +92,7 @@ const groups = [
         <p class="eyebrow cta-eyebrow">Готові спробувати?</p>
         <h2>Оцифруй свій почерк<br/>уже сьогодні</h2>
         <p class="cta-sub">Заповни шаблон або малюй символи від руки — готовий шрифт запрацює одразу в Litopys.</p>
-        <a href="https://api.litopys.win/download/litograph" class="btn-white">Завантажити →</a>
+        <a href="https://github.com/litopysapp/LitoGraph/releases/latest" id="dl-litograph-cta" class="btn-white">Завантажити →</a>
       </div>
     </div>
   </section>
@@ -248,4 +248,21 @@ const groups = [
     });
   }, { threshold: 0.08 });
   document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+  // Підтягуємо exe з найсвіжішого GitHub-релізу замість жорстко прописаної версії.
+  (async () => {
+    const links = [document.getElementById('dl-litograph-hero'), document.getElementById('dl-litograph-cta')].filter(Boolean);
+    if (links.length === 0) return;
+    try {
+      const res = await fetch('https://api.github.com/repos/litopysapp/LitoGraph/releases/latest', {
+        headers: { 'Accept': 'application/vnd.github+json' }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        const assets: { name: string; browser_download_url: string }[] = data.assets ?? [];
+        const setup = assets.find((a: any) => a.name.endsWith('.exe'))?.browser_download_url;
+        if (setup) links.forEach((l) => { if (l) l.href = setup; });
+      }
+    } catch {}
+  })();
 </script>
