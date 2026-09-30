@@ -75,16 +75,11 @@ const { title, description = "Litopys Suite — Litopys, LitoScan і LitoGraph: 
                 <a href="/litograph" class="nav-dropdown-item" role="menuitem">LitoGraph</a>
               </div>
             </div>
+            <a href="/tsiny">Ціни</a>
             <a href="/litopys/demo" style="color:var(--text);">ДЕМО</a>
-            <div class="nav-download-wrap">
-              <button class="nav-icon-btn" id="dl-btn" aria-label="Завантажити" aria-expanded="false" aria-haspopup="true">
-                <img src="/icon-download-header.svg" alt="" style="width:18px;height:18px;display:block;" />
-              </button>
-              <div class="nav-dropdown" id="dl-menu" role="menu">
-                <a href="https://api.litopys.win/download/setup" class="nav-dropdown-item" role="menuitem">Litopys</a>
-                <a href="https://api.litopys.win/download/portable" class="nav-dropdown-item" role="menuitem">Litopys Portable</a>
-              </div>
-            </div>
+            <a href="/zavantazhennia" class="nav-icon-btn" aria-label="Завантаження" title="Завантаження">
+              <img src="/icon-download-header.svg" alt="" style="width:18px;height:18px;display:block;" />
+            </a>
             <a href="/dashboard" class="nav-icon-btn" aria-label="Кабінет">
               <img src="/icon-user-header.svg" alt="" style="width:18px;height:18px;display:block;" />
             </a>
@@ -287,26 +282,6 @@ const { title, description = "Litopys Suite — Litopys, LitoScan і LitoGraph: 
       }
     } catch {}
   })();
-
-  const dlBtn = document.getElementById('dl-btn');
-  const dlMenu = document.getElementById('dl-menu');
-  if (dlBtn && dlMenu) {
-    dlBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const open = dlMenu.classList.toggle('open');
-      dlBtn.setAttribute('aria-expanded', String(open));
-    });
-    document.addEventListener('click', () => {
-      dlMenu.classList.remove('open');
-      dlBtn.setAttribute('aria-expanded', 'false');
-    });
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
-        dlMenu.classList.remove('open');
-        dlBtn.setAttribute('aria-expanded', 'false');
-      }
-    });
-  }
 
   const productsBtn = document.getElementById('products-btn');
   const productsMenu = document.getElementById('products-menu');

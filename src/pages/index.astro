@@ -7,7 +7,7 @@ const products = [
     name: 'Litopys',
     tagline: 'Ручка — зброя писаря',
     desc: 'Офлайн-редактор документів: готові журнали ЖБД і ЖОВтР або власний шаблон, з друком ручкою через плотер.',
-    icon: '/icon-book-open-check.svg',
+    logo: '/logo-litopys.png',
     cta: 'Перейти до Litopys',
     accent: '#2b4a8b',
   },
@@ -16,7 +16,7 @@ const products = [
     name: 'LitoScan',
     tagline: 'Сканування без клопоту',
     desc: 'Сканування, об’єднання та редагування PDF: дуплекс, обертання і видалення сторінок, пошук у тексті, друк.',
-    icon: '/icon-scan-line.svg',
+    logo: '/logo-litoscan.png',
     cta: 'Перейти до LitoScan',
     accent: '#0f6b52',
   },
@@ -25,7 +25,7 @@ const products = [
     name: 'LitoGraph',
     tagline: 'Твій почерк — шрифтом',
     desc: 'Створення рукописного шрифту зі сканів символів або малювання від руки — з редактором гліфів і збіркою шрифту.',
-    icon: '/icon-case-sensitive.svg',
+    logo: '/logo-litograph.png',
     cta: 'Перейти до LitoGraph',
     accent: '#7c3a8a',
   },
@@ -49,7 +49,7 @@ const products = [
       <div class="products-grid">
         {products.map((p, i) => (
           <a href={`/${p.slug}`} class="product-card fade-up" style={`--d:${i * 0.08}s; --accent:${p.accent}`}>
-            <div class="product-icon-wrap"><img src={p.icon} alt="" class="product-svg" /></div>
+            <img src={p.logo} alt="" width="48" height="48" class="product-logo" />
             <p class="product-tagline">{p.tagline}</p>
             <h2>{p.name}</h2>
             <p class="product-desc">{p.desc}</p>
@@ -157,15 +157,11 @@ const products = [
     transform: translateY(-4px);
     border-color: var(--accent);
   }
-  .product-icon-wrap {
+  .product-logo {
     width: 48px; height: 48px;
-    display: flex; align-items: center; justify-content: center;
-    border-radius: 14px;
-    background: color-mix(in srgb, var(--accent) 12%, transparent);
-    color: var(--accent);
+    display: block;
     margin-bottom: 1.25rem;
   }
-  .product-svg { width: 24px; height: 24px; display: block; }
   .product-tagline {
     font-size: .75rem;
     font-weight: 700;

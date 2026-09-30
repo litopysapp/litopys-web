@@ -1,0 +1,195 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+// Посилання на завантаження: api.litopys.win/download/:variant рахує
+// завантаження і перенаправляє на останній реліз GitHub.
+// Продукт без links показується як "Скоро".
+const products = [
+  {
+    name: 'Litopys',
+    logo: '/logo-litopys.png',
+    desc: 'Офлайн-редактор документів: журнали ЖБД і ЖОВтР або власний шаблон, з друком ручкою через плотер.',
+    page: '/litopys',
+    links: [
+      { label: 'Завантажити інсталятор', href: 'https://api.litopys.win/download/setup', primary: true },
+      { label: 'Portable-версія', href: 'https://api.litopys.win/download/portable' },
+    ],
+  },
+  {
+    name: 'LitoScan',
+    logo: '/logo-litoscan.png',
+    badge: 'Безкоштовно',
+    desc: 'Сканування, об’єднання та редагування PDF: дуплекс, обертання і видалення сторінок, пошук у тексті, друк.',
+    page: '/litoscan',
+    links: [
+      { label: 'Завантажити інсталятор', href: 'https://api.litopys.win/download/litoscan', primary: true },
+    ],
+  },
+  {
+    name: 'LitoGraph',
+    logo: '/logo-litograph.png',
+    desc: 'Створення рукописного шрифту зі сканів символів або малювання від руки — з редактором гліфів і збіркою шрифту.',
+    page: '/litograph',
+    links: [],
+  },
+];
+---
+<Layout title="Завантаження — Litopys Suite" description="Завантажити Litopys, LitoScan і LitoGraph для Windows.">
+
+  <!-- ══ HERO ══ -->
+  <section class="hero-page">
+    <div class="hero-bg"></div>
+    <div class="container">
+      <p class="eyebrow fade-up">Завантаження</p>
+      <h1 class="fade-up" style="--d:.05s">Завантаж застосунки<br/>Litopys Suite.</h1>
+      <p class="hero-sub fade-up" style="--d:.1s">Офлайн-програми для Windows. Один акаунт Litopys для всіх трьох застосунків.</p>
+    </div>
+  </section>
+
+  <!-- ══ DOWNLOADS ══ -->
+  <section class="section-downloads">
+    <div class="container">
+      <div class="dl-grid">
+        {products.map((p, i) => (
+          <div class="dl-card fade-up" style={`--d:${i * 0.08}s`}>
+            <div class="dl-head">
+              <img src={p.logo} alt="" width="56" height="56" class="dl-logo" />
+              {p.badge && <span class="dl-badge">{p.badge}</span>}
+            </div>
+            <h2>{p.name}</h2>
+            <p class="dl-desc">{p.desc}</p>
+            <div class="dl-actions">
+              {p.links.length > 0 ? (
+                p.links.map((l) => (
+                  <a href={l.href} class={l.primary ? 'btn-primary' : 'btn-secondary'}>{l.label}</a>
+                ))
+              ) : (
+                <button class="btn-primary" disabled>Скоро</button>
+              )}
+            </div>
+            <a href={p.page} class="dl-more">Докладніше про {p.name} →</a>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+</Layout>
+
+<style is:global>
+  .fade-up {
+    opacity: 0;
+    transform: translateY(32px);
+    transition: opacity .65s ease, transform .65s ease;
+    transition-delay: var(--d, 0s);
+  }
+  .fade-up.visible { opacity: 1; transform: translateY(0); }
+</style>
+
+<style>
+  .container { max-width: 1060px; margin: 0 auto; padding: 0 1.5rem; }
+  .eyebrow {
+    font-size: .75rem;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: #4f7cac;
+    margin-bottom: 1rem;
+  }
+
+  /* ── Hero ── */
+  .hero-page { position: relative; padding: 6rem 0 3rem; }
+  .hero-bg {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background: radial-gradient(ellipse at 20% 40%, #dce8f5 0%, transparent 55%),
+                radial-gradient(ellipse at 80% 60%, #f5ead8 0%, transparent 50%),
+                #f8f9fb;
+    pointer-events: none;
+  }
+  .hero-page h1 {
+    font-size: clamp(1.9rem, 4vw, 3rem);
+    font-weight: 800;
+    letter-spacing: -.04em;
+    line-height: 1.12;
+    color: #111827;
+    margin-bottom: 1.25rem;
+    max-width: 760px;
+  }
+  .hero-sub { font-size: 1.0625rem; color: #6b7280; line-height: 1.75; max-width: 620px; }
+
+  /* ── Downloads ── */
+  .section-downloads { padding: 3rem 0 8rem; }
+  .dl-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; align-items: stretch; }
+  .dl-card {
+    display: flex;
+    flex-direction: column;
+    background: rgba(255,255,255,.85);
+    border: 1px solid #e5e7eb;
+    border-radius: 20px;
+    padding: 2.25rem 2rem;
+    backdrop-filter: blur(8px);
+    transition: box-shadow .2s, transform .2s, border-color .2s;
+  }
+  .dl-card:hover { box-shadow: 0 12px 32px rgba(0,0,0,.09); transform: translateY(-3px); border-color: #bfd4e8; }
+  .dl-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; }
+  .dl-logo { width: 56px; height: 56px; display: block; }
+  .dl-badge {
+    background: #f4c716;
+    color: #0d1024;
+    font-size: .75rem;
+    font-weight: 700;
+    letter-spacing: .03em;
+    padding: .3rem .9rem;
+    border-radius: 50px;
+  }
+  .dl-card h2 { font-size: 1.5rem; font-weight: 800; letter-spacing: -.03em; color: #111827; margin-bottom: .6rem; }
+  .dl-desc { font-size: .875rem; color: #6b7280; line-height: 1.6; margin-bottom: 1.75rem; flex: 1; }
+  .dl-actions { display: flex; flex-direction: column; gap: .75rem; margin-bottom: 1.25rem; }
+  .dl-more { font-size: .875rem; font-weight: 600; color: #4f7cac; }
+  .dl-more:hover { text-decoration: underline; }
+
+  /* ── Buttons ── */
+  .btn-primary, .btn-secondary {
+    display: block;
+    padding: .8rem 1.5rem;
+    border-radius: 50px;
+    font-size: .9375rem;
+    font-weight: 600;
+    text-align: center;
+    cursor: pointer;
+    font-family: inherit;
+    transition: opacity .2s, transform .2s, box-shadow .2s;
+  }
+  .btn-primary {
+    background: #1a1a2e;
+    color: #fff;
+    border: none;
+    box-shadow: 0 4px 16px rgba(0,0,0,.2);
+  }
+  .btn-primary:hover { opacity: .85; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.25); }
+  .btn-primary:disabled { opacity: .5; cursor: default; transform: none; box-shadow: none; }
+  .btn-secondary {
+    background: transparent;
+    color: #1a1a2e;
+    border: 1px solid #d1d5db;
+  }
+  .btn-secondary:hover { border-color: #1a1a2e; }
+
+  @media (max-width: 900px) {
+    .dl-grid { grid-template-columns: 1fr; }
+  }
+</style>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+</script>

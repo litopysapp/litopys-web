@@ -13,7 +13,7 @@ export default defineConfig({
     '/funktsii': '/litopys/funktsii',
     '/yak-pratsyuye': '/litopys/yak-pratsyuye',
     '/shcho-potribno': '/litopys/shcho-potribno',
-    '/tsiny': '/litopys/tsiny',
+    '/litopys/tsiny': '/tsiny',
     '/demo': '/litopys/demo',
     '/shrifty': '/litopys/shrifty',
   }
