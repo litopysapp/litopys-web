@@ -117,17 +117,25 @@ import Layout from '../layouts/Layout.astro';
       <p class="eyebrow fade-up">LitoGraph</p>
       <div class="plans-grid">
 
-        <div class="plan-card fade-up">
-          <p class="plan-name">Ліцензія на 1 місяць</p>
-          <p class="plan-price">1 499 <span class="plan-currency">грн</span></p>
-          <p class="plan-period">щомісячна оплата</p>
+        <div class="plan-card fade-up" id="litograph-plan" data-price-per-month="1499">
+          <p class="plan-name">Ліцензія на кілька місяців</p>
+          <p class="plan-price"><span id="litograph-total">1 499</span> <span class="plan-currency">грн</span></p>
+          <p class="plan-period" id="litograph-period">1 місяць × 1 499 грн</p>
           <ul class="plan-features">
             <li>Створюй власні рукописні шрифти</li>
             <li>Зі сканів символів або малювання від руки</li>
             <li>Редактор гліфів і вирівнювання геометрії</li>
             <li>Готовий шрифт одразу працює в Litopys</li>
           </ul>
-          <button class="btn-primary" data-add-to-cart data-id="litograph-monthly" data-name="LitoGraph — ліцензія на 1 місяць" data-price="1499">Придбати →</button>
+          <label class="months-picker" for="litograph-months">
+            <span>Кількість місяців</span>
+            <select id="litograph-months">
+              {Array.from({ length: 12 }, (_, i) => i + 1).map((m) => (
+                <option value={m} selected={m === 1}>{m}</option>
+              ))}
+            </select>
+          </label>
+          <button class="btn-primary" id="litograph-add-to-cart">Придбати →</button>
         </div>
 
       </div>
@@ -296,6 +304,28 @@ import Layout from '../layouts/Layout.astro';
   .plans-note { text-align: center; color: #9ca3af; font-size: .875rem; margin-top: 2.5rem; }
   .plans-note a { text-decoration: underline; color: #6b7280; }
 
+  /* ── Months picker (LitoGraph) ── */
+  .months-picker {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    font-size: .875rem;
+    color: #4b5563;
+    margin-bottom: 1.25rem;
+  }
+  .months-picker select {
+    font-family: inherit;
+    font-size: .9375rem;
+    font-weight: 600;
+    color: #111827;
+    background: #fff;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    padding: .5rem .75rem;
+    cursor: pointer;
+  }
+
   /* ── Buttons ── */
   .btn-primary {
     display: inline-block;
@@ -389,6 +419,38 @@ import Layout from '../layouts/Layout.astro';
     });
   }, { threshold: 0.12 });
   document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+  function flashAdded(btn: HTMLButtonElement) {
+    const original = btn.textContent;
+    btn.textContent = 'Додано ✓';
+    btn.classList.add('btn-added');
+    setTimeout(() => {
+      btn.textContent = original;
+      btn.classList.remove('btn-added');
+    }, 1400);
+  }
+
+  const lgPlan = document.getElementById('litograph-plan');
+  const lgSelect = document.getElementById('litograph-months') as HTMLSelectElement | null;
+  const lgBtn = document.getElementById('litograph-add-to-cart') as HTMLButtonElement | null;
+  if (lgPlan && lgSelect && lgBtn) {
+    const perMonth = Number(lgPlan.dataset.pricePerMonth);
+    const fmt = (n: number) => n.toLocaleString('uk-UA');
+    const monthsWord = (m: number) => (m === 1 ? 'місяць' : m >= 2 && m <= 4 ? 'місяці' : 'місяців');
+    const update = () => {
+      const months = Number(lgSelect.value);
+      document.getElementById('litograph-total')!.textContent = fmt(perMonth * months);
+      document.getElementById('litograph-period')!.textContent = `${months} ${monthsWord(months)} × ${fmt(perMonth)} грн`;
+    };
+    lgSelect.addEventListener('change', update);
+    update();
+    lgBtn.addEventListener('click', () => {
+      const cart = (window as any).LitopysCart;
+      if (!cart) return;
+      cart.addToCart({ id: 'litograph-monthly', name: 'LitoGraph — ліцензія', price: perMonth, qty: Number(lgSelect.value) });
+      flashAdded(lgBtn);
+    });
+  }
 
   document.querySelectorAll<HTMLButtonElement>('[data-add-to-cart]').forEach((btn) => {
     btn.addEventListener('click', () => {

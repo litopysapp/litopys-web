@@ -16,7 +16,7 @@
     'font-litopys-2': { name: 'Шрифт Litopys-2', price: 4999 },
     'font-litopys-3': { name: 'Шрифт Litopys-3', price: 4999 },
     'font-litopys-4': { name: 'Шрифт Litopys-4', price: 4999 },
-    'litograph-monthly': { name: 'LitoGraph — ліцензія на 1 місяць', price: 1499 },
+    'litograph-monthly': { name: 'LitoGraph — ліцензія', price: 1499 },
   };
 
   function readCart() {
@@ -48,28 +48,35 @@
     window.dispatchEvent(new CustomEvent('litopys-cart-updated', { detail: items }));
   }
 
-  const MULTI_QTY_IDS = ['litopys-extra-user']; // товари, що можна купувати в кількості > 1
-  const MAX_QTY = 20;
+  // Товари, що можна купувати в кількості > 1, і їхній максимум.
+  // Для LitoGraph кількість = кількість місяців ліцензії.
+  const MAX_QTY_BY_ID = { 'litopys-extra-user': 20, 'litograph-monthly': 12 };
+  const QTY_UNIT_BY_ID = { 'litograph-monthly': 'міс.' };
 
   function maxQtyFor(id) {
-    return MULTI_QTY_IDS.includes(id) ? MAX_QTY : 1;
+    return MAX_QTY_BY_ID[id] || 1;
   }
 
   function isMultiQty(id) {
-    return MULTI_QTY_IDS.includes(id);
+    return id in MAX_QTY_BY_ID;
+  }
+
+  function qtyUnit(id) {
+    return QTY_UNIT_BY_ID[id] || '';
   }
 
   function addToCart(item) {
     const items = readCart();
     const existing = items.find(i => i.id === item.id);
+    const addQty = Number(item.qty) > 0 ? Math.floor(Number(item.qty)) : 1;
     if (!existing) {
-      items.push({ id: item.id, name: item.name, price: item.price, qty: 1 });
+      items.push({ id: item.id, name: item.name, price: item.price, qty: Math.min(addQty, maxQtyFor(item.id)) });
       writeCart(items);
     } else {
       existing.price = item.price;
       existing.name = item.name;
       if (isMultiQty(item.id)) {
-        existing.qty = Math.min(existing.qty + 1, maxQtyFor(item.id));
+        existing.qty = Math.min(existing.qty + addQty, maxQtyFor(item.id));
       }
       writeCart(items);
     }
@@ -131,7 +138,7 @@
     badge.style.display = count > 0 ? 'flex' : 'none';
   }
 
-  window.LitopysCart = { readCart, addToCart, removeFromCart, setQty, clearCart, cartCount, cartTotal, isMultiQty, maxQtyFor, pricedItemsWithDiscount };
+  window.LitopysCart = { readCart, addToCart, removeFromCart, setQty, clearCart, cartCount, cartTotal, isMultiQty, maxQtyFor, qtyUnit, pricedItemsWithDiscount };
 
   document.addEventListener('DOMContentLoaded', updateBadge);
   window.addEventListener('storage', (e) => { if (e.key === KEY) updateBadge(); });

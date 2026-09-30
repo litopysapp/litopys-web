@@ -226,7 +226,9 @@ if (Astro.request.method === 'POST') {
       const list = document.getElementById('order-items')!;
       const pricedItems = cart.pricedItemsWithDiscount();
       list.innerHTML = pricedItems.map((i: any) => {
-        const label = `${i.name}${i.qty > 1 ? ` × ${i.qty}` : ''}${i.discount > 0 ? ' <span class="order-item-badge">−50%</span>' : ''}`;
+        const unit = cart.qtyUnit(i.id);
+        const qtyLabel = unit ? ` × ${i.qty} ${unit}` : i.qty > 1 ? ` × ${i.qty}` : '';
+        const label = `${i.name}${qtyLabel}${i.discount > 0 ? ' <span class="order-item-badge">−50%</span>' : ''}`;
         const priceHtml = i.discount > 0
           ? `<span class="order-item-price-old">${formatUAH(i.unitPrice * i.qty)}</span> ${formatUAH(i.finalUnitPrice * i.qty)}`
           : formatUAH(i.unitPrice * i.qty);
