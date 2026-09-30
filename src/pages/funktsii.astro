@@ -1,0 +1,262 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const groups = [
+  {
+    icon: '/icon-book-open-check.svg',
+    title: 'Готові журнали',
+    items: [
+      { h: 'Журнал бойових дій (ЖБД)', p: 'Готовий бланк із таблицею, датою й часом — відкрив і одразу заповнюєш.' },
+      { h: 'Журнал відданих і отриманих розпоряджень (ЖОВтР)', p: 'Книжковий і альбомний варіанти бланку з усіма потрібними полями.' },
+    ],
+  },
+  {
+    icon: '/icon-layout-template.svg',
+    title: 'Власний документ',
+    items: [
+      { h: 'Вільний документ — книжковий або альбомний', p: 'А4 у книжковій (210×297) або альбомній (297×210) орієнтації — під будь-який бланк, якого немає серед готових.' },
+      { h: 'Своя таблиця, як у Word', p: 'Потрібна кількість рядків і колонок, об’єднання клітинок, межі й товщина ліній, підгонка під ширину чи висоту листа в один клік.' },
+      { h: 'Заголовки, колонтитули, нумерація сторінок', p: 'Розміти документ так, як того вимагає саме твій бланк.' },
+      { h: 'Збереження у власний шаблон', p: '«Файл → Зберегти як шаблон» — і документ з’являється в «Моїх шаблонах» з мініатюрою, готовий до повторного використання.' },
+    ],
+  },
+  {
+    icon: '/icon-case-sensitive.svg',
+    title: 'Текст і форматування',
+    items: [
+      { h: 'Форматування як у Word', p: 'Жирний, курсив, підкреслення, вирівнювання абзацу, відступ першого рядка, марковані й нумеровані списки.' },
+      { h: 'Контекстне меню шрифту', p: 'Правий клік по тексту — вибір рукописного набору або системного шрифту Times New Roman, розміру, стилю.' },
+      { h: 'Автонумерація "№ з/п"', p: 'По виділених клітинках або по всій колонці, з будь-якого стартового номера — нові рядки продовжують рахунок самі.' },
+      { h: 'Пошук і заміна', p: 'Швидкий пошук по тексту документа з переходом між збігами та заміною одного чи всіх входжень.' },
+      { h: 'Перевірка орфографії рукопису', p: 'Підкреслює помилки у введеному тексті та пропонує варіанти виправлення просто в контекстному меню.' },
+    ],
+  },
+  {
+    icon: '/icon-pencil-sparkles.svg',
+    title: 'Почерк і підпис',
+    items: [
+      { h: 'Персональний рукописний шрифт', p: 'Оцифруємо твій почерк — і сторінка виглядатиме написаною власноруч.' },
+      { h: 'Перегенерувати символи', p: 'Один клік — і однакові слова в тексті більше не виглядають ідентичними, як за живого письма.' },
+      { h: 'Редактор підпису', p: 'Малюєш підпис пером, розміщуєш його в будь-якому місці сторінки; плотер відтворює саме його, а не факсиміле.' },
+    ],
+  },
+  {
+    icon: '/icon-file-stack.svg',
+    title: 'Файли й імпорт',
+    items: [
+      { h: 'Імпорт з DOCX', p: 'Заливаєш готовий Word-файл — текст вставляється рукописним або системним шрифтом, з заміною вмісту або біля курсора.' },
+      { h: 'Експорт у Word (.docx)', p: 'Абзаци, списки й таблиці з об’єднаними клітинками, поля (зокрема дзеркальні) та колонтитули з номером сторінки зберігаються при експорті.' },
+      { h: 'Друк і збереження PDF', p: 'Три режими: тільки бланк, тільки текст або бланк разом із текстом — для перевірки перед друком на плотері.' },
+    ],
+  },
+  {
+    icon: '/icon-save-check.svg',
+    title: 'Проект і збереження',
+    items: [
+      { h: 'Автозбереження кожні 3 хвилини', p: 'Незбережені зміни тихо йдуть у файл проекту або в чернетку — після збою нічого не втрачається.' },
+      { h: 'Історія змін', p: 'Скасувати й повернути будь-яку правку, покрокова навігація по змінах документа.' },
+      { h: 'Останні документи й швидке відкриття', p: 'До 6 останніх проектів у вікні запуску — з датою, типом модуля й підписами "Сьогодні/Учора".' },
+    ],
+  },
+  {
+    icon: '/icon-globe-off.svg',
+    title: 'Плотер і друк ручкою',
+    items: [
+      { h: 'Друк справжньою ручкою', p: 'Плотер Silhouette Portrait 4 самостійно вписує рукописний текст у документ — рухом пера, а не принтера.' },
+      { h: 'Окремий друк порожніх бланків', p: 'Роздрукуй розмітку й таблицю без тексту на звичайному принтері — і заповни бланк ручкою вручну або віддай плотеру.' },
+      { h: 'Вибір товщини ліній і плотера', p: 'Тонкі або товсті лінії трасування, підключення по USB, вибір конкретного пристрою зі списку.' },
+    ],
+  },
+  {
+    icon: '/icon-book-key.svg',
+    title: 'Дані й безпека',
+    items: [
+      { h: 'Повністю офлайн', p: 'Жодного інтернету для роботи — усі файли залишаються на твоєму диску.' },
+      { h: 'Ваші дані — ваші', p: 'Нічого не надсилається на сторонні сервери без твоєї дії.' },
+    ],
+  },
+];
+---
+<Layout title="Основні функції — Літопис" description="Повний огляд можливостей Літопису: журнали, власні документи, таблиці, почерк, друк плотером і збереження даних.">
+
+  <!-- ══ HERO ══ -->
+  <section class="hero-page">
+    <div class="hero-bg"></div>
+    <div class="container">
+      <p class="eyebrow fade-up">Основні функції</p>
+      <h1 class="fade-up" style="--d:.05s">Все, що вміє Літопис —<br/>в одному місці.</h1>
+      <p class="hero-sub fade-up" style="--d:.1s">Від готових журналів до власного шаблону документа з таблицею і розміткою — і друку справжньою ручкою.</p>
+    </div>
+  </section>
+
+  <!-- ══ FUNCTION GROUPS ══ -->
+  <section class="section-groups">
+    <div class="container">
+      {groups.map((g, gi) => (
+        <div class="fgroup fade-up" style={`--d:${Math.min(gi * 0.05, 0.3).toFixed(2)}s`}>
+          <div class="fgroup-head">
+            <div class="fgroup-icon-wrap"><img src={g.icon} alt="" class="fgroup-svg" /></div>
+            <h2>{g.title}</h2>
+          </div>
+          <div class="fgroup-list">
+            {g.items.map((it) => (
+              <div class="fitem">
+                <h3>{it.h}</h3>
+                <p class="body-text">{it.p}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- ══ CTA ══ -->
+  <section class="section-cta">
+    <div class="container">
+      <div class="cta-card fade-up">
+        <p class="eyebrow cta-eyebrow">Готові спробувати?</p>
+        <h2>Відкрийте Літопис<br/>прямо зараз</h2>
+        <p class="cta-sub">Протестуйте редактор у браузері — без реєстрації та завантажень.</p>
+        <a href="/demo" class="btn-white">Відкрити демо →</a>
+      </div>
+    </div>
+  </section>
+
+</Layout>
+
+<style is:global>
+  .fade-up {
+    opacity: 0;
+    transform: translateY(32px);
+    transition: opacity .65s ease, transform .65s ease;
+    transition-delay: var(--d, 0s);
+  }
+  .fade-up.visible { opacity: 1; transform: translateY(0); }
+</style>
+
+<style>
+  .container { max-width: 1060px; margin: 0 auto; padding: 0 1.5rem; }
+  .eyebrow {
+    font-size: .75rem;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: #4f7cac;
+    margin-bottom: 1rem;
+  }
+  .body-text { color: #4b5563; line-height: 1.75; font-size: .9375rem; }
+
+  /* ── Hero ── */
+  .hero-page { position: relative; padding: 6rem 0 3rem; }
+  .hero-bg {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background: radial-gradient(ellipse at 20% 40%, #dce8f5 0%, transparent 55%),
+                radial-gradient(ellipse at 80% 60%, #f5ead8 0%, transparent 50%),
+                #f8f9fb;
+    pointer-events: none;
+  }
+  .hero-page h1 {
+    font-size: clamp(1.9rem, 4vw, 3rem);
+    font-weight: 800;
+    letter-spacing: -.04em;
+    line-height: 1.12;
+    color: #111827;
+    margin-bottom: 1.25rem;
+    max-width: 760px;
+  }
+  .hero-sub { font-size: 1.0625rem; color: #6b7280; line-height: 1.75; max-width: 620px; }
+
+  /* ── Groups ── */
+  .section-groups { padding: 3rem 0 7rem; }
+  .fgroup {
+    background: rgba(255,255,255,.85);
+    border: 1px solid #e5e7eb;
+    border-radius: 22px;
+    padding: 2.25rem 2.5rem 2.5rem;
+    backdrop-filter: blur(8px);
+    transition: box-shadow .2s, border-color .2s;
+  }
+  .fgroup:hover { box-shadow: 0 12px 32px rgba(0,0,0,.06); border-color: #bfd4e8; }
+  .fgroup + .fgroup { margin-top: 1.5rem; }
+  .fgroup-head { display: flex; align-items: center; gap: .9rem; margin-bottom: 1.5rem; }
+  .fgroup-icon-wrap {
+    width: 44px; height: 44px;
+    display: flex; align-items: center; justify-content: center;
+    background: #eef4fb;
+    border-radius: 12px;
+    flex-shrink: 0;
+  }
+  .fgroup-svg { width: 22px; height: 22px; display: block; }
+  .fgroup-head h2 { font-size: 1.375rem; font-weight: 800; letter-spacing: -.02em; color: #111827; }
+
+  .fgroup-list { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem 2rem; }
+  .fitem h3 { font-size: 1rem; font-weight: 700; color: #111827; margin-bottom: .4rem; letter-spacing: -.005em; }
+
+  @media (max-width: 700px) {
+    .fgroup { padding: 1.75rem 1.5rem 2rem; }
+    .fgroup-list { grid-template-columns: 1fr; gap: 1.25rem; }
+  }
+
+  /* ── CTA ── */
+  .section-cta { padding: 3rem 0 8rem; }
+  .cta-card {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%);
+    border-radius: 28px; padding: 5rem 3rem; text-align: center; color: #fff;
+    box-shadow: 0 24px 64px rgba(0,0,0,.25);
+    position: relative; overflow: hidden;
+  }
+  .cta-card::before {
+    content: '';
+    position: absolute;
+    top: -80px; right: -80px;
+    width: 320px; height: 320px;
+    background: radial-gradient(circle, rgba(255,213,0,.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .cta-card::after {
+    content: '';
+    position: absolute;
+    bottom: -60px; left: -60px;
+    width: 280px; height: 280px;
+    background: radial-gradient(circle, rgba(0,91,187,.2) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .cta-eyebrow { color: rgba(255,255,255,.5) !important; }
+  .cta-card h2 {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 800; letter-spacing: -.04em; line-height: 1.1; margin-bottom: 1rem;
+    position: relative; z-index: 1;
+  }
+  .cta-sub { font-size: 1.0625rem; color: rgba(255,255,255,.7); margin-bottom: 2.5rem; line-height: 1.6; position: relative; z-index: 1; }
+  .btn-white {
+    display: inline-block;
+    background: #fff;
+    color: #1a1a2e;
+    padding: .85rem 2.2rem;
+    border-radius: 50px;
+    font-size: 1rem;
+    font-weight: 700;
+    transition: transform .2s, box-shadow .2s;
+    box-shadow: 0 4px 20px rgba(0,0,0,.18);
+    position: relative; z-index: 1;
+  }
+  .btn-white:hover { transform: translateY(-2px); box-shadow: 0 10px 32px rgba(0,0,0,.25); }
+  @media (max-width: 640px) {
+    .cta-card { padding: 3rem 1.5rem; }
+  }
+</style>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+</script>
