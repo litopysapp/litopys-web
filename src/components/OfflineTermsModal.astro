@@ -1,0 +1,48 @@
+---
+// Попап умов перетворення ліцензії в офлайн (кабінет → Ліцензії).
+// Текст і версія — з D:\LitopysPro\docs\legal (node scripts/build-legal.js →
+// src/lib/legal-texts.ts). Версія = дата редакції; сервер зберігає її разом
+// зі згодою користувача.
+import { OFFLINE_RULES_HTML, OFFLINE_RULES_VERSION } from '../lib/legal-texts';
+export const TERMS_VERSION = OFFLINE_RULES_VERSION;
+---
+
+<div id="offline-terms-modal" class="terms-backdrop" hidden data-terms-version={TERMS_VERSION}>
+  <div class="terms-modal" role="dialog" aria-modal="true" aria-labelledby="offline-terms-title">
+    <h2 id="offline-terms-title">Умови користування та перетворення ліцензії в офлайн</h2>
+    <div class="terms-text" set:html={OFFLINE_RULES_HTML} />
+    <p class="terms-links">
+      Повні тексти: <a href="/umovy-vykorystannia" target="_blank" rel="noopener">Умови використання програми Litopys</a> ·
+      <a href="/pravyla-oflain-litsenzii" target="_blank" rel="noopener">Правила перетворення ліцензії в офлайн</a>
+    </p>
+    <label class="terms-check"><input type="checkbox" id="offline-terms-agree" /> Я ознайомився й погоджуюсь з умовами користування</label>
+    <label class="terms-check"><input type="checkbox" id="offline-terms-confirm" /> Підтверджую перетворення цієї ліцензії в офлайн</label>
+    <div class="terms-actions">
+      <button type="button" class="btn-secondary" id="offline-terms-cancel">Скасувати</button>
+      <button type="button" class="btn-primary" id="offline-terms-submit" disabled>Перетворити</button>
+    </div>
+  </div>
+</div>
+
+<style>
+  .terms-backdrop { position: fixed; inset: 0; background: rgba(17, 24, 39, .45); display: flex; align-items: center; justify-content: center; padding: 1rem; z-index: 1000; }
+  .terms-backdrop[hidden] { display: none; }
+  .terms-modal { background: #fff; border-radius: 16px; padding: 1.5rem; width: min(640px, 100%); max-height: 92vh; display: flex; flex-direction: column; }
+  .terms-modal h2 { font-size: 1.05rem; font-weight: 700; color: #111827; margin-bottom: 1rem; }
+  .terms-text { font-size: .875rem; color: #374151; line-height: 1.55; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 10px; padding: 1rem; margin-bottom: .75rem; overflow: auto; min-height: 8rem; flex: 1 1 auto; }
+  .terms-text :global(p) { margin: 0 0 .6rem; }
+  .terms-text :global(h3) { font-size: .9rem; font-weight: 700; color: #111827; margin: 1rem 0 .4rem; }
+  .terms-text :global(ul), .terms-text :global(ol) { margin: 0 0 .6rem; padding-left: 1.25rem; }
+  .terms-text :global(ul) { list-style: disc; }
+  .terms-text :global(ol) { list-style: decimal; }
+  .terms-text :global(li) { margin-bottom: .2rem; }
+  .terms-links { font-size: .8rem; color: #6b7280; margin-bottom: .9rem; }
+  .terms-links a { color: #4f7cac; text-decoration: underline; }
+  .terms-check { display: flex; gap: .55rem; align-items: flex-start; font-size: .875rem; color: #111827; margin-bottom: .6rem; cursor: pointer; }
+  .terms-check input { margin-top: .2rem; }
+  .terms-actions { display: flex; justify-content: flex-end; gap: .6rem; margin-top: .6rem; }
+  .btn-primary, .btn-secondary { border-radius: 8px; padding: .55rem 1rem; font-size: .875rem; font-weight: 600; cursor: pointer; font-family: inherit; }
+  .btn-primary { background: #1a1a2e; color: #fff; border: 1.5px solid #1a1a2e; }
+  .btn-primary:disabled { opacity: .45; cursor: not-allowed; }
+  .btn-secondary { background: #fff; color: #374151; border: 1.5px solid #e5e7eb; }
+</style>

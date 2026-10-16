@@ -1,5 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import OfflineTermsModal from '../../components/OfflineTermsModal.astro';
 
 const { user } = Astro.locals;
 const token = Astro.cookies.get('litopys_token')?.value ?? '';
@@ -7,6 +8,9 @@ const token = Astro.cookies.get('litopys_token')?.value ?? '';
 let license: any = null;
 let sessions: any[] = [];
 let maxSessions = 0;
+// Ліцензії повної ліцензії рядками (server/src/offline-licenses.js): одна
+// ліцензія = один ПК, тип Онлайн/Офлайн.
+let seats: any[] = [];
 let actionError = '';
 let actionSuccess = '';
 
@@ -26,7 +30,7 @@ if (Astro.request.method === 'POST') {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await res.json();
-      actionSuccess = data.ok ? 'Сеанс завершено' : 'Не вдалось завершити сеанс';
+      actionSuccess = data.ok ? 'Ліцензію на цьому ПК завершено' : 'Не вдалось завершити ліцензію на цьому ПК';
       if (!data.ok) actionError = actionSuccess, actionSuccess = '';
     } catch {
       actionError = 'Помилка зʼєднання';
@@ -45,6 +49,14 @@ try {
     sessions = data.sessions ?? [];
     maxSessions = data.maxSessions ?? 0;
   }
+} catch {}
+
+try {
+  const res = await fetch('https://api.litopys.win/licenses/seats', {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  const data = await res.json();
+  if (data.ok) seats = data.seats ?? [];
 } catch {}
 
 const expiresDate = license?.expiresAt ? new Date(license.expiresAt) : null;
@@ -101,7 +113,7 @@ function fmtDate(d: string | null | undefined) {
 
     <main class="dash-main">
       <div class="dash-header">
-        <p class="dash-greeting">Ліцензія та сеанси</p>
+        <p class="dash-greeting">Ліцензії</p>
         <p class="dash-email">{user?.name} · {user?.email}</p>
       </div>
 
@@ -131,7 +143,7 @@ function fmtDate(d: string | null | undefined) {
                 <p class="info-value">{license.modules.map((m: string) => moduleLabels[m] ?? m).join(', ')}</p>
               </div>
               <div class="info-item">
-                <p class="info-label">Макс. сеансів</p>
+                <p class="info-label">Кількість ліцензій (ПК)</p>
                 <p class="info-value">{license.maxSessions}</p>
               </div>
               <div class="info-item">
@@ -157,55 +169,266 @@ function fmtDate(d: string | null | undefined) {
         )}
       </section>
 
-      <!-- Активні сеанси -->
+      <!-- Ліцензії: одна ліцензія = один ПК, тип Онлайн / Офлайн -->
       <section class="card">
         <div class="card-header">
-          <h2>Активні сеанси</h2>
-          <span class="badge badge-gray">{sessions.length} / {maxSessions}</span>
+          <h2>Ліцензії</h2>
+          {seats.length > 0 && (
+            <span class="badge badge-gray">
+              Онлайн: {seats.filter((s: any) => s.kind !== 'offline').length} · Офлайн: {seats.filter((s: any) => s.kind === 'offline').length}
+            </span>
+          )}
         </div>
 
-        {sessions.length === 0 ? (
-          <p class="no-data">Активних сеансів немає.</p>
+        {seats.length === 0 ? (
+          <p class="no-data">Перетворити в офлайн можна лише повну ліцензію.</p>
         ) : (
-          <div class="sessions-list">
-            {sessions.map((s: any) => (
-              <div class="session-item">
-                <div class="session-info">
-                  <div class="session-icon">💻</div>
-                  <div>
-                    <p class="session-name">{s.session_name ?? s.sessionName ?? 'Без назви'}</p>
-                    <p class="session-device">{s.current_device_label ?? s.currentDeviceLabel ?? '—'}</p>
-                    <p class="session-last">
-                      Остання активність: {fmtDate(s.last_seen_at ?? s.lastSeenAt)}
-                    </p>
+          <div class="sessions-list" id="seats-list" data-seat-count={seats.length}>
+            {seats.map((s: any) => (
+              <div class="session-item seat-item" data-seat={s.seat} data-kind={s.kind} data-offline-id={s.offlineId ?? ''}>
+                <div class="seat-row">
+                  <div class="session-info">
+                    <div class="session-icon">{s.kind === 'offline' ? '🔒' : '💻'}</div>
+                    <div>
+                      <p class="session-name">Ліцензія {s.seat}{s.seat === 1 ? ' (основна)' : ''}</p>
+                      {s.kind === 'free' && <p class="session-device">Не активована на жодному ПК</p>}
+                      {s.kind === 'online' && (
+                        <>
+                          <p class="session-device">ПК: {s.pcName ?? '—'} · {s.online ? 'на зв’язку' : 'не в мережі'}</p>
+                          <p class="session-last">Остання активність: {fmtDate(s.lastSeenAt)}</p>
+                        </>
+                      )}
+                      {s.kind === 'offline' && (
+                        <>
+                          <p class="session-device">Офлайн-ПК: {s.pcName ?? '—'}</p>
+                          <p class="session-last">Файл ліцензії видано: {fmtDate(s.regeneratedAt ?? s.issuedAt)}</p>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                  <div class="seat-controls">
+                    <select class="seat-type" aria-label="Тип ліцензії" disabled={s.kind === 'offline'}
+                      title={s.kind === 'offline' ? 'Офлайн-ліцензію неможливо перетворити назад в онлайн' : ''}>
+                      <option value="online" selected={s.kind !== 'offline'}>Онлайн</option>
+                      <option value="offline" selected={s.kind === 'offline'}>Офлайн</option>
+                    </select>
+                    {s.kind === 'online' && (
+                      <form method="POST" class="revoke-form">
+                        <input type="hidden" name="action" value="revoke" />
+                        <input type="hidden" name="sessionId" value={s.sessionId} />
+                        <button type="submit" class="btn-revoke"
+                          onclick="return confirm('Завершити роботу цієї ліцензії на цьому ПК?')">
+                          Завершити
+                        </button>
+                      </form>
+                    )}
                   </div>
                 </div>
-                <form method="POST" class="revoke-form">
-                  <input type="hidden" name="action" value="revoke" />
-                  <input type="hidden" name="sessionId" value={s.id} />
-                  <button type="submit" class="btn-revoke"
-                    onclick="return confirm('Завершити цей сеанс?')">
-                    Завершити
-                  </button>
-                </form>
+
+                {s.kind !== 'offline' && (
+                  <div class="seat-panel" hidden>
+                    <p class="seat-hint">Завантажте код ПК — файл <b>.litreq</b>, збережений у Litopys на комп’ютері без інтернету («Офлайн-ліцензія» → «Зберегти код ПК»).</p>
+                    <div class="seat-panel-row">
+                      <input type="file" class="seat-code" accept=".litreq,text/plain" />
+                      <button type="button" class="btn-primary seat-confirm">Підтвердити</button>
+                    </div>
+                  </div>
+                )}
+
+                {s.kind === 'offline' && (
+                  <div class="seat-panel seat-panel-offline">
+                    <div class="seat-panel-row">
+                      <button type="button" class="btn-secondary seat-restore">Відновити файл ліцензії</button>
+                      <label class="btn-secondary seat-regen-label">
+                        Перегенерувати файл
+                        <input type="file" class="seat-regen" accept=".litreq,text/plain" hidden />
+                      </label>
+                    </div>
+                    <p class="seat-hint">Перегенерувати — якщо після заміни диска чи збою активації потрібен новий файл: завантажте щойно збережений у Litopys код ПК.</p>
+                  </div>
+                )}
+
+                <div class="seat-message" hidden></div>
               </div>
             ))}
           </div>
         )}
       </section>
 
-      <!-- Історія сеансів -->
+      <OfflineTermsModal />
+
+      <!-- Історія ліцензій -->
       <section class="card">
         <div class="card-header">
-          <h2>Історія сеансів</h2>
+          <h2>Історія ліцензій</h2>
         </div>
         <div class="history-placeholder">
-          <p>Історія сеансів буде доступна найближчим часом.</p>
+          <p>Історія ліцензій буде доступна найближчим часом.</p>
         </div>
       </section>
     </main>
   </div>
 </Layout>
+
+<script>
+  // Перетворення ліцензії в офлайн, відновлення й перегенерація файлу ліцензії
+  // (проксі: /api/offline-license/*, сервер: server/src/offline-licenses.js).
+  const list = document.getElementById('seats-list');
+  const modal = document.getElementById('offline-terms-modal');
+  const seatCount = Number(list?.dataset.seatCount || 0);
+
+  function waLink(phone: string) {
+    const digits = String(phone || '').replace(/\D/g, '');
+    return digits ? `<a href="https://wa.me/${digits}" target="_blank" rel="noopener">WhatsApp ${phone}</a>` : 'WhatsApp';
+  }
+
+  function showMessage(item: HTMLElement, html: string, kind: 'ok' | 'err' | 'warn') {
+    const box = item.querySelector<HTMLElement>('.seat-message');
+    if (!box) return;
+    box.innerHTML = html;
+    box.className = `seat-message seat-message-${kind}`;
+    box.hidden = false;
+  }
+
+  function errorText(data: any) {
+    switch (data?.error) {
+      case 'seat_unavailable':
+        return 'Ця ліцензія недоступна. Підключіть Litopys до інтернету для продовження процесу перетворення ліцензії'
+          + (data.canChooseOther ? ' або оберіть іншу.' : '.');
+      case 'already_activated_other':
+        return `Увага! Цей ПК вже активовано. Зверніться в технічну підтримку Litopys: ${waLink(data.supportWhatsapp)}.`;
+      case 'different_pc':
+        return `Це інший комп’ютер: материнська плата або процесор не збігаються з тими, для яких видано ліцензію. Зверніться в технічну підтримку Litopys: ${waLink(data.supportWhatsapp)}.`;
+      case 'bad_pc_code':
+        return 'Це не код ПК Litopys. Збережіть його в Litopys: «Офлайн-ліцензія» → «Зберегти код ПК».';
+      case 'hardware_unreadable':
+        return 'Litopys не зміг зчитати дані материнської плати й процесора цього ПК. Зверніться в технічну підтримку Litopys.';
+      case 'terms_not_accepted':
+        return 'Потрібно погодитися з умовами й підтвердити перетворення.';
+      case 'already_offline':
+        return 'Ця ліцензія вже офлайн.';
+      case 'no_full_license':
+        return 'Перетворити в офлайн можна лише повну ліцензію.';
+      case 'offline_signing_unavailable':
+        return 'Офлайн-ліцензії тимчасово недоступні. Спробуйте пізніше.';
+      case 'network':
+        return 'Помилка з’єднання. Спробуйте ще раз.';
+      default:
+        return 'Не вдалося виконати дію. Спробуйте ще раз.';
+    }
+  }
+
+  function downloadFile(fileName: string, text: string) {
+    const url = URL.createObjectURL(new Blob([text + '\n'], { type: 'application/octet-stream' }));
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = fileName || 'Litopys.litlic';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+
+  async function postJson(url: string, body?: unknown) {
+    try {
+      const res = await fetch(url, {
+        method: body === undefined ? 'GET' : 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: body === undefined ? undefined : JSON.stringify(body),
+      });
+      return await res.json();
+    } catch {
+      return { ok: false, error: 'network' };
+    }
+  }
+
+  async function restoreFile(item: HTMLElement, offlineId: string | number) {
+    const data = await postJson(`/api/offline-license/${offlineId}/file`);
+    if (data.ok) {
+      downloadFile(data.fileName, data.fileText);
+      showMessage(item, 'Файл ліцензії завантажено. Відкрийте його в Litopys на офлайн-ПК.', 'ok');
+    } else showMessage(item, errorText(data), 'err');
+  }
+
+  // Попап умов: Promise<termsVersion | null>.
+  function askTerms(): Promise<string | null> {
+    if (!modal) return Promise.resolve(null);
+    const agree = modal.querySelector<HTMLInputElement>('#offline-terms-agree')!;
+    const confirm = modal.querySelector<HTMLInputElement>('#offline-terms-confirm')!;
+    const submit = modal.querySelector<HTMLButtonElement>('#offline-terms-submit')!;
+    const cancel = modal.querySelector<HTMLButtonElement>('#offline-terms-cancel')!;
+    agree.checked = false;
+    confirm.checked = false;
+    submit.disabled = true;
+    modal.hidden = false;
+    return new Promise(resolve => {
+      const sync = () => { submit.disabled = !(agree.checked && confirm.checked); };
+      const done = (value: string | null) => {
+        modal.hidden = true;
+        agree.removeEventListener('change', sync);
+        confirm.removeEventListener('change', sync);
+        submit.removeEventListener('click', onSubmit);
+        cancel.removeEventListener('click', onCancel);
+        resolve(value);
+      };
+      const onSubmit = () => { if (agree.checked && confirm.checked) done(modal.dataset.termsVersion || ''); };
+      const onCancel = () => done(null);
+      agree.addEventListener('change', sync);
+      confirm.addEventListener('change', sync);
+      submit.addEventListener('click', onSubmit);
+      cancel.addEventListener('click', onCancel);
+    });
+  }
+
+  list?.querySelectorAll<HTMLElement>('.seat-item').forEach(item => {
+    const seat = Number(item.dataset.seat);
+    const select = item.querySelector<HTMLSelectElement>('.seat-type');
+    const panel = item.querySelector<HTMLElement>('.seat-panel:not(.seat-panel-offline)');
+
+    select?.addEventListener('change', () => {
+      if (panel) panel.hidden = select.value !== 'offline';
+      item.querySelector<HTMLElement>('.seat-message')!.hidden = true;
+    });
+
+    item.querySelector('.seat-confirm')?.addEventListener('click', async () => {
+      const input = item.querySelector<HTMLInputElement>('.seat-code');
+      const file = input?.files?.[0];
+      if (!file) { showMessage(item, 'Оберіть файл коду ПК (.litreq).', 'err'); return; }
+      const request = await file.text();
+      const termsVersion = await askTerms();
+      if (termsVersion === null) return;
+      showMessage(item, 'Перетворюємо ліцензію…', 'warn');
+      const data = await postJson('/api/offline-license/convert', { seat, request, termsVersion, accepted: true });
+      if (data.ok) {
+        downloadFile(data.fileName, data.fileText);
+        showMessage(item, 'Готово! Файл ліцензії завантажено — відкрийте його в Litopys на офлайн-ПК («Офлайн-ліцензія» → «Відкрити файл ліцензії»).', 'ok');
+        setTimeout(() => location.reload(), 2500);
+        return;
+      }
+      if (data.error === 'already_activated_own') {
+        showMessage(item, `Увага! Цей ПК вже активовано (Ліцензія ${data.seat}). Можна відновити його файл ліцензії замість нової активації. <button type="button" class="btn-secondary seat-restore-existing">Відновити файл ліцензії</button>`, 'warn');
+        item.querySelector('.seat-restore-existing')?.addEventListener('click', () => restoreFile(item, data.offlineId));
+        return;
+      }
+      showMessage(item, errorText(data), 'err');
+    });
+
+    item.querySelector('.seat-restore')?.addEventListener('click', () => restoreFile(item, item.dataset.offlineId || ''));
+
+    item.querySelector<HTMLInputElement>('.seat-regen')?.addEventListener('change', async (event) => {
+      const input = event.target as HTMLInputElement;
+      const file = input.files?.[0];
+      input.value = '';
+      if (!file) return;
+      showMessage(item, 'Перегенеровуємо файл ліцензії…', 'warn');
+      const data = await postJson(`/api/offline-license/${item.dataset.offlineId}/regenerate`, { request: await file.text() });
+      if (data.ok) {
+        downloadFile(data.fileName, data.fileText);
+        showMessage(item, 'Новий файл ліцензії завантажено — відкрийте його в Litopys на офлайн-ПК.', 'ok');
+      } else showMessage(item, errorText(data), 'err');
+    });
+  });
+</script>
 
 <style>
   .dash-wrap { display: grid; grid-template-columns: 220px 1fr; min-height: 100vh; }
@@ -268,6 +491,26 @@ function fmtDate(d: string | null | undefined) {
   .btn-revoke { background: none; border: 1.5px solid #fca5a5; color: #dc2626; border-radius: 8px; padding: .45rem .9rem; font-size: .8125rem; font-weight: 600; cursor: pointer; font-family: inherit; transition: background .15s; white-space: nowrap; }
   .btn-revoke:hover { background: #fef2f2; }
 
+  .seat-item { flex-direction: column; align-items: stretch; }
+  .seat-row { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+  .seat-controls { display: flex; align-items: center; gap: .5rem; flex-shrink: 0; }
+  .seat-type { border: 1.5px solid #e5e7eb; border-radius: 8px; padding: .4rem .6rem; font-size: .8125rem; font-family: inherit; background: #fff; }
+  .seat-type:disabled { color: #6b7280; background: #f3f4f6; }
+  .seat-panel { margin-top: .85rem; padding-top: .85rem; border-top: 1px dashed #e5e7eb; }
+  .seat-panel[hidden] { display: none; }
+  .seat-panel-row { display: flex; align-items: center; gap: .6rem; flex-wrap: wrap; }
+  .seat-hint { font-size: .8125rem; color: #6b7280; margin: .5rem 0; }
+  .seat-code { font-size: .8125rem; }
+  .btn-primary, .btn-secondary { border-radius: 8px; padding: .45rem .9rem; font-size: .8125rem; font-weight: 600; cursor: pointer; font-family: inherit; white-space: nowrap; }
+  .btn-primary { background: #1a1a2e; color: #fff; border: 1.5px solid #1a1a2e; }
+  .btn-secondary { background: #fff; color: #374151; border: 1.5px solid #e5e7eb; display: inline-block; }
+  .seat-message { margin-top: .75rem; border-radius: 10px; padding: .65rem 1rem; font-size: .8125rem; line-height: 1.5; }
+  .seat-message[hidden] { display: none; }
+  .seat-message .btn-secondary { margin-top: .5rem; }
+  .seat-message-ok { background: #f0fdf4; border: 1px solid #bbf7d0; color: #15803d; }
+  .seat-message-err { background: #fef2f2; border: 1px solid #fecaca; color: #dc2626; }
+  .seat-message-warn { background: #fffbeb; border: 1px solid #fde68a; color: #92400e; }
+
   .history-placeholder { padding: 2rem; text-align: center; color: #9ca3af; font-size: .875rem; background: #f9fafb; border-radius: 10px; border: 1px dashed #e5e7eb; }
 
   .no-data { color: #6b7280; font-size: .9375rem; }
@@ -281,5 +524,7 @@ function fmtDate(d: string | null | undefined) {
     .dash-main { padding: 1.25rem 1rem; }
     .info-grid { grid-template-columns: 1fr; }
     .session-item { flex-direction: column; align-items: flex-start; }
+    .seat-item { align-items: stretch; }
+    .seat-row { flex-direction: column; align-items: flex-start; }
   }
 </style>
