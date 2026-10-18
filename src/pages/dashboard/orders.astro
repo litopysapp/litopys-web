@@ -5,14 +5,22 @@ const { user } = Astro.locals;
 const token = Astro.cookies.get('litopys_token')?.value ?? '';
 
 let orders: any[] = [];
+let catalog: any[] = [];
 
-try {
-  const res = await fetch('https://api.litopys.win/orders', {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-  const data = await res.json();
-  if (data.ok) orders = data.orders ?? [];
-} catch {}
+const authHeaders = { Authorization: `Bearer ${token}` };
+const [ordersRes, catalogRes] = await Promise.allSettled([
+  fetch('https://api.litopys.win/orders', { headers: authHeaders }).then((r) => r.json()),
+  fetch('https://api.litopys.win/orders/catalog', { headers: authHeaders }).then((r) => r.json()),
+]);
+if (ordersRes.status === 'fulfilled' && ordersRes.value?.ok) orders = ordersRes.value.orders ?? [];
+if (catalogRes.status === 'fulfilled' && catalogRes.value?.ok) catalog = catalogRes.value.catalog ?? [];
+
+// «× 3 міс.» для LitoGraph, «× 2» для решти
+function qtyText(i: any) {
+  const qty = i.qty || 1;
+  if (i.id === 'litograph-monthly') return ` × ${qty} міс.`;
+  return qty > 1 ? ` × ${qty}` : '';
+}
 
 const statusBadge: Record<string, string> = {
   'Оформлено': 'badge-gray',
@@ -82,7 +90,7 @@ function fmtUAH(n: number) {
       ) : (
         <div class="orders-list">
           {orders.map((o: any) => (
-            <section class="card order-card">
+            <section class="card order-card" data-order-id={o.id} data-editable={o.editable ? '1' : '0'}>
               <div class="card-header">
                 <h2>Замовлення №{o.orderNumber}</h2>
                 <span class:list={['badge', statusBadge[o.status] ?? 'badge-gray']}>{o.status}</span>
@@ -97,12 +105,18 @@ function fmtUAH(n: number) {
               <ul class="order-items">
                 {o.items.map((i: any, idx: number) => (
                   <li>
-                    <span>{i.name}{i.qty > 1 ? ` × ${i.qty}` : ''}</span>
+                    <span>
+                      {i.name}{qtyText(i)}
+                      {i.discountPerUnit > 0 && <span class="item-discount">−{Math.round(i.discountPerUnit / (i.originalPrice || 1) * 100)}%</span>}
+                    </span>
                     <span class="order-item-right">
                       {i.confirmed && i.downloadFile && (
                         <button type="button" class="btn-download-font" data-order-id={o.id} data-item-index={idx}>Завантажити →</button>
                       )}
                       {fmtUAH(i.price * (i.qty || 1))}
+                      {o.editable && !i.addedByAdmin && o.items.length > 1 && (
+                        <button type="button" class="btn-item-remove" data-index={idx} title="Прибрати з замовлення" aria-label="Прибрати з замовлення">✕</button>
+                      )}
                     </span>
                   </li>
                 ))}
@@ -110,8 +124,30 @@ function fmtUAH(n: number) {
 
               <div class="order-total">
                 <p>Разом</p>
-                <p>{fmtUAH(o.total)}</p>
+                <p class="order-total-sum">{fmtUAH(o.total)}</p>
               </div>
+
+              {o.editable && catalog.length > 0 && (
+                <div class="order-edit">
+                  <p class="order-edit-note">Склад замовлення можна змінити, доки його не взяли в роботу.</p>
+                  <div class="order-add">
+                    <select class="order-add-select" aria-label="Товар">
+                      <option value="">Додати товар…</option>
+                      {catalog.map((p: any) => (
+                        <option value={p.id} data-max={p.maxQty || 1} data-label={p.qtyLabel || ''}>
+                          {p.name} — {fmtUAH(p.price)}{p.id === 'litograph-monthly' ? ' / міс.' : ''}
+                        </option>
+                      ))}
+                    </select>
+                    <label class="order-add-qty" hidden>
+                      <span class="order-add-qty-label">Кількість</span>
+                      <input type="number" min="1" value="1" />
+                    </label>
+                    <button type="button" class="btn-order-add" disabled>Додати</button>
+                  </div>
+                  <p class="order-edit-msg" hidden></p>
+                </div>
+              )}
             </section>
           ))}
         </div>
@@ -191,6 +227,27 @@ function fmtUAH(n: number) {
   .btn-download-font:hover { opacity: .85; }
   .btn-download-font:disabled { opacity: .6; cursor: default; }
 
+  .item-discount { margin-left: .4rem; font-size: .75rem; font-weight: 700; color: #dc2626; }
+  .btn-item-remove {
+    width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid #e5e7eb; background: #fff; color: #9ca3af;
+    font-size: .8rem; cursor: pointer; font-family: inherit; line-height: 1; transition: color .15s, border-color .15s;
+  }
+  .btn-item-remove:hover { color: #dc2626; border-color: #dc2626; }
+  .btn-item-remove:disabled { opacity: .5; cursor: default; }
+
+  .order-edit { margin-top: 1.1rem; padding-top: 1rem; border-top: 1px dashed #e5e7eb; }
+  .order-edit-note { font-size: .8125rem; color: #6b7280; margin-bottom: .6rem; }
+  .order-add { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; }
+  .order-add-select { flex: 1 1 260px; min-width: 0; padding: .55rem .75rem; border: 1.5px solid #e5e7eb; border-radius: 10px; font: inherit; font-size: .875rem; background: #fff; }
+  .order-add-qty { display: flex; align-items: center; gap: .4rem; font-size: .8125rem; color: #6b7280; }
+  .order-add-qty[hidden] { display: none; }
+  .order-add-qty input { width: 70px; padding: .5rem .6rem; border: 1.5px solid #e5e7eb; border-radius: 10px; font: inherit; }
+  .btn-order-add { background: #1a1a2e; color: #fff; border: none; border-radius: 50px; padding: .55rem 1.2rem; font: inherit; font-size: .875rem; font-weight: 600; cursor: pointer; }
+  .btn-order-add:disabled { opacity: .45; cursor: default; }
+  .order-edit-msg { margin-top: .6rem; font-size: .8125rem; }
+  .order-edit-msg.error { color: #dc2626; }
+  .order-edit-msg.ok { color: #15803d; }
+
   .no-data { color: #6b7280; font-size: .9375rem; }
   .inline-link { color: #1a1a2e; font-weight: 600; }
 
@@ -210,6 +267,137 @@ function fmtUAH(n: number) {
     const match = contentDisposition.match(/filename="?([^"]+)"?/);
     return match?.[1] ?? 'font.zip';
   }
+
+  // ── Зміна складу замовлення клієнтом (поки статус «Оформлено») ──
+  const EDIT_ERRORS: Record<string, string> = {
+    order_locked: 'Замовлення вже взяли в роботу — змінити склад не можна.',
+    last_item: 'Це остання позиція. Щоб скасувати замовлення, зв\'яжіться з нами.',
+    item_added_by_admin: 'Цю позицію додав менеджер — прибрати її можна лише через нього.',
+    invalid_qty: 'Неправильна кількість.',
+    unknown_product: 'Такого товару немає в каталозі.',
+  };
+  const fmtUAH = (n: number) => n.toLocaleString('uk-UA') + ' грн';
+  const qtyText = (i: any) => {
+    const qty = i.qty || 1;
+    if (i.id === 'litograph-monthly') return ` × ${qty} міс.`;
+    return qty > 1 ? ` × ${qty}` : '';
+  };
+
+  function showMsg(card: HTMLElement, text: string, kind: 'ok' | 'error') {
+    const msg = card.querySelector<HTMLElement>('.order-edit-msg');
+    if (!msg) { if (kind === 'error') alert(text); return; }
+    msg.textContent = text;
+    msg.className = `order-edit-msg ${kind}`;
+    msg.hidden = false;
+  }
+
+  // Перемальовує позиції й суму картки за відповіддю сервера.
+  function renderOrder(card: HTMLElement, order: any) {
+    const ul = card.querySelector('.order-items')!;
+    ul.replaceChildren(...order.items.map((i: any, idx: number) => {
+      const li = document.createElement('li');
+      const left = document.createElement('span');
+      left.textContent = `${i.name}${qtyText(i)}`;
+      if (i.discountPerUnit > 0) {
+        const d = document.createElement('span');
+        d.className = 'item-discount';
+        d.textContent = `−${Math.round(i.discountPerUnit / (i.originalPrice || 1) * 100)}%`;
+        left.append(d);
+      }
+      const right = document.createElement('span');
+      right.className = 'order-item-right';
+      right.append(fmtUAH(i.price * (i.qty || 1)));
+      if (order.editable && !i.addedByAdmin && order.items.length > 1) {
+        const rm = document.createElement('button');
+        rm.type = 'button';
+        rm.className = 'btn-item-remove';
+        rm.dataset.index = String(idx);
+        rm.title = 'Прибрати з замовлення';
+        rm.setAttribute('aria-label', 'Прибрати з замовлення');
+        rm.textContent = '✕';
+        right.append(rm);
+      }
+      li.append(left, right);
+      return li;
+    }));
+    card.querySelector('.order-total-sum')!.textContent = fmtUAH(order.total);
+    if (!order.editable) {
+      card.dataset.editable = '0';
+      card.querySelector('.order-edit')?.remove();
+    }
+  }
+
+  async function changeOrder(card: HTMLElement, method: 'POST' | 'DELETE', url: string, body?: unknown) {
+    const controls = card.querySelectorAll<HTMLButtonElement | HTMLSelectElement>('.btn-item-remove, .btn-order-add, .order-add-select');
+    controls.forEach((c) => { c.disabled = true; });
+    try {
+      const res = await fetch(url, {
+        method,
+        headers: body === undefined ? {} : { 'Content-Type': 'application/json' },
+        body: body === undefined ? undefined : JSON.stringify(body),
+      });
+      if (res.status === 401) {
+        window.location.href = `/login?next=${encodeURIComponent('/dashboard/orders')}`;
+        return null;
+      }
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data.ok) {
+        showMsg(card, EDIT_ERRORS[data.error] ?? 'Не вдалося змінити замовлення. Спробуйте ще раз.', 'error');
+        if (data.error === 'order_locked') setTimeout(() => window.location.reload(), 2000);
+        return null;
+      }
+      renderOrder(card, data.order);
+      showMsg(card, 'Замовлення оновлено.', 'ok');
+      return data.order;
+    } catch {
+      showMsg(card, 'Немає зв\'язку з сервером. Спробуйте ще раз.', 'error');
+      return null;
+    } finally {
+      card.querySelectorAll<HTMLButtonElement | HTMLSelectElement>('.btn-item-remove, .order-add-select').forEach((c) => { c.disabled = false; });
+      const sel = card.querySelector<HTMLSelectElement>('.order-add-select');
+      const add = card.querySelector<HTMLButtonElement>('.btn-order-add');
+      if (add) add.disabled = !sel?.value;
+    }
+  }
+
+  document.addEventListener('click', async (e) => {
+    const rm = (e.target as HTMLElement).closest<HTMLButtonElement>('.btn-item-remove');
+    if (!rm) return;
+    const card = rm.closest<HTMLElement>('.order-card')!;
+    const name = rm.closest('li')?.querySelector('span')?.textContent?.trim() ?? 'позицію';
+    if (!confirm(`Прибрати з замовлення «${name}»?`)) return;
+    await changeOrder(card, 'DELETE', `/api/orders/${card.dataset.orderId}/items/${rm.dataset.index}`);
+  });
+
+  document.querySelectorAll<HTMLElement>('.order-card[data-editable="1"]').forEach((card) => {
+    const sel = card.querySelector<HTMLSelectElement>('.order-add-select');
+    const qtyWrap = card.querySelector<HTMLLabelElement>('.order-add-qty');
+    const qtyInput = qtyWrap?.querySelector('input');
+    const qtyLabel = card.querySelector<HTMLElement>('.order-add-qty-label');
+    const add = card.querySelector<HTMLButtonElement>('.btn-order-add');
+    if (!sel || !qtyWrap || !qtyInput || !add) return;
+
+    sel.addEventListener('change', () => {
+      const opt = sel.selectedOptions[0];
+      const max = Number(opt?.dataset.max || 1);
+      qtyWrap.hidden = !sel.value || max <= 1;
+      qtyInput.max = String(max);
+      qtyInput.value = '1';
+      if (qtyLabel) qtyLabel.textContent = opt?.dataset.label ? `Кількість, ${opt.dataset.label}` : 'Кількість';
+      add.disabled = !sel.value;
+    });
+
+    add.addEventListener('click', async () => {
+      if (!sel.value) return;
+      const max = Number(sel.selectedOptions[0]?.dataset.max || 1);
+      const qty = Math.min(max, Math.max(1, Math.floor(Number(qtyInput.value) || 1)));
+      const done = await changeOrder(card, 'POST', `/api/orders/${card.dataset.orderId}/items`, { id: sel.value, qty });
+      if (done) {
+        sel.value = '';
+        sel.dispatchEvent(new Event('change'));
+      }
+    });
+  });
 
   document.querySelectorAll<HTMLButtonElement>('.btn-download-font').forEach((btn) => {
     btn.addEventListener('click', async () => {
