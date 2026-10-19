@@ -11,13 +11,11 @@ if (Astro.request.method === 'POST') {
   const form = await Astro.request.formData();
   const name = form.get('name')?.toString() ?? '';
   const phone = form.get('phone')?.toString() ?? '';
-  const unit = form.get('unit')?.toString() ?? '';
-  const callsign = form.get('callsign')?.toString() ?? '';
   try {
     const res = await fetch('https://api.litopys.win/profile', {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-      body: JSON.stringify({ name, phone, unit, callsign }),
+      body: JSON.stringify({ name, phone }),
     });
     const data = await res.json();
     if (data.ok) saveMsg = 'Збережено';
@@ -115,14 +113,6 @@ function fmtDate(d: string | null | undefined) {
           <label>
             Імʼя
             <input type="text" name="name" value={profile?.name ?? ''} placeholder="Введіть імʼя" />
-          </label>
-          <label>
-            Позивний
-            <input type="text" name="callsign" value={profile?.callsign ?? ''} placeholder="Наприклад: Дніпро" />
-          </label>
-          <label>
-            Підрозділ
-            <input type="text" name="unit" value={profile?.unit ?? ''} placeholder="Наприклад: 47 ОМБр" />
           </label>
           <label>
             Телефон
