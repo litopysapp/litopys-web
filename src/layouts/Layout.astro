@@ -7,6 +7,13 @@ interface Props {
 }
 const { title, description = "Litopys Suite — Litopys, LitoScan і LitoGraph: офлайн-програми для документів, сканування та рукописних шрифтів", fullPage = false, noHeader = false } = Astro.props;
 
+// Пошук: канонічна адреса без query, а службові сторінки (кабінет, кошик,
+// входи й скидання паролю) — не індексуються.
+const SITE = 'https://litopys.pro';
+const pathname = Astro.url.pathname.replace(/\/+$/, '') || '/';
+const canonical = SITE + (pathname === '/' ? '/' : pathname);
+const NOINDEX = ['/dashboard', '/koshyk', '/oformlennia', '/login', '/verify', '/forgot-password', '/reset-password', '/confirm-password-change'];
+const noindex = NOINDEX.some((p) => pathname === p || pathname.startsWith(p + '/'));
 ---
 <!doctype html>
 <html lang="uk">
@@ -15,6 +22,13 @@ const { title, description = "Litopys Suite — Litopys, LitoScan і LitoGraph: 
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
     <title>{title}</title>
+    {noindex ? <meta name="robots" content="noindex, nofollow" /> : <link rel="canonical" href={canonical} />}
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Litopys" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content="uk_UA" />
     <link rel="icon" href="/favicon.png" type="image/png">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
