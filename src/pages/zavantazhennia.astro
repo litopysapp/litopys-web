@@ -31,7 +31,7 @@ const products = [
     desc: 'Створення рукописного шрифту зі сканів символів або малювання від руки — з редактором гліфів і збіркою шрифту.',
     page: '/litograph',
     links: [
-      { label: 'Завантажити інсталятор', href: 'https://github.com/litopysapp/LitoGraph/releases/latest', primary: true, id: 'dl-litograph-setup' },
+      { label: 'Завантажити інсталятор', href: 'https://api.litopys.win/download/litograph', primary: true },
     ],
   },
 ];
@@ -194,22 +194,4 @@ const products = [
     });
   }, { threshold: 0.12 });
   document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
-
-  // LitoGraph: підтягуємо exe з найсвіжішого GitHub-релізу, а не жорстко
-  // прописану версію — посилання завжди веде на актуальний інсталятор.
-  (async () => {
-    const link = document.getElementById('dl-litograph-setup');
-    if (!link) return;
-    try {
-      const res = await fetch('https://api.github.com/repos/litopysapp/LitoGraph/releases/latest', {
-        headers: { 'Accept': 'application/vnd.github+json' }
-      });
-      if (res.ok) {
-        const data = await res.json();
-        const assets: { name: string; browser_download_url: string }[] = data.assets ?? [];
-        const setup = assets.find((a: any) => a.name.endsWith('.exe'))?.browser_download_url;
-        if (setup) link.href = setup;
-      }
-    } catch {}
-  })();
 </script>
