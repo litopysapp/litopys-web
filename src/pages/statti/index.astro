@@ -1,0 +1,58 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { ARTICLES, formatDate } from '../../lib/articles';
+---
+<Layout title="Статті про рукописні шрифти й письмо плотером — Літопис" description="Як створити шрифт зі свого почерку, як плотер пише ручкою, безкоштовні рукописні шрифти з українськими літерами та поради щодо журналів від руки.">
+  <div class="list-bg"></div>
+  <section class="list">
+    <p class="eyebrow">Статті</p>
+    <h1>Про почерк, шрифти й письмо без мозолів</h1>
+    <a class="tool" href="/rukopysnyi-tekst-onlain">
+      <span class="tag">Безкоштовний інструмент</span>
+      <b>Рукописний текст онлайн</b>
+      <span>Введіть текст — отримайте сторінку, написану від руки, у PNG або PDF.</span>
+    </a>
+    <div class="grid">
+      {ARTICLES.map((a) => (
+        <a href={`/statti/${a.slug}`} class="item">
+          <span class="tag">{a.tag} · {formatDate(a.date)}</span>
+          <h2>{a.title}</h2>
+          <p>{a.description}</p>
+          <span class="more">Читати →</span>
+        </a>
+      ))}
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .list-bg {
+    position: fixed; inset: 0; z-index: -1; pointer-events: none;
+    background: radial-gradient(ellipse at 20% 30%, #ecdcf5 0%, transparent 55%), #f8f9fb;
+  }
+  .list { max-width: 980px; margin: 0 auto; padding: 4rem 1.5rem 6rem; }
+  .eyebrow { font-size: .75rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: #7c3a8a; margin-bottom: .75rem; }
+  h1 { font-size: clamp(1.9rem, 4vw, 2.8rem); font-weight: 800; letter-spacing: -.04em; line-height: 1.12; color: #111827; margin-bottom: 2rem; max-width: 720px; }
+  .tool {
+    display: flex; flex-direction: column; gap: .35rem; margin-bottom: 1.5rem; padding: 1.5rem 1.75rem; border-radius: 20px; color: #fff;
+    background: linear-gradient(135deg, #3d1345 0%, #7c3a8a 65%, #9c4fae 100%); transition: transform .2s;
+  }
+  .tool:hover { transform: translateY(-2px); }
+  .tool b { font-size: 1.3rem; }
+  .tool span:last-child { color: rgba(255,255,255,.8); }
+  .tool .tag { color: rgba(255,255,255,.65); }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+  .item {
+    display: flex; flex-direction: column; gap: .55rem; background: rgba(255,255,255,.9); border: 1px solid #e5e7eb;
+    border-radius: 20px; padding: 1.5rem 1.75rem; transition: border-color .2s, box-shadow .2s, transform .2s;
+  }
+  .item:hover { border-color: #dcb8e5; box-shadow: 0 12px 32px rgba(0,0,0,.07); transform: translateY(-2px); }
+  .tag { font-size: .6875rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #7c3a8a; }
+  .item h2 { font-size: 1.2rem; font-weight: 800; letter-spacing: -.015em; color: #111827; line-height: 1.3; }
+  .item p { color: #4b5563; line-height: 1.65; font-size: .9375rem; flex: 1; }
+  .more { font-weight: 700; color: #7c3a8a; font-size: .9rem; }
+  @media (max-width: 720px) {
+    .grid { grid-template-columns: 1fr; }
+    .list { padding: 2.5rem 1rem 4rem; }
+  }
+</style>

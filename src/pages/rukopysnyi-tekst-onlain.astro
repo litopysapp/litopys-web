@@ -1,0 +1,628 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+// Безкоштовний генератор «текст від руки»: усе рахується в браузері (canvas),
+// текст нікуди не надсилається. Шрифти — /fonts/free (OFL, без змін) і почерк Літопису.
+const faq = [
+  {
+    q: 'Це справді безкоштовно?',
+    a: 'Так. Генератор працює без реєстрації й без обмежень: вводьте текст, обирайте почерк і завантажуйте сторінки в PNG або PDF скільки завгодно.',
+  },
+  {
+    q: 'Чи зберігається мій текст на сервері?',
+    a: 'Ні. Сторінка малюється прямо у вашому браузері, текст нікуди не надсилається. Він лише запам’ятовується в цьому браузері, щоб не зникнути після перезавантаження.',
+  },
+  {
+    q: 'Чи підтримуються українські літери?',
+    a: 'Так, усі почерки мають повну українську абетку: ґ, є, і, ї та апостроф.',
+  },
+  {
+    q: 'Чи можна написати текст моїм власним почерком?',
+    a: 'Так, але для цього потрібен шрифт із вашого почерку. Його можна створити в програмі LitoGraph: заповнюєте шаблон ручкою, скануєте — і отримуєте шрифт, який пише як ви.',
+  },
+  {
+    q: 'А можна, щоб текст написала справжня ручка на папері?',
+    a: 'Так. Програма Літопис передає текст плотеру Silhouette Portrait 4, і він пише сторінку звичайною ручкою вашим почерком. Від написаного від руки таку сторінку не відрізнити.',
+  },
+  {
+    q: 'Як роздрукувати результат?',
+    a: 'Завантажте PDF — сторінки вже мають формат A4. Друкуйте у масштабі 100% (без «підігнати під сторінку»), щоб клітинки й лінійки мали справжній розмір.',
+  },
+];
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    name: 'Рукописний текст онлайн',
+    url: 'https://litopys.pro/rukopysnyi-tekst-onlain',
+    applicationCategory: 'UtilitiesApplication',
+    operatingSystem: 'Будь-яка (у браузері)',
+    inLanguage: 'uk',
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'UAH' },
+    description: 'Безкоштовний генератор: перетворює надрукований текст на сторінку, написану від руки, на папері в клітинку, лінійку або на білому аркуші. Завантаження в PNG і PDF.',
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+  },
+];
+---
+<Layout title="Рукописний текст онлайн — безкоштовно, українською" description="Перетворіть текст на сторінку, написану від руки: 8 почерків з українськими літерами, синя або чорна ручка, зошит у клітинку чи лінійку. Завантаження PNG і PDF, без реєстрації.">
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+
+  <section class="hw-hero">
+    <div class="hw-bg"></div>
+    <div class="container">
+      <p class="eyebrow">Безкоштовно · без реєстрації</p>
+      <h1>Рукописний текст онлайн</h1>
+      <p class="hero-sub">Введіть текст — і отримайте сторінку, написану від руки: у зошиті в клітинку, у лінійку чи на білому аркуші. Завантажуйте результат як картинку або PDF.</p>
+    </div>
+  </section>
+
+  <section class="hw-tool">
+    <div class="container tool-grid">
+      <div class="panel">
+        <label class="field">
+          <span class="field-label">Текст</span>
+          <textarea id="hw-text" rows="9" spellcheck="true"></textarea>
+        </label>
+
+        <div class="field">
+          <span class="field-label">Почерк</span>
+          <div class="font-grid" id="hw-fonts" role="radiogroup" aria-label="Почерк"></div>
+        </div>
+
+        <div class="field">
+          <span class="field-label">Ручка</span>
+          <div class="chips" id="hw-ink" role="radiogroup" aria-label="Колір ручки">
+            <button type="button" data-ink="#1f3f9a" class="chip"><i style="background:#1f3f9a"></i>Синя</button>
+            <button type="button" data-ink="#1c1c1f" class="chip"><i style="background:#1c1c1f"></i>Чорна</button>
+            <button type="button" data-ink="#5b2a86" class="chip"><i style="background:#5b2a86"></i>Фіолетова</button>
+            <button type="button" data-ink="#a3201e" class="chip"><i style="background:#a3201e"></i>Червона</button>
+          </div>
+        </div>
+
+        <div class="field">
+          <span class="field-label">Папір</span>
+          <div class="chips" id="hw-paper" role="radiogroup" aria-label="Папір">
+            <button type="button" data-paper="grid" class="chip">Клітинка</button>
+            <button type="button" data-paper="lines" class="chip">Лінійка</button>
+            <button type="button" data-paper="blank" class="chip">Білий аркуш</button>
+          </div>
+        </div>
+
+        <label class="field">
+          <span class="field-label">Розмір літер <output id="hw-size-out"></output></span>
+          <input type="range" id="hw-size" min="70" max="140" step="5" />
+        </label>
+
+        <label class="field">
+          <span class="field-label">Нерівність почерку <output id="hw-mess-out"></output></span>
+          <input type="range" id="hw-mess" min="0" max="100" step="5" />
+        </label>
+
+        <div class="actions">
+          <button type="button" id="hw-shuffle" class="btn-ghost" title="Інакше розкидати нерівності почерку">Перемішати</button>
+          <button type="button" id="hw-png" class="btn-ghost">Завантажити PNG</button>
+          <button type="button" id="hw-pdf" class="btn-primary">Завантажити PDF</button>
+        </div>
+        <p class="note" id="hw-note"></p>
+      </div>
+
+      <div class="preview">
+        <div class="paper-wrap">
+          <canvas id="hw-canvas" width="1240" height="1754" aria-label="Попередній перегляд сторінки"></canvas>
+          <div class="loading" id="hw-loading" hidden>Завантаження почерку…</div>
+        </div>
+        <div class="pager">
+          <button type="button" id="hw-prev" aria-label="Попередня сторінка">‹</button>
+          <span id="hw-page">Сторінка 1 з 1</span>
+          <button type="button" id="hw-next" aria-label="Наступна сторінка">›</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="hw-more">
+    <div class="container">
+      <div class="cards">
+        <a class="card" href="/litograph">
+          <p class="eyebrow">LitoGraph</p>
+          <h2>Хочете своїм почерком?</h2>
+          <p>Заповніть шаблон ручкою, відскануйте — і LitoGraph збере шрифт, який пише саме як ви, з кількома варіантами кожної літери.</p>
+          <span class="more">Про LitoGraph →</span>
+        </a>
+        <a class="card card-dark" href="/litopys/yak-pratsyuye">
+          <p class="eyebrow">Літопис</p>
+          <h2>Потрібно ручкою на папері?</h2>
+          <p>Літопис передає текст плотеру, і той пише сторінку справжньою ручкою вашим почерком. Журнали, бланки, таблиці — без мозолів.</p>
+          <span class="more">Як це працює →</span>
+        </a>
+      </div>
+
+      <h2 class="h2">Як це працює</h2>
+      <ol class="steps">
+        <li><b>Введіть або вставте текст.</b> Абзаци й порожні рядки зберігаються, довгий текст сам переноситься на нові сторінки A4.</li>
+        <li><b>Оберіть почерк, ручку й папір.</b> Повзунок «Нерівність почерку» додає природні коливання: літери трохи «гуляють», як у живому письмі.</li>
+        <li><b>Завантажте результат.</b> PNG — поточна сторінка, PDF — усі сторінки, готові до друку на A4.</li>
+      </ol>
+
+      <h2 class="h2">Почерки</h2>
+      <p class="body-text">Усі почерки мають повну українську абетку. «Літопис» — справжній оцифрований почерк, решта — вільні шрифти під ліцензією SIL Open Font License (<a href="/fonts/free/OFL.txt">текст ліцензій</a>). Детальніше про них — у статті <a href="/statti/bezkoshtovni-rukopysni-shryfty">«Безкоштовні рукописні шрифти з українськими літерами»</a>.</p>
+
+      <h2 class="h2">Питання й відповіді</h2>
+      <div class="faq">
+        {faq.map((f) => (
+          <details>
+            <summary>{f.q}</summary>
+            <p>{f.a}</p>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .container { max-width: 1120px; margin: 0 auto; padding: 0 1.5rem; }
+  .eyebrow { font-size: .75rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: #7c3a8a; margin-bottom: .75rem; }
+  .body-text { color: #4b5563; line-height: 1.75; font-size: .9375rem; }
+  .body-text a { color: #7c3a8a; text-decoration: underline; }
+
+  .hw-hero { position: relative; padding: 4.5rem 0 1.5rem; }
+  .hw-bg {
+    position: fixed; inset: 0; z-index: -1; pointer-events: none;
+    background: radial-gradient(ellipse at 20% 30%, #ecdcf5 0%, transparent 55%),
+                radial-gradient(ellipse at 85% 70%, #dfe8f7 0%, transparent 50%), #f8f9fb;
+  }
+  .hw-hero h1 { font-size: clamp(1.9rem, 4vw, 3rem); font-weight: 800; letter-spacing: -.04em; line-height: 1.12; color: #111827; margin-bottom: 1rem; }
+  .hero-sub { font-size: 1.0625rem; color: #6b7280; line-height: 1.7; max-width: 680px; }
+
+  .hw-tool { padding: 1.5rem 0 3rem; }
+  .tool-grid { display: grid; grid-template-columns: minmax(0, 380px) minmax(0, 1fr); gap: 2rem; align-items: start; }
+  .panel {
+    background: rgba(255,255,255,.9); border: 1px solid #e5e7eb; border-radius: 22px;
+    padding: 1.5rem; display: flex; flex-direction: column; gap: 1.1rem;
+    position: sticky; top: calc(var(--nav-h) + 1rem);
+  }
+  .field { display: flex; flex-direction: column; gap: .5rem; }
+  .field-label { font-size: .8125rem; font-weight: 700; color: #111827; display: flex; justify-content: space-between; }
+  .field-label output { font-weight: 500; color: #6b7280; }
+  textarea {
+    width: 100%; resize: vertical; min-height: 140px; font: inherit; font-size: .9rem; line-height: 1.5;
+    border: 1px solid #d1d5db; border-radius: 12px; padding: .75rem .85rem; color: #111827; background: #fff;
+  }
+  textarea:focus { outline: 2px solid #c9a3d4; border-color: #7c3a8a; }
+  input[type=range] { width: 100%; accent-color: #7c3a8a; }
+
+  .font-grid { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; }
+  .font-grid :global(.font-btn) {
+    border: 1px solid #e5e7eb; background: #fff; border-radius: 12px; padding: .45rem .6rem; cursor: pointer;
+    text-align: left; display: flex; flex-direction: column; gap: .1rem; transition: border-color .15s, box-shadow .15s;
+  }
+  .font-grid :global(.font-btn small) { font-size: .6875rem; color: #6b7280; }
+  .font-grid :global(.font-btn span) { font-size: 1.35rem; line-height: 1.2; color: #1f3f9a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .font-grid :global(.font-btn[aria-checked=true]), .chip[aria-checked=true] { border-color: #7c3a8a; box-shadow: 0 0 0 2px #ead6f0; }
+
+  .chips { display: flex; flex-wrap: wrap; gap: .45rem; }
+  .chip {
+    border: 1px solid #e5e7eb; background: #fff; border-radius: 50px; padding: .4rem .8rem; cursor: pointer;
+    font-size: .8125rem; color: #111827; display: inline-flex; align-items: center; gap: .4rem;
+  }
+  .chip i { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
+
+  .actions { display: flex; flex-wrap: wrap; gap: .5rem; }
+  .btn-primary, .btn-ghost {
+    border-radius: 50px; padding: .65rem 1.1rem; font-size: .875rem; font-weight: 600; cursor: pointer;
+    transition: opacity .2s, transform .2s;
+  }
+  .btn-primary { background: #7c3a8a; color: #fff; border: none; box-shadow: 0 4px 16px rgba(124,58,138,.25); }
+  .btn-ghost { background: #fff; color: #7c3a8a; border: 1px solid #dcb8e5; }
+  .btn-primary:hover, .btn-ghost:hover { opacity: .85; transform: translateY(-1px); }
+  .btn-primary:disabled, .btn-ghost:disabled { opacity: .5; cursor: progress; transform: none; }
+  .note { font-size: .78rem; color: #6b7280; line-height: 1.5; min-height: 1em; }
+
+  .preview { display: flex; flex-direction: column; align-items: center; gap: .75rem; }
+  .paper-wrap { position: relative; width: 100%; max-width: 680px; }
+  #hw-canvas { width: 100%; height: auto; display: block; border-radius: 4px; box-shadow: 0 2px 6px rgba(0,0,0,.08), 0 18px 48px rgba(0,0,0,.12); background: #fff; }
+  .loading { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,.7); font-size: .9rem; color: #4b5563; }
+  .loading[hidden] { display: none; }
+  .pager { display: flex; align-items: center; gap: .75rem; font-size: .875rem; color: #4b5563; }
+  .pager button { width: 34px; height: 34px; border-radius: 50%; border: 1px solid #e5e7eb; background: #fff; cursor: pointer; font-size: 1.2rem; line-height: 1; }
+  .pager button:disabled { opacity: .35; cursor: default; }
+
+  .hw-more { padding: 1rem 0 6rem; }
+  .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 3.5rem; }
+  .card {
+    display: block; background: rgba(255,255,255,.9); border: 1px solid #e5e7eb; border-radius: 22px; padding: 1.75rem 2rem;
+    transition: box-shadow .2s, border-color .2s, transform .2s;
+  }
+  .card:hover { box-shadow: 0 12px 32px rgba(0,0,0,.08); border-color: #dcb8e5; transform: translateY(-2px); }
+  .card h2 { font-size: 1.375rem; font-weight: 800; letter-spacing: -.02em; color: #111827; margin-bottom: .6rem; }
+  .card p { color: #4b5563; line-height: 1.65; font-size: .9375rem; }
+  .card .more { display: inline-block; margin-top: 1rem; font-weight: 700; color: #7c3a8a; font-size: .9rem; }
+  .card-dark { background: linear-gradient(135deg, #3d1345 0%, #7c3a8a 70%, #9c4fae 100%); border-color: transparent; }
+  .card-dark h2, .card-dark .more { color: #fff; }
+  .card-dark p { color: rgba(255,255,255,.8); }
+  .card-dark .eyebrow { color: rgba(255,255,255,.6); }
+
+  .h2 { font-size: 1.5rem; font-weight: 800; letter-spacing: -.02em; color: #111827; margin: 2.5rem 0 1rem; }
+  .steps { padding-left: 1.25rem; display: flex; flex-direction: column; gap: .6rem; color: #4b5563; line-height: 1.7; font-size: .9375rem; }
+  .steps b { color: #111827; }
+  .faq { display: flex; flex-direction: column; gap: .6rem; }
+  .faq details { background: rgba(255,255,255,.9); border: 1px solid #e5e7eb; border-radius: 14px; padding: .9rem 1.2rem; }
+  .faq summary { cursor: pointer; font-weight: 700; color: #111827; font-size: .9375rem; }
+  .faq details p { margin-top: .6rem; color: #4b5563; line-height: 1.7; font-size: .9375rem; }
+
+  @media (max-width: 860px) {
+    .tool-grid { grid-template-columns: 1fr; }
+    .panel { position: static; }
+    .cards { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 520px) {
+    .container { padding: 0 1rem; }
+    .panel { padding: 1.1rem; }
+    .card { padding: 1.4rem 1.25rem; }
+  }
+</style>
+
+<script>
+  // xh — висота малих літер (о, н, п, и) у частках кегля, виміряна з контурів шрифту:
+  //   за нею всі почерки виходять однакового розміру.
+  // cursive — літери з'єднані, тож слово малюється цілим (інакше рвуться з'єднання).
+  // missing — символи, яких у шрифті немає: замінюються схожими (див. REPLACE).
+  type FontDef = { id: string; name: string; file: string; xh: number; cursive?: boolean; missing?: string };
+  const FONTS: FontDef[] = [
+    { id: 'caveat', name: 'Caveat', file: '/fonts/free/Caveat.ttf', xh: 0.375 },
+    { id: 'litopys', name: 'Літопис', file: '/fonts/OleksiiFull-Regular.otf', xh: 0.455, missing: '«»—–…₴' },
+    { id: 'badscript', name: 'Bad Script', file: '/fonts/free/BadScript-Regular.ttf', xh: 0.505, cursive: true },
+    { id: 'marck', name: 'Marck Script', file: '/fonts/free/MarckScript-Regular.ttf', xh: 0.385, cursive: true, missing: 'ʼ₴' },
+    { id: 'neucha', name: 'Neucha', file: '/fonts/free/Neucha.ttf', xh: 0.5, missing: 'ʼ₴' },
+    { id: 'comforter', name: 'Comforter', file: '/fonts/free/Comforter-Regular.ttf', xh: 0.445, cursive: true, missing: '₴' },
+    { id: 'greatvibes', name: 'Great Vibes', file: '/fonts/free/GreatVibes-Regular.ttf', xh: 0.348, cursive: true },
+    { id: 'amatic', name: 'Amatic SC', file: '/fonts/free/AmaticSC-Regular.ttf', xh: 0.665 },
+  ];
+  const REPLACE: Record<string, string> = { 'ʼ': '’', '«': '"', '»': '"', '—': '-', '–': '-', '…': '...', '₴': ' грн' };
+
+  const DEFAULT_TEXT = `Привіт!
+
+Цей текст ніхто не писав рукою — його намалював сайт litopys.pro. Введіть свій текст, оберіть почерк, колір ручки й папір, а потім завантажте сторінку як картинку або PDF.
+
+Хочете, щоб текст писався вашим власним почерком? Створіть свій шрифт у LitoGraph. А якщо треба, щоб сторінку справді написала ручка на папері, — Літопис із плотером зробить це за вас.`;
+
+  const W = 1240, H = 1754;            // A4 при 150 dpi
+  const MM = W / 210;                   // пікселів в 1 мм
+  const STORE_KEY = 'litopys_hw_v1';
+  const MAX_PAGES = 30;
+
+  const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
+  const textEl = $<HTMLTextAreaElement>('hw-text');
+  const canvas = $<HTMLCanvasElement>('hw-canvas');
+  const sizeEl = $<HTMLInputElement>('hw-size');
+  const messEl = $<HTMLInputElement>('hw-mess');
+  const noteEl = $('hw-note');
+  const loadingEl = $('hw-loading');
+
+  const state = { text: DEFAULT_TEXT, font: 'caveat', ink: '#1f3f9a', paper: 'grid', size: 100, mess: 45, seed: 7, page: 0 };
+  try {
+    const saved = JSON.parse(localStorage.getItem(STORE_KEY) || 'null');
+    if (saved && typeof saved === 'object') Object.assign(state, saved, { page: 0 });
+    if (!FONTS.some((f) => f.id === state.font)) state.font = 'caveat';
+  } catch {}
+  const save = () => { try { localStorage.setItem(STORE_KEY, JSON.stringify({ ...state, page: 0 })); } catch {} };
+
+  // ── Шрифти: вантажимо лише обраний ──
+  const loaded = new Map<string, Promise<void>>();
+  function loadFont(f: FontDef) {
+    if (!loaded.has(f.id)) {
+      const face = new FontFace(`hw-${f.id}`, `url(${f.file})`);
+      const p = face.load().then((ff) => { document.fonts.add(ff); }).catch((e) => { loaded.delete(f.id); throw e; });
+      loaded.set(f.id, p);
+    }
+    return loaded.get(f.id)!;
+  }
+
+  // ── Детермінований випадок: однакові нерівності при тих самих налаштуваннях ──
+  function rng(seed: number) {
+    let a = seed >>> 0;
+    return () => {
+      a = (a + 0x6D2B79F5) >>> 0;
+      let t = a;
+      t = Math.imul(t ^ (t >>> 15), t | 1);
+      t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  const sym = (r: () => number) => r() * 2 - 1;
+
+  // ── Папір ──
+  type Paper = { lineH: number; top: number; left: number; right: number; bottom: number; draw(ctx: CanvasRenderingContext2D): void };
+  function paperOf(kind: string): Paper {
+    const marginX = W - 25 * MM;
+    const margin = (ctx: CanvasRenderingContext2D) => {
+      ctx.strokeStyle = 'rgba(214, 72, 72, .75)';
+      ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(marginX, 0); ctx.lineTo(marginX, H); ctx.stroke();
+    };
+    if (kind === 'grid') {
+      return {
+        lineH: 10 * MM, top: 25 * MM, left: 10 * MM, right: marginX - 3 * MM, bottom: H - 10 * MM,
+        draw(ctx) {
+          ctx.fillStyle = '#fdfdf9'; ctx.fillRect(0, 0, W, H);
+          ctx.strokeStyle = 'rgba(96, 150, 205, .42)'; ctx.lineWidth = 1.4;
+          ctx.beginPath();
+          for (let x = 5 * MM; x < W; x += 5 * MM) { ctx.moveTo(Math.round(x) + .5, 0); ctx.lineTo(Math.round(x) + .5, H); }
+          for (let y = 5 * MM; y < H; y += 5 * MM) { ctx.moveTo(0, Math.round(y) + .5); ctx.lineTo(W, Math.round(y) + .5); }
+          ctx.stroke();
+          margin(ctx);
+        },
+      };
+    }
+    if (kind === 'lines') {
+      return {
+        lineH: 8 * MM, top: 24 * MM, left: 12 * MM, right: marginX - 3 * MM, bottom: H - 10 * MM,
+        draw(ctx) {
+          ctx.fillStyle = '#fdfdf9'; ctx.fillRect(0, 0, W, H);
+          ctx.strokeStyle = 'rgba(96, 150, 205, .5)'; ctx.lineWidth = 1.6;
+          ctx.beginPath();
+          for (let y = 24 * MM; y < H - 6 * MM; y += 8 * MM) { ctx.moveTo(0, Math.round(y) + .5); ctx.lineTo(W, Math.round(y) + .5); }
+          ctx.stroke();
+          margin(ctx);
+        },
+      };
+    }
+    return {
+      lineH: 9 * MM, top: 25 * MM, left: 20 * MM, right: W - 15 * MM, bottom: H - 15 * MM,
+      draw(ctx) { ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, W, H); },
+    };
+  }
+
+  function normalize(text: string, f: FontDef) {
+    const miss = f.missing || '';
+    let out = text.replace(/\r\n?/g, '\n').replace(/\t/g, '    ');
+    for (const ch of miss) if (REPLACE[ch]) out = out.split(ch).join(REPLACE[ch]);
+    return out;
+  }
+
+  // ── Розкладка: абзаци → рядки → сторінки ──
+  type Layout = { pages: string[][]; fontPx: number; family: string; paper: Paper; truncated: boolean };
+  function layout(): Layout {
+    const f = FONTS.find((x) => x.id === state.font)!;
+    const family = `hw-${f.id}`;
+    const paper = paperOf(state.paper);
+    const fontPx = (paper.lineH * 0.34 * (state.size / 100)) / f.xh;
+    const ctx = document.createElement('canvas').getContext('2d')!;
+    ctx.font = `${fontPx}px "${family}"`;
+    const maxW = (paper.right - paper.left) * 0.97; // запас на нерівності
+    const width = (s: string) => ctx.measureText(s).width;
+
+    const lines: string[] = [];
+    for (const para of normalize(state.text, f).split('\n')) {
+      if (!para.trim()) { lines.push(''); continue; }
+      const tokens = para.match(/\s+|\S+/g) || [];
+      let line = '';
+      for (const tok of tokens) {
+        const candidate = line + tok;
+        if (width(candidate.trimEnd()) <= maxW) { line = candidate; continue; }
+        if (/^\s+$/.test(tok)) { lines.push(line.trimEnd()); line = ''; continue; }
+        if (line.trim()) { lines.push(line.trimEnd()); line = ''; }
+        // Слово довше за рядок — ріжемо по літерах.
+        let word = tok;
+        while (width(word) > maxW) {
+          let n = word.length - 1;
+          while (n > 1 && width(word.slice(0, n) + '-') > maxW) n--;
+          lines.push(word.slice(0, n) + '-');
+          word = word.slice(n);
+        }
+        line = word;
+      }
+      lines.push(line.trimEnd());
+    }
+    while (lines.length > 1 && lines[lines.length - 1] === '') lines.pop();
+
+    const perPage = Math.max(1, Math.floor((paper.bottom - paper.top) / paper.lineH) + 1);
+    const pages: string[][] = [];
+    for (let i = 0; i < lines.length; i += perPage) pages.push(lines.slice(i, i + perPage));
+    if (!pages.length) pages.push([]);
+    const truncated = pages.length > MAX_PAGES;
+    return { pages: pages.slice(0, MAX_PAGES), fontPx, family, paper, truncated };
+  }
+
+  // ── Малювання сторінки ──
+  function drawPage(ctx: CanvasRenderingContext2D, L: Layout, pageIndex: number) {
+    const f = FONTS.find((x) => x.id === state.font)!;
+    const { paper, fontPx, family } = L;
+    const k = state.mess / 100;
+        ctx.save();
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    paper.draw(ctx);
+    ctx.font = `${fontPx}px "${family}"`;
+    ctx.textBaseline = 'alphabetic';
+    ctx.fillStyle = state.ink;
+    ctx.shadowColor = state.ink;
+    ctx.shadowBlur = 0.8;
+    const xh = fontPx * f.xh;
+    const lines = L.pages[pageIndex] || [];
+    const lineBase = L.pages.slice(0, pageIndex).reduce((n, p) => n + p.length, 0);
+
+    lines.forEach((line, li) => {
+      if (!line) return;
+      const r = rng(state.seed * 7919 + (lineBase + li) * 104729);
+      const slope = sym(r) * 0.006 * k;
+      let x = paper.left + Math.max(0, r()) * 1.5 * MM * k;
+      const y0 = paper.top + li * paper.lineH - 0.4 * MM;
+      let wordDy = 0, wordAlpha = 1, wordScale = 1;
+      if (f.cursive) {
+        // Прописний почерк: кожне слово цілим, нерівності — на рівні слів.
+        for (const tok of line.match(/ +|[^ ]+/g) || []) {
+          if (tok[0] === ' ') { x += ctx.measureText(tok).width * (1 + sym(r) * 0.25 * k); continue; }
+          const sc = 1 + sym(r) * 0.04 * k;
+          const y = y0 + (x - paper.left) * slope + sym(r) * 0.07 * xh * k;
+          ctx.globalAlpha = 1 - r() * 0.16 * k;
+          ctx.save();
+          ctx.translate(x, y);
+          ctx.rotate(sym(r) * 0.012 * k);
+          ctx.scale(sc, sc);
+          ctx.fillText(tok, 0, 0);
+          ctx.restore();
+          x += ctx.measureText(tok).width * sc;
+        }
+        return;
+      }
+      let newWord = true;
+      for (const ch of line) {
+        if (ch === ' ') {
+          x += ctx.measureText(' ').width * (1 + sym(r) * 0.25 * k);
+          newWord = true;
+          continue;
+        }
+        if (newWord) {
+          wordDy = sym(r) * 0.07 * xh * k;
+          wordAlpha = 1 - r() * 0.16 * k;
+          wordScale = 1 + sym(r) * 0.05 * k;
+          newWord = false;
+        }
+        const adv = ctx.measureText(ch).width;
+        const dy = wordDy + sym(r) * 0.05 * xh * k;
+        const rot = sym(r) * 0.05 * k;
+        const sc = wordScale * (1 + sym(r) * 0.04 * k);
+        const y = y0 + (x - paper.left) * slope + dy;
+        ctx.globalAlpha = wordAlpha * (1 - r() * 0.06 * k);
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate(rot);
+        ctx.scale(sc, sc);
+        ctx.fillText(ch, 0, 0);
+        ctx.restore();
+        x += adv * sc * (1 + sym(r) * 0.05 * k);
+      }
+    });
+    ctx.restore();
+  }
+
+  // ── Інтерфейс ──
+  let current: Layout | null = null;
+  const pageLabel = $('hw-page');
+  const prevBtn = $<HTMLButtonElement>('hw-prev');
+  const nextBtn = $<HTMLButtonElement>('hw-next');
+
+  async function render() {
+    const f = FONTS.find((x) => x.id === state.font)!;
+    const slow = setTimeout(() => { loadingEl.hidden = false; }, 150);
+    try {
+      await loadFont(f);
+    } catch {
+      clearTimeout(slow);
+      loadingEl.hidden = true;
+      noteEl.textContent = 'Не вдалося завантажити почерк. Перевірте з’єднання й спробуйте ще раз.';
+      return;
+    }
+    clearTimeout(slow);
+    loadingEl.hidden = true;
+    current = layout();
+    state.page = Math.min(state.page, current.pages.length - 1);
+    drawPage(canvas.getContext('2d')!, current, state.page);
+    const total = current.pages.length;
+    pageLabel.textContent = `Сторінка ${state.page + 1} з ${total}`;
+    prevBtn.disabled = state.page === 0;
+    nextBtn.disabled = state.page >= total - 1;
+    noteEl.textContent = current.truncated ? `Показано перші ${MAX_PAGES} сторінок — розбийте текст на частини.` : '';
+  }
+
+  let timer = 0;
+  const schedule = (delay = 120) => { clearTimeout(timer); timer = window.setTimeout(() => { save(); render(); }, delay); };
+
+  // Кнопки почерків з прев'ю їхнім же шрифтом.
+  const fontsBox = $('hw-fonts');
+  for (const f of FONTS) {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'font-btn';
+    b.setAttribute('role', 'radio');
+    b.dataset.font = f.id;
+    b.innerHTML = `<small></small><span>Привіт, світ</span>`;
+    b.querySelector('small')!.textContent = f.name;
+    fontsBox.appendChild(b);
+    loadFont(f).then(() => { (b.querySelector('span') as HTMLElement).style.fontFamily = `"hw-${f.id}"`; }).catch(() => {});
+  }
+
+  function syncControls() {
+    textEl.value = state.text;
+    sizeEl.value = String(state.size);
+    messEl.value = String(state.mess);
+    $('hw-size-out').textContent = `${state.size}%`;
+    $('hw-mess-out').textContent = `${state.mess}%`;
+    fontsBox.querySelectorAll<HTMLElement>('.font-btn').forEach((b) => b.setAttribute('aria-checked', String(b.dataset.font === state.font)));
+    document.querySelectorAll<HTMLElement>('#hw-ink .chip').forEach((b) => { b.setAttribute('role', 'radio'); b.setAttribute('aria-checked', String(b.dataset.ink === state.ink)); });
+    document.querySelectorAll<HTMLElement>('#hw-paper .chip').forEach((b) => { b.setAttribute('role', 'radio'); b.setAttribute('aria-checked', String(b.dataset.paper === state.paper)); });
+  }
+
+  textEl.addEventListener('input', () => { state.text = textEl.value; schedule(250); });
+  fontsBox.addEventListener('click', (e) => {
+    const b = (e.target as HTMLElement).closest<HTMLElement>('.font-btn');
+    if (!b) return;
+    state.font = b.dataset.font!; syncControls(); schedule(0);
+  });
+  $('hw-ink').addEventListener('click', (e) => {
+    const b = (e.target as HTMLElement).closest<HTMLElement>('[data-ink]');
+    if (!b) return;
+    state.ink = b.dataset.ink!; syncControls(); schedule(0);
+  });
+  $('hw-paper').addEventListener('click', (e) => {
+    const b = (e.target as HTMLElement).closest<HTMLElement>('[data-paper]');
+    if (!b) return;
+    state.paper = b.dataset.paper!; syncControls(); schedule(0);
+  });
+  sizeEl.addEventListener('input', () => { state.size = +sizeEl.value; syncControls(); schedule(60); });
+  messEl.addEventListener('input', () => { state.mess = +messEl.value; syncControls(); schedule(60); });
+  $('hw-shuffle').addEventListener('click', () => { state.seed = Math.floor(Math.random() * 1e6); schedule(0); });
+  prevBtn.addEventListener('click', () => { if (state.page > 0) { state.page--; render(); } });
+  nextBtn.addEventListener('click', () => { state.page++; render(); });
+
+  function download(blob: Blob, name: string) {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = name;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  }
+
+  $('hw-png').addEventListener('click', async () => {
+    await render();
+    canvas.toBlob((blob) => { if (blob) download(blob, `rukopys-storinka-${state.page + 1}.png`); }, 'image/png');
+  });
+
+  const pdfBtn = $<HTMLButtonElement>('hw-pdf');
+  pdfBtn.addEventListener('click', async () => {
+    pdfBtn.disabled = true;
+    const label = pdfBtn.textContent;
+    pdfBtn.textContent = 'Готуємо PDF…';
+    try {
+      await render();
+      const L = current!;
+      const { jsPDF } = await import('jspdf');
+      const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4', compress: true });
+      const off = document.createElement('canvas');
+      off.width = W; off.height = H;
+      const octx = off.getContext('2d')!;
+      for (let i = 0; i < L.pages.length; i++) {
+        if (i) doc.addPage();
+        drawPage(octx, L, i);
+        doc.addImage(off.toDataURL('image/jpeg', 0.9), 'JPEG', 0, 0, 210, 297, undefined, 'FAST');
+      }
+      download(doc.output('blob'), 'rukopysnyi-tekst.pdf');
+    } catch {
+      noteEl.textContent = 'Не вдалося створити PDF. Спробуйте ще раз або завантажте PNG.';
+    } finally {
+      pdfBtn.disabled = false;
+      pdfBtn.textContent = label;
+    }
+  });
+
+  syncControls();
+  render();
+</script>

@@ -1,4 +1,5 @@
 import type { APIRoute } from 'astro';
+import { ARTICLES } from '../lib/articles';
 
 // Карта сайту для Google/Bing: лише публічні сторінки (кабінет, кошик і
 // сторінки входу сюди не входять — вони мають noindex у Layout).
@@ -15,6 +16,9 @@ const PAGES: { path: string; priority: number; changefreq: string }[] = [
   { path: '/litoscan', priority: 0.8, changefreq: 'monthly' },
   { path: '/litograph', priority: 0.8, changefreq: 'monthly' },
   { path: '/zavantazhennia', priority: 0.8, changefreq: 'weekly' },
+  { path: '/rukopysnyi-tekst-onlain', priority: 0.9, changefreq: 'monthly' },
+  { path: '/statti', priority: 0.6, changefreq: 'weekly' },
+  ...ARTICLES.map((a) => ({ path: `/statti/${a.slug}`, priority: 0.7, changefreq: 'monthly' })),
   { path: '/register', priority: 0.5, changefreq: 'yearly' },
   { path: '/umovy-vykorystannia', priority: 0.3, changefreq: 'yearly' },
   { path: '/pravyla-oflain-litsenzii', priority: 0.3, changefreq: 'yearly' },

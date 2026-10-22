@@ -75,9 +75,9 @@ const noindex = NOINDEX.some((p) => pathname === p || pathname.startsWith(p + '/
   <body class:list={[fullPage && 'full-page']}>
     {!fullPage && !noHeader && (
       <header style="position:sticky; top:0; z-index:100; background:rgba(255,255,255,0.85); backdrop-filter:saturate(180%) blur(20px); -webkit-backdrop-filter:saturate(180%) blur(20px); border-bottom:1px solid var(--border-subtle);">
-        <nav style="max-width:980px; margin:0 auto; height:var(--nav-h); padding:0 1.5rem; display:flex; align-items:center; justify-content:space-between;">
+        <nav class="site-nav" style="max-width:980px; margin:0 auto; height:var(--nav-h); padding:0 1.5rem; display:flex; align-items:center; justify-content:space-between;">
           <a href="/"><img src="/lito-badge.png" alt="Litopys Suite" style="height:36px;width:36px;object-fit:contain;border-radius:8px;display:block;"></a>
-          <div style="display:flex; gap:1.5rem; align-items:center; font-size:.875rem; font-weight:400; color:var(--text-secondary);">
+          <div class="site-nav-links" style="display:flex; gap:1.5rem; align-items:center; font-size:.875rem; font-weight:400; color:var(--text-secondary);">
             <div class="nav-download-wrap">
               <button class="nav-icon-btn nav-products-btn" id="products-btn" aria-expanded="false" aria-haspopup="true" style="width:auto; gap:.4rem; padding:0 .25rem; color:var(--text-secondary); font-size:.875rem; font-weight:400;">
                 Продукти
@@ -144,6 +144,8 @@ const noindex = NOINDEX.some((p) => pathname === p || pathname.startsWith(p + '/
           <div style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:1rem;">
             <span>© {new Date().getFullYear()} Літопис. Усі права захищені.</span>
             <span style="display:flex; gap:1rem; flex-wrap:wrap;">
+              <a href="/rukopysnyi-tekst-onlain" style="color:inherit; text-decoration:underline;">Рукописний текст онлайн</a>
+              <a href="/statti" style="color:inherit; text-decoration:underline;">Статті</a>
               <a href="/umovy-vykorystannia" style="color:inherit; text-decoration:underline;">Умови використання</a>
               <a href="/pravyla-oflain-litsenzii" style="color:inherit; text-decoration:underline;">Правила офлайн-ліцензії</a>
             </span>
@@ -182,6 +184,13 @@ const noindex = NOINDEX.some((p) => pathname === p || pathname.startsWith(p + '/
   .nav-icon-btn img { filter: brightness(0) saturate(100%); }
 
   .nav-download-wrap { position: relative; }
+
+  /* Телефон: усе меню в один рядок без вильоту за екран */
+  @media (max-width: 480px) {
+    .site-nav { padding: 0 .75rem !important; gap: .5rem; }
+    .site-nav-links { gap: .35rem !important; }
+    .site-nav-links .nav-icon-btn { width: 30px; height: 30px; }
+  }
 
   .nav-dropdown {
     display: none;
