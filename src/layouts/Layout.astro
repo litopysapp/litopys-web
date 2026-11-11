@@ -165,6 +165,9 @@ const noindex = NOINDEX.some((p) => pathname === p || pathname.startsWith(p + '/
 </html>
 
 <style is:global>
+  /* Акція «До Різдва»: <html data-promo> ставить cart.js за датою акції. */
+  html[data-promo="off"] .promo-on { display: none !important; }
+  html[data-promo="on"] .promo-off { display: none !important; }
   .nav-icon-btn {
     display: flex;
     align-items: center;

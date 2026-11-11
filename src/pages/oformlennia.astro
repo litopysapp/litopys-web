@@ -228,12 +228,15 @@ if (Astro.request.method === 'POST') {
       list.innerHTML = pricedItems.map((i: any) => {
         const unit = cart.qtyUnit(i.id);
         const qtyLabel = unit ? ` × ${i.qty} ${unit}` : i.qty > 1 ? ` × ${i.qty}` : '';
-        const label = `${i.name}${qtyLabel}${i.discount > 0 ? ' <span class="order-item-badge">−50%</span>' : ''}`;
-        const priceHtml = i.discount > 0
-          ? `<span class="order-item-price-old">${formatUAH(i.unitPrice * i.qty)}</span> ${formatUAH(i.finalUnitPrice * i.qty)}`
+        // Стара ціна: знижка −50% або акція «До Різдва» (regularPrice > ціни).
+        const oldUnit = i.discount > 0 ? i.unitPrice : i.regularPrice > i.finalUnitPrice ? i.regularPrice : 0;
+        const badge = i.discount > 0 ? '−50%' : i.promo ? `акція «${i.promo}»` : '';
+        const label = `${i.name}${qtyLabel}${badge ? ` <span class="order-item-badge">${badge}</span>` : ''}`;
+        const priceHtml = oldUnit
+          ? `<span class="order-item-price-old">${formatUAH(oldUnit * i.qty)}</span> ${formatUAH(i.finalUnitPrice * i.qty)}`
           : formatUAH(i.unitPrice * i.qty);
         return `<p><span>${label}</span><span>${priceHtml}</span></p>`;
-      }).join('');
+      }).join('') + cart.giftLines().map((g: any) => `<p><span>${g.name}</span><span>${formatUAH(g.price)}</span></p>`).join('');
       document.getElementById('order-total-value')!.textContent = formatUAH(cart.cartTotal());
       (document.getElementById('order-items-input') as HTMLInputElement).value = JSON.stringify(items);
     }

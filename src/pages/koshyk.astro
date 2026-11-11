@@ -220,18 +220,26 @@ import Layout from '../layouts/Layout.astro';
           <button class="qty-btn" data-action="inc" aria-label="Збільшити кількість">+</button>
         </div>
       ` : '';
-      const priceHtml = i.discount > 0
-        ? `<p class="cart-item-price"><span class="cart-item-price-old">${formatUAH(i.unitPrice * i.qty)}</span> ${formatUAH(i.finalUnitPrice * i.qty)}</p>`
+      // Стара ціна: знижка −50% або акція «До Різдва» (regularPrice > ціни).
+      const oldUnit = i.discount > 0 ? i.unitPrice : i.regularPrice > i.finalUnitPrice ? i.regularPrice : 0;
+      const badge = i.discount > 0 ? '−50%' : i.promo ? `акція «${i.promo}»` : '';
+      const priceHtml = oldUnit
+        ? `<p class="cart-item-price"><span class="cart-item-price-old">${formatUAH(oldUnit * i.qty)}</span> ${formatUAH(i.finalUnitPrice * i.qty)}</p>`
         : `<p class="cart-item-price">${formatUAH(i.unitPrice * i.qty)}</p>`;
       return `
       <div class="cart-item" data-id="${i.id}">
-        <p class="cart-item-name">${i.name}${i.discount > 0 ? ' <span class="cart-item-badge">−50%</span>' : ''}</p>
+        <p class="cart-item-name">${i.name}${badge ? ` <span class="cart-item-badge">${badge}</span>` : ''}</p>
         ${qtyControl}
         ${priceHtml}
         <button class="cart-remove" data-action="remove" aria-label="Видалити">✕</button>
       </div>
     `;
-    }).join('');
+    }).join('') + cart.giftLines().map((g: any) => `
+      <div class="cart-item">
+        <p class="cart-item-name">${g.name}</p>
+        <p class="cart-item-price">${formatUAH(g.price)}</p>
+      </div>
+    `).join('');
 
     totalEl.textContent = formatUAH(cart.cartTotal());
 

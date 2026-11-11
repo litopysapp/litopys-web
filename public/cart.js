@@ -7,17 +7,35 @@
   // localStorage), звіряються з цим каталогом при кожному readCart(), щоб
   // клієнт ніколи не оформив замовлення за застарілою ціною після того, як
   // ціни на сайті змінились.
+  // promoPrice — ціна на час акції, promoOnly — товар лише в акцію (ціни й
+  // id — як ORDER_CATALOG у server/src/app.js; сервер усе одно рахує сам).
   const PRICE_CATALOG = {
     'litopys-trial': { name: 'Літопис — тестовий місяць', price: 1999 },
     'litopys-license': { name: 'Літопис — ліцензія', price: 9999 },
+    'litopys-license-font': { name: 'Літопис — ліцензія + шрифт з твого почерку під ключ', price: 11999, promoOnly: true },
     'litopys-extra-user': { name: 'Додатковий користувач', price: 4998 },
-    'font-individual': { name: 'Індивідуальний шрифт', price: 4899 },
-    'font-litopys-1': { name: 'Шрифт Litopys-1', price: 4999 },
-    'font-litopys-2': { name: 'Шрифт Litopys-2', price: 4999 },
-    'font-litopys-3': { name: 'Шрифт Litopys-3', price: 4999 },
-    'font-litopys-4': { name: 'Шрифт Litopys-4', price: 4999 },
+    'font-individual': { name: 'Індивідуальний шрифт', price: 4899, promoPrice: 2499 },
+    'font-litopys-1': { name: 'Шрифт Litopys-1', price: 4999, promoPrice: 2499 },
+    'font-litopys-2': { name: 'Шрифт Litopys-2', price: 4999, promoPrice: 2499 },
+    'font-litopys-3': { name: 'Шрифт Litopys-3', price: 4999, promoPrice: 2499 },
+    'font-litopys-4': { name: 'Шрифт Litopys-4', price: 4999, promoPrice: 2499 },
     'litograph-monthly': { name: 'LitoGraph — ліцензія', price: 1499 },
   };
+
+  // Акція «До Різдва» — та сама дата, що PROMO.until на сервері. Після неї
+  // сайт сам повертає звичайні ціни (без перезбирання): <html data-promo="on|off">
+  // ховає блоки .promo-on / .promo-off (стилі — у Layout.astro).
+  const PROMO = { name: 'До Різдва', until: '2026-12-25T23:59:59+02:00', litographGiftMonths: 1 };
+  const promoActive = () => Date.now() <= Date.parse(PROMO.until);
+  document.documentElement.dataset.promo = promoActive() ? 'on' : 'off';
+
+  // Чинна ціна товару; null — товар зараз не продається (акційний після акції).
+  function currentPrice(id) {
+    const p = PRICE_CATALOG[id];
+    if (!p) return null;
+    if (p.promoOnly && !promoActive()) return null;
+    return promoActive() && p.promoPrice !== undefined ? p.promoPrice : p.price;
+  }
 
   function readCart() {
     let items;
@@ -28,14 +46,18 @@
       return [];
     }
     let changed = false;
-    for (const item of items) {
+    items = items.filter(item => {
       const current = PRICE_CATALOG[item.id];
-      if (current && (item.price !== current.price || item.name !== current.name)) {
-        item.price = current.price;
+      if (!current) return true;
+      const price = currentPrice(item.id);
+      if (price === null) { changed = true; return false; }
+      if (item.price !== price || item.name !== current.name) {
+        item.price = price;
         item.name = current.name;
         changed = true;
       }
-    }
+      return true;
+    });
     if (changed) {
       try { localStorage.setItem(KEY, JSON.stringify(items)); } catch {}
     }
@@ -109,12 +131,14 @@
   const FONT_IDS = ['font-individual', 'font-litopys-1', 'font-litopys-2', 'font-litopys-3', 'font-litopys-4'];
   const FONT_DISCOUNT_RATIO = 0.5;
 
-  // Акція: ліцензія на Літопис (не пробна) + хоча б один шрифт у замовленні —
-  // перший шрифт за порядком у списку йде з знижкою 50%, решта — повна ціна.
+  // Поза акцією «До Різдва»: ліцензія на Літопис (не пробна) + хоча б один шрифт
+  // у замовленні — перший шрифт за порядком у списку йде з знижкою 50%, решта — повна ціна.
+  // В акцію −50% немає: шрифти й так за акційною ціною (regularPrice — звичайна, для показу).
   function pricedItemsWithDiscount() {
     const items = readCart();
+    const promo = promoActive();
     const hasLicense = items.some(i => i.id === 'litopys-license');
-    let discountApplied = false;
+    let discountApplied = promo;
     return items.map(item => {
       const unitPrice = item.price;
       let discount = 0;
@@ -122,8 +146,16 @@
         discountApplied = true;
         discount = Math.round(unitPrice * FONT_DISCOUNT_RATIO);
       }
-      return { ...item, unitPrice, discount, finalUnitPrice: unitPrice - discount };
+      const regular = PRICE_CATALOG[item.id] && PRICE_CATALOG[item.id].price;
+      const promoItem = promo && regular !== undefined && regular > unitPrice;
+      return { ...item, unitPrice, discount, finalUnitPrice: unitPrice - discount, regularPrice: promoItem ? regular : unitPrice, promo: promoItem ? PROMO.name : '' };
     });
+  }
+
+  // Подарунки акції — рядки з ціною 0 для кошика й оформлення (видає сервер при підтвердженні).
+  function giftLines() {
+    if (!promoActive() || !readCart().some(i => i.id === 'litopys-license')) return [];
+    return [{ name: `LitoGraph — ${PROMO.litographGiftMonths} міс. у подарунок 🎁`, price: 0 }];
   }
 
   function cartTotal() {
@@ -138,7 +170,7 @@
     badge.style.display = count > 0 ? 'flex' : 'none';
   }
 
-  window.LitopysCart = { readCart, addToCart, removeFromCart, setQty, clearCart, cartCount, cartTotal, isMultiQty, maxQtyFor, qtyUnit, pricedItemsWithDiscount };
+  window.LitopysCart = { readCart, addToCart, removeFromCart, setQty, clearCart, cartCount, cartTotal, isMultiQty, maxQtyFor, qtyUnit, pricedItemsWithDiscount, giftLines, promoActive, PROMO };
 
   document.addEventListener('DOMContentLoaded', updateBadge);
   window.addEventListener('storage', (e) => { if (e.key === KEY) updateBadge(); });

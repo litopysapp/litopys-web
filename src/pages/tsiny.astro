@@ -16,7 +16,11 @@ import Layout from '../layouts/Layout.astro';
   <!-- ══ PROMO BANNER ══ -->
   <section class="section-promo">
     <div class="container">
-      <div class="promo-banner fade-up">
+      <div class="promo-banner promo-on fade-up">
+        <span class="promo-banner-badge">🎄 До Різдва</span>
+        <p class="promo-banner-text">До 25 грудня: до повної ліцензії — <strong>місяць LitoGraph у подарунок</strong>, зроби шрифт зі свого почерку сам. Шрифти — <strong>2&nbsp;499&nbsp;грн</strong> замість 4&nbsp;999. Ліцензія + шрифт з твого почерку під ключ — <strong>11&nbsp;999&nbsp;грн</strong>.</p>
+      </div>
+      <div class="promo-banner promo-off fade-up">
         <span class="promo-banner-badge">Акція</span>
         <p class="promo-banner-text">Купуй повну ліцензію на Літопис разом із будь-яким шрифтом — і перший шрифт коштуватиме <strong>−50%</strong>.</p>
       </div>
@@ -48,6 +52,7 @@ import Layout from '../layouts/Layout.astro';
           <p class="plan-period">одноразово, безстроково</p>
           <ul class="plan-features">
             <li>Ліцензія назавжди на 1 ПК</li>
+            <li class="promo-on">🎁 Місяць LitoGraph у подарунок — шрифт зі свого почерку</li>
             <li>Можливість розширити кількість користувачів</li>
             <li>Усі оновлення програми включені</li>
             <li>Повний доступ до всіх модулів</li>
@@ -82,7 +87,8 @@ import Layout from '../layouts/Layout.astro';
 
         <div class="plan-card fade-up">
           <p class="plan-name">Індивідуальний шрифт</p>
-          <p class="plan-price">4 899 <span class="plan-currency">грн</span></p>
+          <p class="plan-price-old promo-on">4 899 грн</p>
+          <p class="plan-price"><span class="promo-on">2 499</span><span class="promo-off">4 899</span> <span class="plan-currency">грн</span></p>
           <p class="plan-period">розробка з вашого почерку</p>
           <ul class="plan-features">
             <li>Оцифруємо саме ваш почерк</li>
@@ -95,7 +101,8 @@ import Layout from '../layouts/Layout.astro';
 
         <div class="plan-card fade-up" style="--d:.08s">
           <p class="plan-name">Готовий шрифт</p>
-          <p class="plan-price">4 999 <span class="plan-currency">грн</span></p>
+          <p class="plan-price-old promo-on">4 999 грн</p>
+          <p class="plan-price"><span class="promo-on">2 499</span><span class="promo-off">4 999</span> <span class="plan-currency">грн</span></p>
           <p class="plan-period">вибір із каталогу</p>
           <ul class="plan-features">
             <li>Кілька готових рукописних варіантів</li>
@@ -105,6 +112,21 @@ import Layout from '../layouts/Layout.astro';
             <li>Одразу готовий до використання</li>
           </ul>
           <a href="/litopys/shrifty" class="btn-primary">Обрати →</a>
+        </div>
+
+        <div class="plan-card plan-featured promo-on fade-up" style="--d:.16s">
+          <div class="plan-badge plan-badge-sale">🎄 До Різдва</div>
+          <p class="plan-name">Ліцензія + шрифт з твого почерку</p>
+          <p class="plan-price-old">14 898 грн</p>
+          <p class="plan-price">11 999 <span class="plan-currency">грн</span></p>
+          <p class="plan-period">комплект під ключ, до 25 грудня</p>
+          <ul class="plan-features">
+            <li>Повна ліцензія Літопис назавжди на 1 ПК</li>
+            <li>Оцифруємо саме ваш почерк за вас</li>
+            <li>По 3 варіанти кожного символу</li>
+            <li>Усі оновлення програми включені</li>
+          </ul>
+          <button class="btn-white" data-add-to-cart data-id="litopys-license-font" data-name="Літопис — ліцензія + шрифт з твого почерку під ключ" data-price="11999">Придбати →</button>
         </div>
 
       </div>
