@@ -7,32 +7,35 @@
   // localStorage), звіряються з цим каталогом при кожному readCart(), щоб
   // клієнт ніколи не оформив замовлення за застарілою ціною після того, як
   // ціни на сайті змінились.
-  // promoPrice — ціна на час акції, promoOnly — товар лише в акцію (ціни й
-  // id — як ORDER_CATALOG у server/src/app.js; сервер усе одно рахує сам).
+  // promoPrice — ціна на час акції, promoOnly — товар лише в акцію, retired —
+  // знятий з продажу (прибирається з кошиків). Ціни й id — як ORDER_CATALOG
+  // у server/src/app.js; сервер усе одно рахує сам.
   const PRICE_CATALOG = {
     'litopys-trial': { name: 'Літопис — тестовий місяць', price: 1999 },
     'litopys-license': { name: 'Літопис — ліцензія', price: 9999 },
-    'litopys-license-font': { name: 'Літопис — ліцензія + шрифт з твого почерку під ключ', price: 11999, promoOnly: true },
+    'litopys-license-font': { name: 'Літопис — ліцензія + шрифт з твого почерку під ключ', price: 11999, retired: true },
     'litopys-extra-user': { name: 'Додатковий користувач', price: 4998 },
-    'font-individual': { name: 'Індивідуальний шрифт', price: 4899, promoPrice: 2499 },
-    'font-litopys-1': { name: 'Шрифт Litopys-1', price: 4999, promoPrice: 2499 },
-    'font-litopys-2': { name: 'Шрифт Litopys-2', price: 4999, promoPrice: 2499 },
-    'font-litopys-3': { name: 'Шрифт Litopys-3', price: 4999, promoPrice: 2499 },
-    'font-litopys-4': { name: 'Шрифт Litopys-4', price: 4999, promoPrice: 2499 },
+    'font-individual': { name: 'Індивідуальний шрифт', price: 1999 },
+    'font-litopys-1': { name: 'Шрифт Litopys-1', price: 1999 },
+    'font-litopys-2': { name: 'Шрифт Litopys-2', price: 1999 },
+    'font-litopys-3': { name: 'Шрифт Litopys-3', price: 1999 },
+    'font-litopys-4': { name: 'Шрифт Litopys-4', price: 1999 },
     'litograph-monthly': { name: 'LitoGraph — ліцензія', price: 1499 },
   };
 
-  // Акція «До Різдва» — та сама дата, що PROMO.until на сервері. Після неї
-  // сайт сам повертає звичайні ціни (без перезбирання): <html data-promo="on|off">
-  // ховає блоки .promo-on / .promo-off (стилі — у Layout.astro).
+  // Акція «До Різдва» (до повної ліцензії — місяць LitoGraph у подарунок) —
+  // та сама дата, що PROMO.until на сервері. Після неї сайт сам ховає акцію
+  // (без перезбирання): <html data-promo="on|off"> ховає блоки .promo-on /
+  // .promo-off (стилі — у Layout.astro).
   const PROMO = { name: 'До Різдва', until: '2026-12-25T23:59:59+02:00', litographGiftMonths: 1 };
   const promoActive = () => Date.now() <= Date.parse(PROMO.until);
   document.documentElement.dataset.promo = promoActive() ? 'on' : 'off';
 
-  // Чинна ціна товару; null — товар зараз не продається (акційний після акції).
+  // Чинна ціна товару; null — товар зараз не продається (невідомий, знятий
+  // з продажу чи акційний після акції) — такий прибирається з кошика.
   function currentPrice(id) {
     const p = PRICE_CATALOG[id];
-    if (!p) return null;
+    if (!p || p.retired) return null;
     if (p.promoOnly && !promoActive()) return null;
     return promoActive() && p.promoPrice !== undefined ? p.promoPrice : p.price;
   }
@@ -48,7 +51,6 @@
     let changed = false;
     items = items.filter(item => {
       const current = PRICE_CATALOG[item.id];
-      if (!current) return true;
       const price = currentPrice(item.id);
       if (price === null) { changed = true; return false; }
       if (item.price !== price || item.name !== current.name) {
@@ -128,24 +130,15 @@
     return readCart().reduce((sum, i) => sum + i.qty, 0);
   }
 
-  const FONT_IDS = ['font-individual', 'font-litopys-1', 'font-litopys-2', 'font-litopys-3', 'font-litopys-4'];
-  const FONT_DISCOUNT_RATIO = 0.5;
-
-  // Поза акцією «До Різдва»: ліцензія на Літопис (не пробна) + хоча б один шрифт
-  // у замовленні — перший шрифт за порядком у списку йде з знижкою 50%, решта — повна ціна.
-  // В акцію −50% немає: шрифти й так за акційною ціною (regularPrice — звичайна, для показу).
+  // Ціни позицій для кошика й оформлення. Знижки −50% на шрифт до ліцензії
+  // більше немає (шрифти подешевшали до 1 999) — discount лишився 0 для сумісності
+  // з koshyk/oformlennia. regularPrice — звичайна ціна, якщо товар зараз акційний.
   function pricedItemsWithDiscount() {
     const items = readCart();
     const promo = promoActive();
-    const hasLicense = items.some(i => i.id === 'litopys-license');
-    let discountApplied = promo;
     return items.map(item => {
       const unitPrice = item.price;
-      let discount = 0;
-      if (hasLicense && !discountApplied && FONT_IDS.includes(item.id)) {
-        discountApplied = true;
-        discount = Math.round(unitPrice * FONT_DISCOUNT_RATIO);
-      }
+      const discount = 0;
       const regular = PRICE_CATALOG[item.id] && PRICE_CATALOG[item.id].price;
       const promoItem = promo && regular !== undefined && regular > unitPrice;
       return { ...item, unitPrice, discount, finalUnitPrice: unitPrice - discount, regularPrice: promoItem ? regular : unitPrice, promo: promoItem ? PROMO.name : '' };
