@@ -8,7 +8,22 @@ const fonts = [
   { name: 'Litopys-4', preview: '/font-previews/Litopys-4.gif' },
 ];
 ---
-<Layout title="Шрифти — Літопис" description="Готові рукописні шрифти для Літопису — обери й перевір, як виглядає.">
+<Layout title="Рукописні шрифти для Літопису — готові почерки по 1 999 грн" description="Готові українські рукописні шрифти для Літопису з трьома варіантами кожної літери. Перегляньте зразки почерків або замовте шрифт зі свого почерку — 1 999 грн." breadcrumbs={[{ name: 'Програма Літопис', path: '/litopys' }, { name: 'Шрифти', path: '/litopys/shrifty' }]} jsonLd={[{
+  '@type': 'ItemList',
+  name: 'Рукописні шрифти для Літопису',
+  itemListElement: fonts.map((f, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    item: {
+      '@type': 'Product',
+      name: `Рукописний шрифт ${f.name}`,
+      image: `https://litopys.pro${f.preview}`,
+      url: `https://litograph.pro/shryfty/${f.name.toLowerCase()}/`,
+      brand: { '@type': 'Brand', name: 'Літопис' },
+      offers: { '@type': 'Offer', price: '1999', priceCurrency: 'UAH', availability: 'https://schema.org/InStock', url: 'https://litopys.pro/litopys/shrifty' },
+    },
+  })),
+}]}>
 
   <!-- ══ HERO ══ -->
   <section class="hero-page">

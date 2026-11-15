@@ -1,7 +1,22 @@
 ---
 import Layout from '../layouts/Layout.astro';
 ---
-<Layout title="Ціни — Litopys Suite" description="Вартість Літопису, рукописних шрифтів і LitoGraph.">
+<Layout title="Ціни на Літопис, рукописні шрифти й LitoGraph" description="Повна ліцензія Літопису — 9 999 грн назавжди, тестовий місяць — 1 999 грн. Рукописні шрифти — 1 999 грн, LitoGraph — 1 499 грн на місяць. LitoScan — безкоштовно." breadcrumbs={[{ name: 'Ціни', path: '/tsiny' }]} jsonLd={[{
+  '@type': 'SoftwareApplication',
+  name: 'Літопис',
+  alternateName: 'Litopys',
+  applicationCategory: 'BusinessApplication',
+  operatingSystem: 'Windows',
+  inLanguage: 'uk',
+  url: 'https://litopys.pro/litopys',
+  image: 'https://litopys.pro/og-litopys.png',
+  description: 'Офлайн-редактор журналу бойових дій (ЖБД), ЖОВтР і власних документів, який друкує текст справжньою ручкою через плотер.',
+  publisher: { '@id': 'https://litopys.pro/#org' },
+  offers: [
+    { '@type': 'Offer', name: 'Повна ліцензія', price: '9999', priceCurrency: 'UAH', availability: 'https://schema.org/InStock', url: 'https://litopys.pro/tsiny' },
+    { '@type': 'Offer', name: 'Тестовий місяць', price: '1999', priceCurrency: 'UAH', availability: 'https://schema.org/InStock', url: 'https://litopys.pro/tsiny' },
+  ],
+}]}>
 
   <!-- ══ HERO ══ -->
   <section class="hero-page">

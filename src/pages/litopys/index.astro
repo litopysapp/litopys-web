@@ -1,7 +1,22 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 ---
-<Layout title="Літопис — редактор документів" description="Літопис — офлайн-редактор ЖБД, ЖОВтР та власних документів із друком ручкою.">
+<Layout title="Літопис — програма для ЖБД і ЖОВтР з друком ручкою" description="Офлайн-редактор журналу бойових дій, ЖОВтР і власних документів: вводите текст — плотер пише його справжньою ручкою вашим почерком. Windows, без інтернету." breadcrumbs={[{ name: 'Програма Літопис', path: '/litopys' }]} jsonLd={[{
+  '@type': 'SoftwareApplication',
+  name: 'Літопис',
+  alternateName: 'Litopys',
+  applicationCategory: 'BusinessApplication',
+  operatingSystem: 'Windows',
+  inLanguage: 'uk',
+  url: 'https://litopys.pro/litopys',
+  image: 'https://litopys.pro/og-litopys.png',
+  description: 'Офлайн-редактор журналу бойових дій (ЖБД), ЖОВтР і власних документів, який друкує текст справжньою ручкою через плотер.',
+  publisher: { '@id': 'https://litopys.pro/#org' },
+  offers: [
+    { '@type': 'Offer', name: 'Повна ліцензія', price: '9999', priceCurrency: 'UAH', availability: 'https://schema.org/InStock', url: 'https://litopys.pro/tsiny' },
+    { '@type': 'Offer', name: 'Тестовий місяць', price: '1999', priceCurrency: 'UAH', availability: 'https://schema.org/InStock', url: 'https://litopys.pro/tsiny' },
+  ],
+}]}>
 
   <!-- ══ HERO ══ -->
   <section class="hero">

@@ -48,7 +48,17 @@ const groups = [
   },
 ];
 ---
-<Layout title="LitoGraph — рукописний шрифт із твого почерку" description="LitoGraph: створення рукописного шрифту зі сканів символів або малювання від руки. Редактор гліфів, вирівнювання геометрії, збірка шрифту.">
+<Layout title="LitoGraph — рукописний шрифт із твого почерку" description="LitoGraph: створення рукописного шрифту зі сканів символів або малювання від руки. Редактор гліфів, вирівнювання геометрії, збірка шрифту." breadcrumbs={[{ name: 'LitoGraph', path: '/litograph' }]} jsonLd={[{
+  '@type': 'SoftwareApplication',
+  name: 'LitoGraph',
+  applicationCategory: 'DesignApplication',
+  operatingSystem: 'Windows, Web',
+  inLanguage: 'uk',
+  url: 'https://litograph.pro/stvoryty-shryft/',
+  description: 'Програма для створення рукописного шрифту зі свого почерку: шаблон, скан, редагування символів і збірка шрифту .otf.',
+  publisher: { '@id': 'https://litopys.pro/#org' },
+  offers: { '@type': 'Offer', price: '1499', priceCurrency: 'UAH', url: 'https://litopys.pro/tsiny' },
+}]}>
 
   <!-- ══ HERO ══ -->
   <section class="hero-page">

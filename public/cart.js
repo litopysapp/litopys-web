@@ -104,6 +104,10 @@
       }
       writeCart(items);
     }
+    // Подія для Google Analytics (GTM у Layout.astro), якщо підключено.
+    try {
+      if (typeof window.gtag === 'function') window.gtag('event', 'add_to_cart', { currency: 'UAH', value: item.price * addQty, items: [{ item_id: item.id, item_name: item.name, price: item.price, quantity: addQty }] });
+    } catch {}
   }
 
   function removeFromCart(id) {

@@ -46,7 +46,17 @@ const groups = [
   },
 ];
 ---
-<Layout title="LitoScan — сканування та редагування PDF" description="LitoScan: безкоштовна програма для сканування, об’єднання та редагування PDF-документів. Дуплексне сканування, пошук у тексті, друк.">
+<Layout title="LitoScan — безкоштовне сканування та редагування PDF" description="LitoScan: безкоштовна програма для сканування, об’єднання та редагування PDF-документів. Дуплексне сканування, пошук у тексті, друк." breadcrumbs={[{ name: 'LitoScan', path: '/litoscan' }]} jsonLd={[{
+  '@type': 'SoftwareApplication',
+  name: 'LitoScan',
+  applicationCategory: 'BusinessApplication',
+  operatingSystem: 'Windows',
+  inLanguage: 'uk',
+  url: 'https://litopys.pro/litoscan',
+  description: 'Безкоштовна програма для сканування, об’єднання та редагування PDF-документів.',
+  publisher: { '@id': 'https://litopys.pro/#org' },
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'UAH' },
+}]}>
 
   <!-- ══ HERO ══ -->
   <section class="hero-page">

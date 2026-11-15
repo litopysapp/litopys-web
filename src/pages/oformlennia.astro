@@ -53,8 +53,12 @@ if (Astro.request.method === 'POST') {
           <p>Ми зв'яжемось з вами найближчим часом для підтвердження й оплати.</p>
           <a href="/" class="btn-primary">На головну →</a>
         </div>
-        <script>
-          (window as any).LitopysCart?.clearCart();
+        <script is:inline define:vars={{ orderNumber, orderTotal }}>
+          // Подія «покупка» для Google Analytics — до очищення кошика (беремо його склад).
+          var cart = window.LitopysCart;
+          var items = cart ? cart.readCart() : [];
+          if (typeof window.gtag === 'function') window.gtag('event', 'purchase', { transaction_id: String(orderNumber), currency: 'UAH', value: orderTotal, items: items.map(function (i) { return { item_id: i.id, item_name: i.name, price: i.price, quantity: i.qty }; }) });
+          if (cart) cart.clearCart();
         </script>
       ) : (
         <>

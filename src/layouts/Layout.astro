@@ -4,8 +4,13 @@ interface Props {
   description?: string;
   fullPage?: boolean;
   noHeader?: boolean;
+  // SEO: картинка для соцмереж (шлях від кореня), хлібні крихти (без головної —
+  // вона додається сама) і додаткова розмітка schema.org для сторінки.
+  ogImage?: string;
+  breadcrumbs?: { name: string; path: string }[];
+  jsonLd?: Record<string, unknown>[];
 }
-const { title, description = "Litopys Suite — Litopys, LitoScan і LitoGraph: офлайн-програми для документів, сканування та рукописних шрифтів", fullPage = false, noHeader = false } = Astro.props;
+const { title, description = "Літопис — програма, що пише ЖБД, ЖОВтР і власні документи справжньою ручкою через плотер. Також LitoScan для PDF і LitoGraph для рукописних шрифтів.", fullPage = false, noHeader = false, ogImage = '/og-litopys.png', breadcrumbs = [], jsonLd = [] } = Astro.props;
 
 // Пошук: канонічна адреса без query, а службові сторінки (кабінет, кошик,
 // входи й скидання паролю) — не індексуються.
@@ -14,6 +19,48 @@ const pathname = Astro.url.pathname.replace(/\/+$/, '') || '/';
 const canonical = SITE + (pathname === '/' ? '/' : pathname);
 const NOINDEX = ['/dashboard', '/koshyk', '/oformlennia', '/login', '/verify', '/forgot-password', '/reset-password', '/confirm-password-change'];
 const noindex = NOINDEX.some((p) => pathname === p || pathname.startsWith(p + '/'));
+const ogImageUrl = SITE + ogImage;
+
+// Розмітка schema.org: організація (на всіх сторінках), сайт (на головній),
+// хлібні крихти й власна розмітка сторінки.
+const ORG = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  '@id': `${SITE}/#org`,
+  name: 'Літопис',
+  alternateName: ['Litopys', 'Litopys Suite', 'LitoGraph', 'LitoScan'],
+  url: `${SITE}/`,
+  logo: `${SITE}/apple-touch-icon.png`,
+  image: `${SITE}/og-litopys.png`,
+  email: 'info@litopys.pro',
+  telephone: '+380930582908',
+  areaServed: 'UA',
+  contactPoint: { '@type': 'ContactPoint', telephone: '+380930582908', email: 'info@litopys.pro', contactType: 'customer support', availableLanguage: ['uk'] },
+  sameAs: [
+    'https://litograph.pro',
+    'https://www.instagram.com/litopys.pro/',
+    'https://www.facebook.com/share/1MerdzfiWL/?mibextid=wwXIfr',
+    'https://www.threads.com/@litopyspro',
+    'https://www.tiktok.com/@litopyspro',
+  ],
+};
+const ldAll: Record<string, unknown>[] = [ORG];
+if (pathname === '/') {
+  ldAll.push({ '@context': 'https://schema.org', '@type': 'WebSite', '@id': `${SITE}/#website`, name: 'Літопис', alternateName: 'Litopys Suite', url: `${SITE}/`, inLanguage: 'uk', publisher: { '@id': `${SITE}/#org` } });
+}
+if (breadcrumbs.length) {
+  ldAll.push({
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [{ name: 'Літопис', path: '/' }, ...breadcrumbs].map((b, i) => ({ '@type': 'ListItem', position: i + 1, name: b.name, item: SITE + b.path })),
+  });
+}
+for (const ld of jsonLd) ldAll.push({ '@context': 'https://schema.org', ...ld });
+
+// Аналітика: той самий контейнер Google Tag Manager, що й на litograph.pro
+// (у ньому GA4) — обидва сайти в одному ресурсі Analytics. Кабінет не відстежуємо.
+const GTM_ID = 'GTM-WKTF3D83';
+const analytics = !(pathname === '/dashboard' || pathname.startsWith('/dashboard/'));
 ---
 <!doctype html>
 <html lang="uk">
@@ -29,27 +76,21 @@ const noindex = NOINDEX.some((p) => pathname === p || pathname.startsWith(p + '/
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:locale" content="uk_UA" />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={title} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
+    <meta name="theme-color" content="#ffffff" />
     <link rel="icon" href="/favicon.png" type="image/png">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-    <script type="application/ld+json" set:html={JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "Organization",
-      "@id": "https://litopys.pro/#org",
-      name: "Літопис",
-      alternateName: ["Litopys", "LitoGraph"],
-      url: "https://litopys.pro",
-      logo: "https://litopys.pro/apple-touch-icon.png",
-      email: "info@litopys.pro",
-      telephone: "+380930582908",
-      sameAs: [
-        "https://litograph.pro",
-        "https://www.instagram.com/litopys.pro/",
-        "https://www.facebook.com/share/1MerdzfiWL/?mibextid=wwXIfr",
-        "https://www.threads.com/@litopyspro",
-        "https://www.tiktok.com/@litopyspro"
-      ]
-    })} />
+    {ldAll.map((ld) => <script type="application/ld+json" set:html={JSON.stringify(ld)} />)}
+    {analytics && <script async src={`https://www.googletagmanager.com/gtm.js?id=${GTM_ID}`}></script>}
+    {analytics && <script is:inline>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());</script>}
     <script src="/cart.js" is:inline></script>
     <style is:global>
       @font-face {
@@ -177,7 +218,7 @@ const noindex = NOINDEX.some((p) => pathname === p || pathname.startsWith(p + '/
 
     <div id="cookie-banner" class="cookie-banner" hidden>
       <p class="cookie-banner-text">
-        Ми використовуємо файли cookie: анонімний лічильник переглядів сайту та сесію входу в кабінет. Жодних рекламних трекерів.
+        Ми використовуємо файли cookie: Google Analytics — щоб бачити, які сторінки корисні, і сесію входу в кабінет. Жодної реклами.
       </p>
       <button type="button" id="cookie-banner-ok" class="cookie-banner-btn">Зрозуміло</button>
     </div>
@@ -187,6 +228,7 @@ const noindex = NOINDEX.some((p) => pathname === p || pathname.startsWith(p + '/
 <style is:global>
   /* Акція «До Різдва»: <html data-promo> ставить cart.js за датою акції. */
   html[data-promo="off"] .promo-on { display: none !important; }
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
   html[data-promo="on"] .promo-off { display: none !important; }
   .nav-icon-btn {
     display: flex;
@@ -353,7 +395,8 @@ const noindex = NOINDEX.some((p) => pathname === p || pathname.startsWith(p + '/
     });
   }
 
-  const COOKIE_NOTICE_KEY = 'litopys_cookie_notice_seen';
+  // _v2 — текст змінився (додано Google Analytics): показати ще раз.
+  const COOKIE_NOTICE_KEY = 'litopys_cookie_notice_seen_v2';
   const cookieBanner = document.getElementById('cookie-banner');
   const cookieBannerOk = document.getElementById('cookie-banner-ok');
   if (cookieBanner && !localStorage.getItem(COOKIE_NOTICE_KEY)) {
