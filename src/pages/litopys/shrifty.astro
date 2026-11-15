@@ -8,7 +8,7 @@ const fonts = [
   { name: 'Litopys-4', preview: '/font-previews/Litopys-4.gif' },
 ];
 ---
-<Layout title="Рукописні шрифти для Літопису — готові почерки по 1 999 грн" description="Готові українські рукописні шрифти для Літопису з трьома варіантами кожної літери. Перегляньте зразки почерків або замовте шрифт зі свого почерку — 1 999 грн." breadcrumbs={[{ name: 'Програма Літопис', path: '/litopys' }, { name: 'Шрифти', path: '/litopys/shrifty' }]} jsonLd={[{
+<Layout title="Рукописні шрифти для Літопису — готові почерки по 2 499 грн" description="Готові українські рукописні шрифти для Літопису з трьома варіантами кожної літери. Перегляньте зразки почерків або замовте шрифт зі свого почерку — 2 499 грн." breadcrumbs={[{ name: 'Програма Літопис', path: '/litopys' }, { name: 'Шрифти', path: '/litopys/shrifty' }]} jsonLd={[{
   '@type': 'ItemList',
   name: 'Рукописні шрифти для Літопису',
   itemListElement: fonts.map((f, i) => ({
@@ -20,7 +20,7 @@ const fonts = [
       image: `https://litopys.pro${f.preview}`,
       url: `https://litograph.pro/shryfty/${f.name.toLowerCase()}/`,
       brand: { '@type': 'Brand', name: 'Літопис' },
-      offers: { '@type': 'Offer', price: '1999', priceCurrency: 'UAH', availability: 'https://schema.org/InStock', url: 'https://litopys.pro/litopys/shrifty' },
+      offers: { '@type': 'Offer', price: '2499', priceCurrency: 'UAH', availability: 'https://schema.org/InStock', url: 'https://litopys.pro/litopys/shrifty' },
     },
   })),
 }]}>
@@ -40,11 +40,11 @@ const fonts = [
     <div class="container">
       <div class="promo-banner promo-on fade-up">
         <span class="promo-banner-badge">🎄 До Різдва</span>
-        <p class="promo-banner-text">До 25 грудня до повної ліцензії Літопис — <strong>місяць LitoGraph у подарунок</strong>: зроби шрифт зі свого почерку сам. А кожен шрифт тепер — <strong>1&nbsp;999&nbsp;грн</strong>.</p>
+        <p class="promo-banner-text">До 25 грудня до повної ліцензії Літопис — <strong>місяць LitoGraph у подарунок</strong>: зроби шрифт зі свого почерку сам. А кожен шрифт тепер — <strong>2&nbsp;499&nbsp;грн</strong>.</p>
       </div>
       <div class="promo-banner promo-off fade-up">
         <span class="promo-banner-badge">Нові ціни</span>
-        <p class="promo-banner-text">Кожен шрифт — <strong>1&nbsp;999&nbsp;грн</strong>. Не знайшли свій почерк — індивідуальний шрифт теж <strong>1&nbsp;999&nbsp;грн</strong>.</p>
+        <p class="promo-banner-text">Кожен шрифт — <strong>2&nbsp;499&nbsp;грн</strong>. Не знайшли свій почерк — індивідуальний шрифт теж <strong>2&nbsp;499&nbsp;грн</strong>.</p>
       </div>
     </div>
   </section>
@@ -60,8 +60,8 @@ const fonts = [
             </div>
             <div class="font-footer">
               <p class="font-name"><a href={`https://litograph.pro/shryfty/${f.name.toLowerCase()}/`} title={`Рукописний шрифт ${f.name} — детальніше`}>{f.name}</a></p>
-              <p class="font-price">1 999 <span class="plan-currency">грн</span></p>
-              <button class="btn-primary" data-add-to-cart data-id={`font-${f.name.toLowerCase()}`} data-name={`Шрифт ${f.name}`} data-price="1999">Купити →</button>
+              <p class="font-price">2 499 <span class="plan-currency">грн</span></p>
+              <button class="btn-primary" data-add-to-cart data-id={`font-${f.name.toLowerCase()}`} data-name={`Шрифт ${f.name}`} data-price="2499">Купити →</button>
             </div>
           </div>
         ))}

@@ -55,7 +55,8 @@ export const onRequest = defineMiddleware(async (context, next) => {
   if (!isProtected) return next();
 
   const token = context.cookies.get('litopys_token')?.value;
-  if (!token) return context.redirect(`/login?next=${encodeURIComponent(pathname)}`);
+  // Разом із ?query — щоб посилання з листа (…/licenses?promo=КОД) пережило вхід.
+  if (!token) return context.redirect(`/login?next=${encodeURIComponent(pathname + context.url.search)}`);
 
   try {
     const res = await fetch('https://api.litopys.win/me', {

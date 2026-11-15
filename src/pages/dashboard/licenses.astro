@@ -13,6 +13,18 @@ let maxSessions = 0;
 let seats: any[] = [];
 let actionError = '';
 let actionSuccess = '';
+// Промокод (server/src/promo-codes.js): з посилання в листі (?promo=) або свій невикористаний.
+let promoCodes: any[] = [];
+let promoValue = Astro.url.searchParams.get('promo') ?? '';
+
+const PROMO_ERRORS: Record<string, string> = {
+  promo_bad_format: 'Промокод має вигляд LTP-XXXX-XXXX. Перевірте, чи правильно його введено.',
+  promo_not_found: 'Такого промокоду немає. Перевірте, чи правильно його введено.',
+  promo_other_account: 'Цей промокод належить іншому акаунту. Увійдіть з тією поштою, на яку прийшов лист.',
+  promo_already_used: 'Цей промокод уже активовано.',
+  promo_expired: 'Термін активації цього промокоду минув.',
+  promo_already_licensed: 'У вас уже є чинна повна ліцензія — промокод не знадобиться. Він залишиться невикористаним.',
+};
 
 const moduleLabels: Record<string, string> = { jbd: 'ЖБД', br: 'ЖОВтР' };
 const licenseTypeLabels: Record<string, string> = { full: 'Повна', jbd: 'ЖБД', br: 'ЖОВтР', trial: 'Пробна' };
@@ -22,6 +34,28 @@ if (Astro.request.method === 'POST') {
   const form = await Astro.request.formData();
   const sessionId = form.get('sessionId')?.toString();
   const action = form.get('action')?.toString();
+
+  if (action === 'promo') {
+    promoValue = form.get('code')?.toString() ?? '';
+    try {
+      const res = await fetch('https://api.litopys.win/promo/redeem', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code: promoValue }),
+      });
+      const data = await res.json();
+      if (data.ok) {
+        const until = new Date(new Date(data.expiresAt).getTime() - 86400000)
+          .toLocaleDateString('uk-UA', { day: 'numeric', month: 'long' });
+        actionSuccess = `Промокод активовано: повний Літопис діє до ${until} включно. Перезапустіть Літопис на ПК, щоб зняти обмеження демо.`;
+        promoValue = '';
+      } else {
+        actionError = PROMO_ERRORS[data.error] ?? 'Не вдалося активувати промокод. Спробуйте ще раз.';
+      }
+    } catch {
+      actionError = 'Помилка зʼєднання';
+    }
+  }
 
   if (sessionId && action === 'revoke') {
     try {
@@ -58,6 +92,16 @@ try {
   const data = await res.json();
   if (data.ok) seats = data.seats ?? [];
 } catch {}
+
+try {
+  const res = await fetch('https://api.litopys.win/promo/mine', {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  const data = await res.json();
+  if (data.ok) promoCodes = data.codes ?? [];
+} catch {}
+if (!promoValue && promoCodes.length) promoValue = promoCodes[0].code;
+const isPromoLicense = Boolean(license?.limits?.promo);
 
 const expiresDate = license?.expiresAt ? new Date(license.expiresAt) : null;
 const createdDate = license?.createdAt ? new Date(license.createdAt) : null;
@@ -120,6 +164,22 @@ function fmtDate(d: string | null | undefined) {
       {actionSuccess && <div class="alert-success">{actionSuccess}</div>}
       {actionError && <div class="alert-error">{actionError}</div>}
 
+      {(promoCodes.length > 0 || promoValue) && (
+        <section class="card promo-card">
+          <div class="card-header">
+            <h2>{promoCodes.length ? `🎁 ${promoCodes[0].days === 7 ? 'Тиждень' : `${promoCodes[0].days} дн.`} повного Літопису безкоштовно` : 'Промокод'}</h2>
+          </div>
+          {promoCodes.length > 0 && (
+            <p class="promo-text">Ваш промокод діє до {new Date(promoCodes[0].validUntil).toLocaleDateString('uk-UA', { day: 'numeric', month: 'long' })}. Дні рахуються від активації.</p>
+          )}
+          <form method="POST" class="promo-form">
+            <input type="hidden" name="action" value="promo" />
+            <input type="text" name="code" value={promoValue} placeholder="LTP-XXXX-XXXX" class="promo-input" autocomplete="off" required />
+            <button type="submit" class="btn-primary">Активувати</button>
+          </form>
+        </section>
+      )}
+
       <!-- Ліцензія -->
       <section class="card">
         <div class="card-header">
@@ -136,7 +196,7 @@ function fmtDate(d: string | null | undefined) {
             <div class="info-grid">
               <div class="info-item">
                 <p class="info-label">Тип</p>
-                <p class="info-value">{licenseTypeLabels[license.type] ?? license.type}</p>
+                <p class="info-value">{licenseTypeLabels[license.type] ?? license.type}{isPromoLicense && ' (промокод)'}</p>
               </div>
               <div class="info-item">
                 <p class="info-label">Модулі</p>
@@ -309,6 +369,8 @@ function fmtDate(d: string | null | undefined) {
         return 'Ця ліцензія вже офлайн.';
       case 'no_full_license':
         return 'Перетворити в офлайн можна лише повну ліцензію.';
+      case 'promo_no_offline':
+        return 'Безкоштовний тиждень з промокоду працює лише онлайн. Офлайн-ліцензія — з повною ліцензією.';
       case 'offline_signing_unavailable':
         return 'Офлайн-ліцензії тимчасово недоступні. Спробуйте пізніше.';
       case 'network':
@@ -475,6 +537,10 @@ function fmtDate(d: string | null | undefined) {
   .text-warning { color: #d97706; }
   .text-danger { color: #dc2626; }
 
+  .promo-card { border-color: #fde68a; background: #fffbeb; }
+  .promo-text { font-size: .875rem; color: #92400e; margin: -.5rem 0 1rem; }
+  .promo-form { display: flex; gap: .5rem; flex-wrap: wrap; }
+  .promo-input { flex: 1 1 200px; max-width: 280px; padding: .6rem .8rem; border: 1px solid #e5e7eb; border-radius: 10px; font: inherit; font-family: ui-monospace, monospace; letter-spacing: .05em; text-transform: uppercase; }
   .alert-success { background: #f0fdf4; border: 1px solid #bbf7d0; color: #15803d; border-radius: 10px; padding: .65rem 1rem; font-size: .875rem; margin-bottom: 1rem; }
   .alert-error { background: #fef2f2; border: 1px solid #fecaca; color: #dc2626; border-radius: 10px; padding: .65rem 1rem; font-size: .875rem; margin-bottom: 1rem; }
   .alert-warning { margin-top: 1rem; background: #fffbeb; border: 1px solid #fde68a; color: #92400e; border-radius: 10px; padding: .75rem 1rem; font-size: .8125rem; }

@@ -15,11 +15,11 @@
     'litopys-license': { name: 'Літопис — ліцензія', price: 9999 },
     'litopys-license-font': { name: 'Літопис — ліцензія + шрифт з твого почерку під ключ', price: 11999, retired: true },
     'litopys-extra-user': { name: 'Додатковий користувач', price: 4998 },
-    'font-individual': { name: 'Індивідуальний шрифт', price: 1999 },
-    'font-litopys-1': { name: 'Шрифт Litopys-1', price: 1999 },
-    'font-litopys-2': { name: 'Шрифт Litopys-2', price: 1999 },
-    'font-litopys-3': { name: 'Шрифт Litopys-3', price: 1999 },
-    'font-litopys-4': { name: 'Шрифт Litopys-4', price: 1999 },
+    'font-individual': { name: 'Індивідуальний шрифт', price: 2499 },
+    'font-litopys-1': { name: 'Шрифт Litopys-1', price: 2499 },
+    'font-litopys-2': { name: 'Шрифт Litopys-2', price: 2499 },
+    'font-litopys-3': { name: 'Шрифт Litopys-3', price: 2499 },
+    'font-litopys-4': { name: 'Шрифт Litopys-4', price: 2499 },
     'litograph-monthly': { name: 'LitoGraph — ліцензія', price: 1499 },
   };
 
@@ -135,7 +135,7 @@
   }
 
   // Ціни позицій для кошика й оформлення. Знижки −50% на шрифт до ліцензії
-  // більше немає (шрифти подешевшали до 1 999) — discount лишився 0 для сумісності
+  // більше немає (шрифти подешевшали) — discount лишився 0 для сумісності
   // з koshyk/oformlennia. regularPrice — звичайна ціна, якщо товар зараз акційний.
   function pricedItemsWithDiscount() {
     const items = readCart();
