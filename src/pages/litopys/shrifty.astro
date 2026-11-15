@@ -44,7 +44,7 @@ const fonts = [
               <img src={f.preview} alt={`Зразок почерку: ${f.name}`} class="font-preview-img" draggable="false" />
             </div>
             <div class="font-footer">
-              <p class="font-name">{f.name}</p>
+              <p class="font-name"><a href={`https://litograph.pro/shryfty/${f.name.toLowerCase()}/`} title={`Рукописний шрифт ${f.name} — детальніше`}>{f.name}</a></p>
               <p class="font-price">1 999 <span class="plan-currency">грн</span></p>
               <button class="btn-primary" data-add-to-cart data-id={`font-${f.name.toLowerCase()}`} data-name={`Шрифт ${f.name}`} data-price="1999">Купити →</button>
             </div>
@@ -52,7 +52,7 @@ const fonts = [
         ))}
       </div>
 
-      <p class="catalog-note fade-up">Не знайшли підходящий почерк? <a href="/tsiny">Замовте індивідуальний шрифт</a> зі свого власного.</p>
+      <p class="catalog-note fade-up">Не знайшли підходящий почерк? <a href="/tsiny">Замовте індивідуальний шрифт</a> зі свого власного або <a href="https://litograph.pro/stvoryty-shryft/">створіть шрифт сам у LitoGraph</a>.<br/>Опис кожного почерку, зразки й поради — на <a href="https://litograph.pro/shryfty/">litograph.pro</a>.</p>
     </div>
   </section>
 

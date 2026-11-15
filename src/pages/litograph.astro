@@ -86,13 +86,26 @@ const groups = [
     </div>
   </section>
 
+  <!-- ══ САЙТ LITOGRAPH ══ -->
+  <section class="section-site">
+    <div class="container">
+      <p class="eyebrow fade-up">litograph.pro</p>
+      <h2 class="fade-up">Усе про шрифти — на сайті LitoGraph</h2>
+      <ul class="site-links fade-up">
+        <li><a href="https://litograph.pro/stvoryty-shryft/">Як створити шрифт зі свого почерку</a> — покрокова інструкція</li>
+        <li><a href="https://litograph.pro/shryfty/">Готові українські рукописні шрифти</a> — зразки кожного почерку</li>
+        <li><a href="https://litograph.pro/indyvidualnyi-shryft/">Індивідуальний шрифт</a> — оцифруємо твій почерк за тебе</li>
+      </ul>
+    </div>
+  </section>
+
   <!-- ══ CTA ══ -->
   <section class="section-cta">
     <div class="container">
       <div class="cta-card fade-up">
         <p class="eyebrow cta-eyebrow">Готові спробувати?</p>
         <h2>Оцифруй свій почерк<br/>уже сьогодні</h2>
-        <p class="cta-sub">Заповни шаблон або малюй символи від руки — готовий шрифт запрацює одразу в Litopys.</p>
+        <p class="cta-sub">Заповни шаблон або малюй символи від руки — готовий шрифт запрацює одразу в Litopys. Покрокова інструкція — на <a href="https://litograph.pro/stvoryty-shryft/" style="color:inherit; text-decoration:underline;">litograph.pro</a>.</p>
         <a href="https://api.litopys.win/download/litograph" id="dl-litograph-cta" class="btn-white">Завантажити →</a>
       </div>
     </div>
@@ -157,6 +170,10 @@ const groups = [
     box-shadow: 0 4px 16px rgba(124,58,138,.25);
   }
   .btn-primary:hover { opacity: .85; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(124,58,138,.3); }
+  .section-site { padding: 1rem 0 3rem; }
+  .section-site h2 { font-size: clamp(1.5rem, 3vw, 2rem); margin: .5rem 0 1.25rem; }
+  .site-links { list-style: none; display: grid; gap: .75rem; color: var(--text-secondary); line-height: 1.5; }
+  .site-links a { color: #7c3a8a; font-weight: 600; text-decoration: underline; }
   /* Веб-версія LitoGraph (litograph.pro/app/) — поруч із завантаженням */
   .btn-secondary {
     display: inline-block;

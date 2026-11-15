@@ -32,6 +32,24 @@ const noindex = NOINDEX.some((p) => pathname === p || pathname.startsWith(p + '/
     <link rel="icon" href="/favicon.png" type="image/png">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "@id": "https://litopys.pro/#org",
+      name: "Літопис",
+      alternateName: ["Litopys", "LitoGraph"],
+      url: "https://litopys.pro",
+      logo: "https://litopys.pro/apple-touch-icon.png",
+      email: "info@litopys.pro",
+      telephone: "+380930582908",
+      sameAs: [
+        "https://litograph.pro",
+        "https://www.instagram.com/litopys.pro/",
+        "https://www.facebook.com/share/1MerdzfiWL/?mibextid=wwXIfr",
+        "https://www.threads.com/@litopyspro",
+        "https://www.tiktok.com/@litopyspro"
+      ]
+    })} />
     <script src="/cart.js" is:inline></script>
     <style is:global>
       @font-face {
@@ -145,6 +163,8 @@ const noindex = NOINDEX.some((p) => pathname === p || pathname.startsWith(p + '/
             <span>© {new Date().getFullYear()} Літопис. Усі права захищені.</span>
             <span style="display:flex; gap:1rem; flex-wrap:wrap;">
               <a href="/rukopysnyi-tekst-onlain" style="color:inherit; text-decoration:underline;">Рукописний текст онлайн</a>
+              <a href="https://litograph.pro/shryfty/" style="color:inherit; text-decoration:underline;">Українські рукописні шрифти</a>
+              <a href="https://litograph.pro/stvoryty-shryft/" style="color:inherit; text-decoration:underline;">Створити шрифт зі свого почерку</a>
               <a href="/statti" style="color:inherit; text-decoration:underline;">Статті</a>
               <a href="/umovy-vykorystannia" style="color:inherit; text-decoration:underline;">Умови використання</a>
               <a href="/pravyla-oflain-litsenzii" style="color:inherit; text-decoration:underline;">Правила офлайн-ліцензії</a>
