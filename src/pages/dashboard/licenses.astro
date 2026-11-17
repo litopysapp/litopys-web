@@ -27,7 +27,7 @@ const PROMO_ERRORS: Record<string, string> = {
 };
 
 const moduleLabels: Record<string, string> = { jbd: 'ЖБД', br: 'ЖОВтР' };
-const licenseTypeLabels: Record<string, string> = { full: 'Повна', jbd: 'ЖБД', br: 'ЖОВтР', trial: 'Пробна' };
+const licenseTypeLabels: Record<string, string> = { full: 'Повна', jbd: 'ЖБД', br: 'ЖОВтР', trial: 'Демо' };
 
 // Дія: завершити сеанс
 if (Astro.request.method === 'POST') {
@@ -102,6 +102,7 @@ try {
 } catch {}
 if (!promoValue && promoCodes.length) promoValue = promoCodes[0].code;
 const isPromoLicense = Boolean(license?.limits?.promo);
+const isTestMonthLicense = Boolean(license?.limits?.testMonth) || (license?.type === 'trial' && Boolean(license?.expiresAt));
 
 const expiresDate = license?.expiresAt ? new Date(license.expiresAt) : null;
 const createdDate = license?.createdAt ? new Date(license.createdAt) : null;
@@ -196,7 +197,7 @@ function fmtDate(d: string | null | undefined) {
             <div class="info-grid">
               <div class="info-item">
                 <p class="info-label">Тип</p>
-                <p class="info-value">{licenseTypeLabels[license.type] ?? license.type}{isPromoLicense && ' (промокод)'}</p>
+                <p class="info-value">{isTestMonthLicense ? 'Тестовий місяць (повна)' : (licenseTypeLabels[license.type] ?? license.type)}{isPromoLicense && ' (промокод)'}</p>
               </div>
               <div class="info-item">
                 <p class="info-label">Модулі</p>
