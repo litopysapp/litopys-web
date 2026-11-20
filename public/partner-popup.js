@@ -16,7 +16,9 @@
  * Поведінка:
  *   - з'являється через 12 с або після прокрутки половини сторінки (що раніше);
  *     на наступних сторінках тієї ж сесії — через 1,5 с;
- *   - хрестик або перехід — не показувати цього партнера 30 днів;
+ *   - хрестик — не показувати цього партнера 30 днів;
+ *   - перехід (клік по плашці) — не показувати до кінця відвідування (сесії вкладки),
+ *     наступного разу плашка з'явиться знову;
  *   - кілька партнерів — показується перший, якого ще не закривали;
  *   - на телефоні — на всю ширину внизу;
  *   - події GTM: partner_popup_show / partner_popup_click / partner_popup_close.
@@ -26,7 +28,7 @@
   if (!cfg || !cfg.partners || !cfg.partners.length) return;
 
   var DAY = 864e5, HIDE_DAYS = 30, FIRST_DELAY = 12000, NEXT_DELAY = 1500;
-  var KEY = "partner-popup:", SEEN = "partner-popup-seen";
+  var KEY = "partner-popup:", SEEN = "partner-popup-seen", CLICKED = "partner-popup-clicked:";
 
   function get(store, k) { try { return window[store].getItem(k); } catch (e) { return null; } }
   function set(store, k, v) { try { window[store].setItem(k, v); } catch (e) {} }
@@ -44,8 +46,9 @@
 
   var partner = null;
   for (var i = 0; i < cfg.partners.length; i++) {
-    var until = Number(get("localStorage", KEY + cfg.partners[i].id) || 0);
-    if (until < Date.now()) { partner = cfg.partners[i]; break; }
+    var id = cfg.partners[i].id;
+    var until = Number(get("localStorage", KEY + id) || 0);
+    if (until < Date.now() && !get("sessionStorage", CLICKED + id)) { partner = cfg.partners[i]; break; }
   }
   if (!partner) return;
 
@@ -94,7 +97,7 @@
     document.body.appendChild(el);
 
     el.querySelector(".pp-link").addEventListener("click", function () {
-      hideFor(HIDE_DAYS);
+      set("sessionStorage", CLICKED + partner.id, "1");
       track("partner_popup_click", partner.id);
       el.remove();
     });
