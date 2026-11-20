@@ -2,262 +2,332 @@
 import Layout from '../layouts/Layout.astro';
 import PartnersCarousel from '../components/PartnersCarousel.astro';
 
-const products = [
-  {
-    slug: 'litopys',
-    name: 'Litopys',
-    tagline: 'Ручка — зброя писаря',
-    desc: 'Офлайн-редактор документів: готові журнали ЖБД і ЖОВтР або власний шаблон, з друком ручкою через плотер.',
-    logo: '/logo-litopys.png',
-    cta: 'Перейти до Litopys',
-    accent: '#2b4a8b',
-  },
-  {
-    slug: 'litoscan',
-    name: 'LitoScan',
-    tagline: 'Сканування без клопоту',
-    desc: 'Сканування, об’єднання та редагування PDF: дуплекс, обертання і видалення сторінок, пошук у тексті, друк.',
-    logo: '/logo-litoscan.png',
-    cta: 'Перейти до LitoScan',
-    accent: '#0f6b52',
-  },
-  {
-    slug: 'litograph',
-    name: 'LitoGraph',
-    tagline: 'Твій почерк — шрифтом',
-    desc: 'Створення рукописного шрифту зі сканів символів або малювання від руки — з редактором гліфів і збіркою шрифту.',
-    logo: '/logo-litograph.png',
-    cta: 'Перейти до LitoGraph',
-    accent: '#7c3a8a',
-  },
-];
+// Слова для бігучого рядка: рукописом і контуром, по черзі.
+const WORDS = ['заява', 'рапорт', 'акт', 'журнал обліку', 'довідка', 'протокол', 'розписка', 'опис', 'лист'];
+const row = (shift: number) => [...WORDS, ...WORDS].map((w, i) => ({ w, outline: (i + shift) % 3 === 1 }));
 ---
-<Layout title="Літопис — ЖБД і документи ручкою через плотер | Litopys Suite" description="Літопис пише журнал бойових дій, ЖОВтР і власні документи справжньою ручкою через плотер. LitoScan — сканування PDF, LitoGraph — шрифт з вашого почерку.">
+<Layout title="Літопис — будь-які документи ручкою через плотер | Litopys Suite" description="Літопис пише будь-які документи справжньою ручкою через плотер, вашим почерком. Повністю офлайн. LitoScan — сканування PDF, LitoGraph — шрифт з вашого почерку.">
 
   <!-- ══ HERO ══ -->
-  <section class="hero-page">
-    <div class="hero-bg"></div>
-    <div class="container">
-      <p class="eyebrow fade-up">Litopys Suite</p>
-      <h1 class="fade-up" style="--d:.05s">Три застосунки.<br/>Один почерк.</h1>
-      <p class="hero-sub fade-up" style="--d:.1s">Litopys, LitoScan і LitoGraph — офлайн-програми для Windows, які пишуть, сканують і копіюють твій почерк, поки ти цього не робиш.</p>
-    </div>
-  </section>
-
-  <!-- ══ PRODUCTS ══ -->
-  <section class="section-products">
-    <div class="container">
-      <div class="products-grid">
-        {products.map((p, i) => (
-          <a href={`/${p.slug}`} class="product-card fade-up" style={`--d:${i * 0.08}s; --accent:${p.accent}`}>
-            <img src={p.logo} alt="" width="48" height="48" class="product-logo" />
-            <p class="product-tagline">{p.tagline}</p>
-            <h2>{p.name}</h2>
-            <p class="product-desc">{p.desc}</p>
-            <span class="product-cta">{p.cta} →</span>
-          </a>
-        ))}
+  <section class="hero">
+    <div class="wrap">
+      <div class="hero-top">
+        <span class="eyebrow">Litopys Suite · для Windows</span>
+        <h1 class="h1"><span class="big">Ручка — зброя писаря.</span><span class="script">Дай пальцям вижити.<svg viewBox="0 0 600 40" preserveAspectRatio="none" aria-hidden="true"><path d="M6 28 C120 8, 260 6, 380 18 S 540 30, 594 12"/></svg></span></h1>
+        <p class="sub">Вводиш текст — плотер пише будь-які документи справжньою ручкою, твоїм почерком. Повністю офлайн.</p>
+        <div class="cta">
+          <a class="btn btn-y" href="/zavantazhennia">Завантажити <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg></a>
+          <a class="btn btn-g" href="/litopys/demo">Спробувати демо</a>
+        </div>
+        <div class="chips"><span><b>Офлайн</b> — без хмар</span><span><b>Будь-які документи</b> · свої шаблони</span><span><b>Ручкою</b> через плотер</span></div>
       </div>
-    </div>
-  </section>
 
-  <!-- ══ WHY ══ -->
-  <section class="section-why">
-    <div class="container">
-      <div class="why-grid">
-        <div class="why-card fade-up">
-          <div class="why-icon-wrap"><img src="/icon-globe-off.svg" alt="" class="why-svg" /></div>
-          <p class="why-title">Повністю офлайн</p>
-          <p class="why-desc">Жодних хмар. Усі файли — на вашому диску, під вашим контролем.</p>
+      <div class="demo" aria-label="Як працює Літопис: запис набирається в програмі й з'являється від руки в журналі">
+        <div class="app rise">
+          <div class="app-bar"><i></i><i></i><i></i><span>Літопис · Журнал обліку</span></div>
+          <div class="app-body">
+            <div class="fld"><label>Дата, час</label><div id="f1"></div></div>
+            <div class="fld big"><label>Зміст запису</label><div id="f2"></div></div>
+            <div class="fld"><label>Підпис</label><div id="f3"></div></div>
+            <div class="app-go"><span id="st">Набираємо запис…</span><b id="go">Друк ручкою ▸</b></div>
+          </div>
         </div>
-        <div class="why-card fade-up" style="--d:.08s">
-          <div class="why-icon-wrap"><img src="/icon-sparkles.svg" alt="" class="why-svg" /></div>
-          <p class="why-title">Один акаунт</p>
-          <p class="why-desc">Один вхід Litopys для всіх трьох застосунків — без повторної реєстрації.</p>
-        </div>
-        <div class="why-card fade-up" style="--d:.16s">
-          <div class="why-icon-wrap"><img src="/icon-pencil-sparkles.svg" alt="" class="why-svg" /></div>
-          <p class="why-title">Зроблено в Україні</p>
-          <p class="why-desc">Розробляється й підтримується українською командою.</p>
+        <div class="arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"/></svg></div>
+        <div class="paper rise" id="paper">
+          <h4>Журнал обліку документів</h4>
+          <table class="jbd">
+            <colgroup><col class="c1"><col><col class="c3"></colgroup>
+            <thead><tr><th>Дата, час</th><th>Зміст запису</th><th>Підпис</th></tr></thead>
+            <tbody id="rows"></tbody>
+          </table>
+          <span class="nib" id="nib"></span>
+          <span class="stamp">аркуш 14</span>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ══ ПАРТНЕРИ ══ -->
+  <div class="marquee" aria-hidden="true">
+    <div class="mq-row">{row(0).map((x) => (<><span class={x.outline ? 'o' : 'w'}>{x.outline ? x.w.toUpperCase() : x.w}</span><span class="s">✦</span></>))}</div>
+    <div class="mq-row rev">{row(2).map((x) => (<><span class={x.outline ? 'o' : 'w'}>{x.outline ? x.w.toUpperCase() : x.w}</span><span class="s">✦</span></>))}</div>
+  </div>
+
+  <!-- ══ ПРОДУКТИ ══ -->
+  <section class="block wrap" id="products">
+    <div class="block-head rise"><span class="eyebrow">Litopys Suite</span><h2 class="h2">Три застосунки. <span class="hw">Один почерк.</span></h2></div>
+    <div class="prod">
+      <a class="p p-main rise" href="/litopys">
+        <div class="p-logo"><img src="/logo-litopys.png" alt="" width="44" height="44" /><span class="p-tag">Ручка — зброя писаря</span></div>
+        <h3>Літопис</h3>
+        <p>Офлайн-редактор документів: готові шаблони журналів і бланків або власний шаблон, з друком ручкою через плотер.</p>
+        <div class="note" aria-hidden="true"><span>20.11 — прийнято 12 вхідних листів,</span><span>усі зареєстровано в журналі.</span><span class="sig">Секретар ✓</span></div>
+        <div class="feats"><span><b>Готові шаблони</b>журнали й бланки</span><span><b>Свої документи</b>будь-який бланк</span><span><b>Ваш почерк</b>з 3 варіантами літер</span><span><b>Без інтернету</b>усе на вашому диску</span></div>
+        <span class="p-go">Перейти до Літопису</span>
+      </a>
+      <a class="p rise" href="/litoscan">
+        <div class="p-logo"><img src="/logo-litoscan.png" alt="" width="44" height="44" /><span class="p-tag">Сканування без клопоту</span></div>
+        <h3>LitoScan</h3>
+        <p>Сканування, об’єднання й редагування PDF: дуплекс, обертання, видалення сторінок, пошук у тексті.</p>
+        <div class="mini mini-scan" aria-hidden="true"><div></div><div></div><div></div></div>
+        <span class="p-go">Перейти до LitoScan</span>
+      </a>
+      <a class="p rise" href="/litograph">
+        <div class="p-logo"><img src="/logo-litograph.png" alt="" width="44" height="44" /><span class="p-tag">Твій почерк — шрифтом</span></div>
+        <h3>LitoGraph</h3>
+        <p>Рукописний шрифт зі сканів або малювання від руки — одразу готовий для Літопису.</p>
+        <div class="mini mini-font" aria-hidden="true">{[...'АБВГҐДЕЄЖЗИІ'].map((c, i) => (<span style={`animation-delay:${(i * 0.2).toFixed(1)}s`}>{c}</span>))}</div>
+        <span class="p-go">Перейти до LitoGraph</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- ══ ЯК ПРАЦЮЄ ══ -->
+  <section class="block wrap" id="how">
+    <div class="block-head rise"><span class="eyebrow">Як це працює</span><h2 class="h2">Пишеш один раз — <span class="hw">далі плотер</span></h2></div>
+    <div class="how">
+      <div class="step rise"><h3>Вводиш текст</h3><p>Заповнюєш журнал чи бланк у Літописі — як звичайний документ на комп’ютері.</p></div>
+      <div class="step rise"><h3>Обираєш почерк</h3><p>Готовий рукописний шрифт або твій власний з LitoGraph — по 3 варіанти кожної літери.</p></div>
+      <div class="step rise"><h3>Плотер пише ручкою</h3><p>Справжня ручка, справжній аркуш. Документ виглядає заповненим від руки.</p></div>
+    </div>
+  </section>
+
+  <section class="block wrap">
+    <div class="why">
+      <div class="rise"><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19H8a5 5 0 0 1-1.6-9.74"/><path d="M9.3 5.6A6 6 0 0 1 17 9.5h.5a4 4 0 0 1 2.9 6.75"/><path d="M3 3l18 18"/></svg></span><b>Повністю офлайн</b><p>Жодних хмар. Усі файли — на вашому диску, під вашим контролем.</p></div>
+      <div class="rise"><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="15" r="4"/><path d="M10.8 12.2 20 3"/><path d="M17 6l3 3"/><path d="M15 8l2 2"/></svg></span><b>Один акаунт</b><p>Один вхід для Літопису, LitoScan і LitoGraph — без повторної реєстрації.</p></div>
+      <div class="rise"><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg></span><b>Зроблено в Україні</b><p>Розробляється й підтримується українською командою.</p></div>
+    </div>
+  </section>
+
+  <!-- ══ ЦІНИ ══ -->
+  <section class="block wrap" id="prices">
+    <div class="block-head rise"><span class="eyebrow">Ціни</span><h2 class="h2">Купуєш раз. <span class="hw">Пише завжди.</span></h2></div>
+    <div class="prices">
+      <div class="price rise"><h3>Тестовий місяць</h3><p class="amt">1 999 <small>грн</small></p><ul><li>Ліцензія на 1 місяць</li><li>Усі оновлення програми включені</li><li>Повний доступ до всіх модулів</li></ul><a class="btn btn-g" href="/tsiny">Придбати</a></div>
+      <div class="price hot rise"><span class="badge">Найкращий вибір</span><h3>Повна ліцензія</h3><p class="old">15 000 грн</p><p class="amt">9 999 <small>грн · назавжди</small></p><ul><li>Ліцензія назавжди на 1 ПК</li><li>Можливість розширити кількість користувачів</li><li>Усі оновлення й усі модулі</li></ul><a class="btn btn-y" href="/tsiny">Придбати</a></div>
+      <div class="price rise"><h3>Додатковий користувач</h3><p class="amt">4 998 <small>грн</small></p><ul><li>Розширення основної ліцензії</li><li>Ще один ПК з єдиним акаунтом</li><li>Усі оновлення й усі модулі</li></ul><a class="btn btn-g" href="/tsiny">Придбати</a></div>
+    </div>
+    <p class="note-small">Рукописні шрифти, LitoGraph і LitoScan — на сторінці <a href="/tsiny">«Ціни»</a>.</p>
+  </section>
+
   <PartnersCarousel />
 
-  <!-- ══ CTA ══ -->
-  <section class="section-cta">
-    <div class="container">
-      <div class="cta-card fade-up">
-        <p class="eyebrow cta-eyebrow">Готові спробувати?</p>
-        <h2>Обери застосунок<br/>і почни зараз</h2>
-        <p class="cta-sub">Litopys можна протестувати прямо в браузері — без реєстрації та завантажень.</p>
-        <a href="/litopys/demo" class="btn-white">Відкрити демо Litopys →</a>
-      </div>
-    </div>
+  <section class="final wrap">
+    <span class="eyebrow">Спробуй без встановлення</span>
+    <p class="big">Дозволь пальцям вижити.</p>
+    <p class="sub">Демо Літопису працює прямо в браузері — без реєстрації й завантажень.</p>
+    <div class="cta"><a class="btn btn-y" href="/litopys/demo">Відкрити демо</a><a class="btn btn-g" href="/zavantazhennia">Завантажити</a></div>
   </section>
-
 </Layout>
 
-<style is:global>
-  .fade-up {
-    opacity: 0;
-    transform: translateY(32px);
-    transition: opacity .65s ease, transform .65s ease;
-    transition-delay: var(--d, 0s);
-  }
-  .fade-up.visible { opacity: 1; transform: translateY(0); }
-</style>
-
 <style>
-  .container { max-width: 1060px; margin: 0 auto; padding: 0 1.5rem; }
-  .eyebrow {
-    font-size: .75rem;
-    font-weight: 700;
-    letter-spacing: .1em;
-    text-transform: uppercase;
-    color: #4f7cac;
-    margin-bottom: 1rem;
-  }
+  .wrap { max-width: 1240px; margin: 0 auto; padding-left: max(20px, env(safe-area-inset-left, 0px)); padding-right: max(20px, env(safe-area-inset-right, 0px)); }
+  .eyebrow { display: inline-flex; align-items: center; gap: 10px; font: 500 .74rem/1 var(--f-disp); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+  .eyebrow::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--yellow); box-shadow: 0 0 14px var(--yellow); }
+  .h2 { font: 700 clamp(2rem, 5.4vw, 4.4rem)/1.02 var(--f-disp); letter-spacing: -.035em; }
+  .hw { font: 700 1.15em/1 var(--f-hand); color: var(--yellow); letter-spacing: 0; }
+  .sub { color: var(--muted); font-size: 1.08rem; max-width: 56ch; line-height: 1.6; }
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; height: 52px; padding: 0 26px; border-radius: 999px; font: 600 .98rem var(--f-body); border: 1px solid transparent; cursor: pointer; transition: transform .2s, box-shadow .2s, background .2s; white-space: nowrap; }
+  .btn svg { width: 18px; height: 18px; }
+  .btn-y { background: var(--yellow); color: #0b0c1d; box-shadow: 0 10px 40px -8px rgba(244,199,22,.55); }
+  .btn-y:hover { transform: translateY(-2px); box-shadow: 0 16px 50px -8px rgba(244,199,22,.7); }
+  .btn-g { background: var(--glass); border-color: var(--line2); color: var(--text); }
+  .btn-g:hover { background: var(--glass2); }
 
-  /* ── Hero ── */
-  .hero-page { position: relative; padding: 5rem 0 3.5rem; }
-  .hero-bg {
-    position: fixed;
-    inset: 0;
-    z-index: -1;
-    background: radial-gradient(ellipse at 20% 40%, #dce8f5 0%, transparent 55%),
-                radial-gradient(ellipse at 80% 60%, #f5ead8 0%, transparent 50%),
-                #f8f9fb;
-    pointer-events: none;
-  }
-  .hero-page h1 {
-    font-size: clamp(2rem, 4.5vw, 3.25rem);
-    font-weight: 800;
-    letter-spacing: -.04em;
-    line-height: 1.08;
-    margin-bottom: 1.25rem;
-    color: #111827;
-  }
-  .hero-sub { font-size: 1.0625rem; color: #6b7280; line-height: 1.75; max-width: 620px; }
+  .hero { position: relative; padding-top: clamp(56px, 8vw, 96px); }
+  .hero::before { content: ""; position: absolute; inset: -260px -20% auto; height: 1000px; pointer-events: none; z-index: -1;
+    background: radial-gradient(40% 40% at 50% 30%, rgba(91,120,255,.22), transparent 70%), radial-gradient(30% 30% at 75% 45%, rgba(244,199,22,.12), transparent 70%); }
+  .hero-top { text-align: center; display: flex; flex-direction: column; align-items: center; gap: 22px; }
+  .h1 { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .h1 .big { font: 800 clamp(2.4rem, 9vw, 8rem)/.92 var(--f-disp); letter-spacing: -.045em; }
+  .h1 .script { position: relative; font: 700 clamp(2.6rem, 9.6vw, 8.6rem)/1 var(--f-hand); color: var(--yellow); letter-spacing: 0; text-shadow: 0 0 60px rgba(244,199,22,.35); }
+  .h1 .script svg { position: absolute; left: 50%; bottom: -.08em; width: 70%; height: .2em; transform: translateX(-48%); overflow: visible; }
+  .h1 .script path { stroke: var(--yellow); stroke-width: 5; fill: none; stroke-linecap: round; stroke-dasharray: 900; animation: scrib 1.4s .4s cubic-bezier(.6,.1,.2,1) both; }
+  @keyframes scrib { from { stroke-dashoffset: 900; } }
+  .hero .sub { text-align: center; }
+  .cta { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+  .chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+  .chips span { font-size: .82rem; padding: 7px 13px; border-radius: 999px; border: 1px solid var(--line); background: var(--glass); color: var(--muted); }
+  .chips b { color: var(--text); font-weight: 600; }
 
-  /* ── Products ── */
-  .section-products { padding: 1.5rem 0 5rem; }
-  .products-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
-  .product-card {
-    display: flex;
-    flex-direction: column;
-    background: rgba(255,255,255,.85);
-    border: 1px solid #e5e7eb;
-    border-radius: 22px;
-    padding: 2.25rem;
-    backdrop-filter: blur(8px);
-    transition: box-shadow .2s, transform .2s, border-color .2s;
-  }
-  .product-card:hover {
-    box-shadow: 0 16px 40px rgba(0,0,0,.09);
-    transform: translateY(-4px);
-    border-color: var(--accent);
-  }
-  .product-logo {
-    width: 48px; height: 48px;
-    display: block;
-    margin-bottom: 1.25rem;
-  }
-  .product-tagline {
-    font-size: .75rem;
-    font-weight: 700;
-    letter-spacing: .04em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: .4rem;
-  }
-  .product-card h2 { font-size: 1.375rem; font-weight: 800; letter-spacing: -.02em; color: #111827; margin-bottom: .6rem; }
-  .product-desc { font-size: .9375rem; color: #6b7280; line-height: 1.65; flex: 1; margin-bottom: 1.5rem; }
-  .product-cta { font-size: .875rem; font-weight: 700; color: var(--accent); }
+  .demo { margin-top: clamp(40px, 6vw, 64px); display: grid; gap: 16px; align-items: stretch; }
+  @media (min-width: 900px) { .demo { grid-template-columns: .9fr auto 1.25fr; } }
+  .demo > * { min-width: 0; }
+  .app { border-radius: 24px; border: 1px solid var(--line); background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02)); overflow: hidden; display: flex; flex-direction: column; }
+  .app-bar { display: flex; align-items: center; gap: 8px; padding: 12px 16px; border-bottom: 1px solid var(--line); font: 500 .78rem var(--f-disp); color: var(--muted); letter-spacing: .04em; }
+  .app-bar i { width: 9px; height: 9px; border-radius: 50%; background: rgba(255,255,255,.18); }
+  .app-bar span { margin-left: 8px; }
+  .app-body { padding: 18px; display: flex; flex-direction: column; gap: 12px; flex: 1; }
+  .fld { display: grid; gap: 6px; }
+  .fld label { font: 500 .66rem/1 var(--f-disp); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+  .fld div { min-height: 44px; padding: 11px 13px; border-radius: 12px; border: 1px solid var(--line2); background: rgba(0,0,0,.28); font-size: .95rem; line-height: 1.45; }
+  .fld.big div { min-height: 96px; }
+  .caret::after { content: ""; display: inline-block; width: 2px; height: 1.05em; background: var(--yellow); margin-left: 2px; vertical-align: -2px; animation: blink 1s steps(1) infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+  .app-go { margin-top: auto; display: flex; align-items: center; justify-content: space-between; gap: 10px; padding-top: 6px; }
+  .app-go span { font-size: .8rem; color: var(--muted); }
+  .app-go b { display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 16px; border-radius: 999px; background: var(--yellow); color: #0b0c1d; font-size: .86rem; transition: transform .2s, box-shadow .3s; }
+  .app-go b.press { transform: scale(.94); box-shadow: 0 0 0 6px rgba(244,199,22,.25); }
+  .arrow { display: grid; place-items: center; }
+  .arrow svg { width: 56px; height: 56px; color: var(--yellow); filter: drop-shadow(0 0 14px rgba(244,199,22,.5)); }
+  @media (max-width: 899px) { .arrow svg { transform: rotate(90deg); width: 40px; height: 40px; } }
+  .paper { position: relative; border-radius: 18px; background: var(--paper); color: #1d1d24; padding: 22px 22px 34px; box-shadow: 0 40px 100px -30px rgba(0,0,0,.85); transform: rotate(.6deg); overflow: hidden; }
+  .paper h4 { margin: 0 0 12px; font: 700 .72rem/1.3 var(--f-disp); letter-spacing: .1em; text-transform: uppercase; color: #11142a; text-align: center; }
+  .jbd { width: 100%; border-collapse: collapse; table-layout: fixed; font-size: .66rem; color: #4a4d63; }
+  .jbd th { font: 600 .6rem/1.2 var(--f-body); text-transform: uppercase; letter-spacing: .04em; border: 1px solid #b9bccb; padding: 6px 5px; background: #efeadb; }
+  .jbd :global(td) { border: 1px solid #b9bccb; padding: 6px 7px; vertical-align: top; height: 60px; font: 600 clamp(.9rem, 1.55vw, 1.12rem)/1.2 var(--f-hand); color: var(--ink); }
+  .jbd col.c1 { width: 22%; } .jbd col.c3 { width: 22%; }
+  :global(.wr) { display: block; clip-path: inset(0 100% 100% 0); }
+  .nib { position: absolute; width: 14px; height: 14px; margin: -7px 0 0 -7px; border-radius: 50%; background: radial-gradient(circle, var(--yellow) 0 35%, rgba(244,199,22,.35) 36% 100%); box-shadow: 0 0 16px rgba(244,199,22,.8); pointer-events: none; opacity: 0; transition: opacity .3s; }
+  .stamp { position: absolute; right: 18px; bottom: 14px; font: 500 .62rem/1 var(--f-disp); letter-spacing: .1em; color: #9a9db0; text-transform: uppercase; }
 
-  /* ── Why ── */
-  .section-why { padding: 2rem 0 6rem; }
-  .why-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
-  .why-card {
-    background: rgba(255,255,255,.7);
-    border: 1px solid #e5e7eb;
-    border-radius: 18px;
-    padding: 1.75rem;
-    backdrop-filter: blur(8px);
-  }
-  .why-icon-wrap { width: 32px; height: 32px; margin-bottom: 1rem; }
-  .why-svg { width: 28px; height: 28px; display: block; }
-  .why-title { font-weight: 700; font-size: 1rem; margin-bottom: .4rem; color: #111827; }
-  .why-desc { font-size: .875rem; color: #6b7280; line-height: 1.6; }
+  .marquee { margin-top: clamp(80px, 10vw, 120px); border-block: 1px solid var(--line); overflow: hidden; padding: 22px 0; display: flex; flex-direction: column; gap: 10px; }
+  .mq-row { display: flex; width: max-content; gap: 46px; align-items: center; animation: mq 40s linear infinite; }
+  .mq-row.rev { animation-direction: reverse; animation-duration: 48s; }
+  .mq-row span { white-space: nowrap; line-height: 1.1; }
+  .mq-row .w { font: 700 clamp(2.1rem, 4.6vw, 3.8rem)/1.1 var(--f-hand); }
+  .mq-row .s { color: var(--yellow); font-size: 1.5rem; }
+  .mq-row .o { font: 800 clamp(1.5rem, 3.4vw, 2.8rem)/1 var(--f-disp); color: transparent; -webkit-text-stroke: 1.2px rgba(244,242,234,.38); letter-spacing: -.03em; }
+  @keyframes mq { to { transform: translateX(-50%); } }
 
-  /* ── Buttons ── */
-  .btn-white {
-    display: inline-block;
-    background: #fff;
-    color: #1a1a2e;
-    padding: .85rem 2.2rem;
-    border-radius: 50px;
-    font-size: 1rem;
-    font-weight: 700;
-    transition: transform .2s, box-shadow .2s;
-    box-shadow: 0 4px 20px rgba(0,0,0,.18);
-  }
-  .btn-white:hover { transform: translateY(-2px); box-shadow: 0 10px 32px rgba(0,0,0,.25); }
+  .block { padding-top: clamp(90px, 12vw, 160px); }
+  .block-head { display: flex; flex-direction: column; gap: 16px; margin-bottom: clamp(32px, 5vw, 56px); }
+  .prod { display: grid; gap: 14px; }
+  @media (min-width: 900px) { .prod { grid-template-columns: 1.35fr 1fr; } .prod .p-main { grid-row: span 2; } }
+  .p { position: relative; overflow: hidden; border-radius: 22px; border: 1px solid var(--line); background: linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.015)); padding: 26px; display: flex; flex-direction: column; gap: 10px; transition: border-color .2s, transform .2s; }
+  .p:hover { border-color: var(--line2); transform: translateY(-3px); }
+  .p-logo { display: flex; align-items: center; gap: 12px; }
+  .p-logo img { width: 44px; height: 44px; border-radius: 12px; }
+  .p-tag { font: 500 .72rem/1 var(--f-disp); letter-spacing: .12em; text-transform: uppercase; color: var(--yellow); }
+  .p h3 { font: 700 1.6rem/1.1 var(--f-disp); letter-spacing: -.03em; }
+  .p p { color: var(--muted); max-width: 46ch; line-height: 1.6; }
+  .p-go { margin-top: auto; padding-top: 10px; font-weight: 600; }
+  .p-go::after { content: " →"; color: var(--yellow); }
+  .feats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin: 8px 0 6px; }
+  .feats span { padding: 12px 14px; border-radius: 14px; border: 1px solid var(--line); background: rgba(0,0,0,.2); font-size: .88rem; color: var(--muted); }
+  .feats b { display: block; font: 700 .95rem var(--f-disp); color: var(--text); letter-spacing: -.01em; margin-bottom: 2px; }
+  .note { margin: 6px 0 4px; padding: 16px 20px; border-radius: 14px; background: var(--paper); color: var(--ink); transform: rotate(-.8deg); box-shadow: 0 20px 50px -20px rgba(0,0,0,.7);
+    background-image: repeating-linear-gradient(transparent 0 33px, #c9daf0 33px 34px); display: flex; flex-direction: column; font: 600 clamp(1.3rem, 2.2vw, 1.6rem)/34px var(--f-hand); }
+  .note .sig { align-self: flex-end; }
+  .mini { height: 120px; position: relative; margin-top: 6px; }
+  .mini-scan { display: flex; gap: 10px; justify-content: center; align-items: center; }
+  .mini-scan div { width: 74px; height: 100px; border-radius: 6px; background: var(--paper); position: relative; overflow: hidden; box-shadow: 0 12px 30px -8px rgba(0,0,0,.6); }
+  .mini-scan div::before { content: ""; position: absolute; inset: 14px 10px; background: repeating-linear-gradient(#c9cede 0 2px, transparent 2px 9px); }
+  .mini-scan div::after { content: ""; position: absolute; left: 0; right: 0; height: 18px; top: -18px; background: linear-gradient(transparent, rgba(91,120,255,.7)); border-bottom: 2px solid #5b78ff; animation: sc 2.6s infinite ease-in-out; }
+  .mini-scan div:nth-child(2)::after { animation-delay: .5s; } .mini-scan div:nth-child(3)::after { animation-delay: 1s; }
+  @keyframes sc { to { top: 100%; } }
+  .mini-font { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; height: auto; }
+  .mini-font span { aspect-ratio: 1; border-radius: 8px; border: 1px dashed rgba(255,255,255,.2); display: grid; place-items: center; font: 700 1.5rem/1 var(--f-hand); color: transparent; animation: fill 5s infinite; }
+  @keyframes fill { 0%, 8% { color: transparent; } 16%, 85% { color: var(--paper); border-style: solid; background: rgba(255,255,255,.04); } 100% { color: transparent; } }
 
-  /* ── CTA ── */
-  .section-cta { padding: 0 0 8rem; }
-  .cta-card {
-    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%);
-    border-radius: 28px; padding: 5rem 3rem; text-align: center; color: #fff;
-    box-shadow: 0 24px 64px rgba(0,0,0,.25);
-    position: relative; overflow: hidden;
-  }
-  .cta-card::before {
-    content: '';
-    position: absolute;
-    top: -80px; right: -80px;
-    width: 320px; height: 320px;
-    background: radial-gradient(circle, rgba(255,213,0,.12) 0%, transparent 70%);
-    pointer-events: none;
-  }
-  .cta-card::after {
-    content: '';
-    position: absolute;
-    bottom: -60px; left: -60px;
-    width: 280px; height: 280px;
-    background: radial-gradient(circle, rgba(0,91,187,.2) 0%, transparent 70%);
-    pointer-events: none;
-  }
-  .cta-eyebrow { color: rgba(255,255,255,.5) !important; }
-  .cta-card h2 {
-    font-size: clamp(2rem, 4vw, 3rem);
-    font-weight: 800; letter-spacing: -.04em; line-height: 1.1; margin-bottom: 1rem;
-    position: relative; z-index: 1;
-  }
-  .cta-sub { font-size: 1.0625rem; color: rgba(255,255,255,.7); margin-bottom: 2.5rem; line-height: 1.6; position: relative; z-index: 1; }
+  .how { display: grid; gap: 14px; counter-reset: s; }
+  @media (min-width: 900px) { .how { grid-template-columns: repeat(3, 1fr); } }
+  .step { counter-increment: s; border-radius: 22px; border: 1px solid var(--line); background: var(--glass); padding: 26px; display: flex; flex-direction: column; gap: 10px; }
+  .step::before { content: "0" counter(s); font: 800 3.4rem/1 var(--f-disp); color: transparent; -webkit-text-stroke: 1.2px var(--yellow); letter-spacing: -.04em; }
+  .step h3 { font: 700 1.25rem/1.2 var(--f-disp); letter-spacing: -.02em; }
+  .step p { color: var(--muted); line-height: 1.6; }
+  .why { display: grid; gap: 14px; }
+  @media (min-width: 900px) { .why { grid-template-columns: repeat(3, 1fr); } }
+  .why > div { border-radius: 22px; border: 1px solid var(--line); background: var(--glass); padding: 24px; }
+  .why b { display: block; font: 700 1.15rem/1.2 var(--f-disp); letter-spacing: -.02em; margin-bottom: 8px; }
+  .why .ico { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 14px; margin-bottom: 16px; color: var(--yellow); background: rgba(244,199,22,.12); border: 1px solid rgba(244,199,22,.3); }
+  .why .ico svg { width: 22px; height: 22px; }
+  .why p { color: var(--muted); font-size: .94rem; line-height: 1.6; }
 
-  /* ── Mobile ── */
-  @media (max-width: 900px) {
-    .products-grid { grid-template-columns: 1fr; }
-    .why-grid { grid-template-columns: 1fr; }
+  .prices { display: grid; gap: 14px; }
+  @media (min-width: 900px) { .prices { grid-template-columns: repeat(3, 1fr); } }
+  .price { border-radius: 22px; border: 1px solid var(--line); background: var(--glass); padding: 28px; display: flex; flex-direction: column; gap: 12px; }
+  .price.hot { border-color: rgba(244,199,22,.55); background: linear-gradient(180deg, rgba(244,199,22,.12), rgba(255,255,255,.02)); box-shadow: 0 30px 80px -40px rgba(244,199,22,.6); }
+  .price h3 { font: 600 1.05rem/1.2 var(--f-disp); }
+  .price .old { color: var(--muted); text-decoration: line-through; font-size: .95rem; }
+  .price .amt { font: 800 clamp(2.4rem, 4vw, 3.2rem)/1 var(--f-disp); letter-spacing: -.04em; }
+  .price .amt small { font: 500 .95rem var(--f-body); color: var(--muted); letter-spacing: 0; }
+  .price ul { list-style: none; padding: 0; margin: 4px 0 0; display: flex; flex-direction: column; gap: 9px; color: var(--muted); font-size: .93rem; }
+  .price li::before { content: "✓"; color: var(--yellow); margin-right: 10px; font-weight: 700; }
+  .price .btn { margin-top: auto; }
+  .badge { align-self: flex-start; font: 600 .7rem/1 var(--f-disp); letter-spacing: .08em; text-transform: uppercase; padding: 6px 10px; border-radius: 999px; background: var(--yellow); color: #0b0c1d; }
+  .note-small { margin-top: 18px; color: var(--muted); font-size: .9rem; }
+  .note-small a { color: var(--text); text-decoration: underline; text-decoration-color: var(--yellow); text-underline-offset: 3px; }
+
+  .final { text-align: center; padding-block: clamp(110px, 15vw, 200px) 20px; display: flex; flex-direction: column; align-items: center; gap: 24px; }
+  .final .big { font: 700 clamp(3rem, 11vw, 9rem)/.95 var(--f-hand); color: var(--yellow); text-shadow: 0 0 80px rgba(244,199,22,.35); }
+  .final .sub { text-align: center; }
+
+  @supports (animation-timeline: view()) {
+    .rise { animation: rise linear both; animation-timeline: view(); animation-range: entry 0% entry 55%; }
+    @keyframes rise { from { transform: translateY(46px) scale(.98); } }
   }
-  @media (max-width: 640px) {
-    .cta-card { padding: 3rem 1.5rem; }
+  @media (prefers-reduced-motion: reduce) {
+    .mq-row, .mini-scan div::after, .mini-font span, .h1 .script path, .rise, .caret::after { animation: none !important; }
   }
 </style>
 
 <script>
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        e.target.classList.add('visible');
-        observer.unobserve(e.target);
-      }
-    });
-  }, { threshold: 0.12 });
+  // Набираємо запис у «Літописі» → рядок з'являється від руки в журналі (без WebGL, кілька КБ).
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const ENTRIES = [
+    ['20.11.2026 09:00', 'Прийнято вхідну кореспонденцію — 12 листів, усі зареєстровано.', 'Секретар'],
+    ['20.11.2026 11:30', 'Видано довідки з місця роботи за заявами працівників — 3 шт.', 'Інспектор'],
+    ['20.11.2026 15:10', 'Акти виконаних робіт передано на підпис керівнику.', 'Діловод'],
+  ];
+  const f = [1, 2, 3].map((i) => document.getElementById('f' + i)!);
+  const rows = document.getElementById('rows')!, st = document.getElementById('st')!, go = document.getElementById('go')!;
+  const nib = document.getElementById('nib')!, paper = document.getElementById('paper')!;
+  const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+  let visible = true;
+  new IntersectionObserver((e) => { visible = e[0].isIntersecting; }).observe(paper);
+  const waitVisible = async () => { while (!visible || document.hidden) await sleep(300); };
 
-  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+  async function type(el: HTMLElement, text: string) {
+    el.classList.add('caret');
+    for (let i = 1; i <= text.length; i++) { el.textContent = text.slice(0, i); await sleep(text[i - 1] === ' ' ? 55 : 28 + Math.random() * 30); }
+    el.classList.remove('caret');
+  }
+  async function write(cell: HTMLElement, ms: number) {
+    const span = document.createElement('span'); span.className = 'wr'; span.textContent = cell.dataset.t || ''; cell.textContent = ''; cell.append(span);
+    const pr = paper.getBoundingClientRect();
+    const lh = parseFloat(getComputedStyle(span).lineHeight) || 20;
+    nib.style.opacity = '1';
+    const t0 = performance.now();
+    await new Promise<void>((res) => {
+      const mv = (t: number) => {
+        const p = Math.min(1, (t - t0) / ms);
+        const r = span.getBoundingClientRect();
+        const lines = Math.max(1, Math.round(r.height / lh)), li = Math.min(lines - 1, Math.floor(p * lines)), lp = p >= 1 ? 1 : p * lines - li;
+        const x = (lp * 100).toFixed(2) + '%', y0 = li * lh, y1 = (li + 1) * lh;
+        // рядки до поточного — повністю, поточний — до вістря, наступні — приховані
+        span.style.clipPath = p >= 1 ? 'none' : `polygon(0 0, 100% 0, 100% ${y0}px, ${x} ${y0}px, ${x} ${y1}px, 0 ${y1}px)`;
+        nib.style.left = (r.left - pr.left + r.width * lp) + 'px'; nib.style.top = (r.top - pr.top + y0 + lh * 0.6) + 'px';
+        if (p < 1) requestAnimationFrame(mv); else res();
+      };
+      requestAnimationFrame(mv);
+    });
+  }
+  async function loop() {
+    for (;;) {
+      rows.innerHTML = '';
+      for (const e of ENTRIES) {
+        await waitVisible();
+        f.forEach((x) => { x.textContent = ''; });
+        st.textContent = 'Набираємо запис…';
+        await type(f[0], e[0]); await type(f[1], e[1]); await type(f[2], e[2]);
+        st.textContent = 'Готово'; await sleep(350);
+        go.classList.add('press'); await sleep(220); go.classList.remove('press');
+        st.textContent = 'Плотер пише…';
+        const tr = document.createElement('tr');
+        e.forEach((t) => { const td = document.createElement('td'); td.dataset.t = t; tr.append(td); });
+        rows.append(tr);
+        const tds = tr.querySelectorAll('td');
+        await write(tds[0], 1100); await write(tds[1], 2600); await write(tds[2], 900);
+        nib.style.opacity = '0'; st.textContent = 'Записано ✓'; await sleep(900);
+      }
+      await sleep(2600);
+    }
+  }
+  if (reduce) {
+    rows.innerHTML = ENTRIES.map((e) => `<tr>${e.map((t) => `<td>${t}</td>`).join('')}</tr>`).join('');
+    f.forEach((x, i) => { x.textContent = ENTRIES[2][i]; }); st.textContent = 'Записано ✓';
+  } else {
+    (document.fonts ? document.fonts.ready : Promise.resolve()).then(loop);
+  }
 </script>

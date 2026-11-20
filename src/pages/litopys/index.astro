@@ -1,7 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 ---
-<Layout title="Літопис — програма для ЖБД і ЖОВтР з друком ручкою" description="Офлайн-редактор журналу бойових дій, ЖОВтР і власних документів: вводите текст — плотер пише його справжньою ручкою вашим почерком. Windows, без інтернету." breadcrumbs={[{ name: 'Програма Літопис', path: '/litopys' }]} jsonLd={[{
+<Layout title="Літопис — програма, що пише документи ручкою через плотер" description="Офлайн-редактор будь-яких документів: вводите текст — плотер пише його справжньою ручкою вашим почерком. Windows, без інтернету." breadcrumbs={[{ name: 'Програма Літопис', path: '/litopys' }]} jsonLd={[{
   '@type': 'SoftwareApplication',
   name: 'Літопис',
   alternateName: 'Litopys',
@@ -10,7 +10,7 @@ import Layout from '../../layouts/Layout.astro';
   inLanguage: 'uk',
   url: 'https://litopys.pro/litopys',
   image: 'https://litopys.pro/og-litopys.png',
-  description: 'Офлайн-редактор журналу бойових дій (ЖБД), ЖОВтР і власних документів, який друкує текст справжньою ручкою через плотер.',
+  description: 'Офлайн-редактор будь-яких документів, який друкує текст справжньою ручкою через плотер вашим почерком.',
   publisher: { '@id': 'https://litopys.pro/#org' },
   offers: [
     { '@type': 'Offer', name: 'Повна ліцензія', price: '9999', priceCurrency: 'UAH', availability: 'https://schema.org/InStock', url: 'https://litopys.pro/tsiny' },
@@ -46,7 +46,7 @@ import Layout from '../../layouts/Layout.astro';
         <div class="lnc-header">
           <div class="lnc-logo-row">
             <div class="lnc-logo">
-              <img src="/litopys-logo-dark.png" alt="Litopys" class="lnc-logo-img">
+              <img src="/litopys-logo-light.png" alt="Litopys" class="lnc-logo-img">
             </div>
             <div class="lnc-patch">
               <img src="/litopys-badge.png" alt="Litopys" class="lnc-badge-img">
@@ -114,7 +114,7 @@ import Layout from '../../layouts/Layout.astro';
         <div class="what-text fade-up">
           <p class="eyebrow">Що це таке</p>
           <h2>Редактор,<br/>зроблений для тих,<br/>хто береже свої руки.</h2>
-          <p class="body-text">Літопис — настільна програма для Windows, яка дозволяє швидко та легко писати Журнал бойових дій і Журнал відданих та отриманих розпоряджень без мозолів на руках.</p>
+          <p class="body-text">Літопис — настільна програма для Windows, яка дозволяє швидко й легко писати журнали, бланки й будь-які документи — без мозолів на руках.</p>
           <p class="body-text">Все офлайн. Відкрив — і одразу до роботи.</p>
           <a href="/litopys/demo" class="btn-primary" style="margin-top:2rem;display:inline-block;">Спробувати демо →</a>
         </div>
@@ -162,12 +162,12 @@ import Layout from '../../layouts/Layout.astro';
       </div>
       <div class="features-grid">
         <div class="feature-card fade-up" style="--d:.0s">
-          <div class="feature-header"><img src="/icon-book-open-check.svg" alt="" class="feature-svg" /><h3>ЖБД</h3></div>
-          <p>Журнал бойових дій з таблицею, датою та часом — заповнюй і друкуй.</p>
+          <div class="feature-header"><img src="/icon-book-open-check.svg" alt="" class="feature-svg" /><h3>Готові журнали</h3></div>
+          <p>Журнал з таблицею, датою та часом — заповнюй і друкуй.</p>
         </div>
         <div class="feature-card fade-up" style="--d:.08s">
-          <div class="feature-header"><img src="/icon-book-open-text.svg" alt="" class="feature-svg" /><h3>ЖОВтР</h3></div>
-          <p>Шаблон журналу з усіма необхідними полями. Готово за хвилини.</p>
+          <div class="feature-header"><img src="/icon-book-open-text.svg" alt="" class="feature-svg" /><h3>Готові бланки</h3></div>
+          <p>Шаблон бланку з усіма необхідними полями. Готово за хвилини.</p>
         </div>
         <div class="feature-card fade-up" style="--d:.16s">
           <div class="feature-header"><img src="/icon-case-sensitive.svg" alt="" class="feature-svg" /><h3>Персональний шрифт</h3></div>
@@ -196,7 +196,7 @@ import Layout from '../../layouts/Layout.astro';
         <div class="new-text">
           <div class="new-badge"><img src="/icon-layout-template.svg" alt="" class="new-badge-icon" />Нове у версії 2.0</div>
           <h2>Свій документ.<br/>Своя розмітка.</h2>
-          <p class="body-text">Не тільки ЖБД і ЖОВтР. Тепер у Літописі можна зібрати власний шаблон документа — у книжковому або альбомному форматі А4.</p>
+          <p class="body-text">Не тільки готові шаблони. Тепер у Літописі можна зібрати власний шаблон документа — у книжковому або альбомному форматі А4.</p>
           <ul class="new-list">
             <li>Додай свою таблицю — як у Word</li>
             <li>Розмісти поля й текст так, як потрібно тобі</li>
@@ -271,18 +271,18 @@ import Layout from '../../layouts/Layout.astro';
     font-weight: 700;
     letter-spacing: .1em;
     text-transform: uppercase;
-    color: #4f7cac;
+    color: var(--muted);
     margin-bottom: 1rem;
   }
-  .body-text { color: #4b5563; line-height: 1.8; font-size: 1rem; }
+  .body-text { color: var(--text2); line-height: 1.8; font-size: 1rem; }
   .body-text + .body-text { margin-top: .75rem; }
   .ua-text { color: inherit; }
 
   /* ── Buttons ── */
   .btn-primary {
     display: inline-block;
-    background: #1a1a2e;
-    color: #fff;
+    background: var(--yellow);
+    color: #0b0c1d;
     padding: .8rem 1.9rem;
     border-radius: 50px;
     font-size: .9375rem;
@@ -299,8 +299,8 @@ import Layout from '../../layouts/Layout.astro';
     position: absolute;
     top: calc(100% + 8px);
     left: 0;
-    background: #fff;
-    border: 1px solid #e5e7eb;
+    background: var(--glass);
+    border: 1px solid var(--line);
     border-radius: 12px;
     box-shadow: 0 12px 32px rgba(0,0,0,.15);
     min-width: 220px;
@@ -318,29 +318,29 @@ import Layout from '../../layouts/Layout.astro';
     padding: .75rem 1.1rem;
     font-size: .9375rem;
     font-weight: 600;
-    color: #111827;
+    color: var(--text);
     transition: background .12s;
     white-space: nowrap;
   }
-  .hero-dl-item:hover { background: #f9fafb; }
-  .hero-dl-item + .hero-dl-item { border-top: 1px solid #f3f4f6; }
-  .hero-dl-hint { font-size: .75rem; font-weight: 400; color: #9ca3af; }
+  .hero-dl-item:hover { background: var(--glass2); }
+  .hero-dl-item + .hero-dl-item { border-top: 1px solid var(--line); }
+  .hero-dl-hint { font-size: .75rem; font-weight: 400; color: var(--muted); }
   .btn-icon { width: 16px; height: 16px; display: block; filter: brightness(0) invert(1); flex-shrink: 0; }
   .btn-ghost {
     display: inline-block;
-    color: #374151;
+    color: var(--text2);
     padding: .8rem 1.9rem;
     border-radius: 50px;
     font-size: .9375rem;
     font-weight: 500;
-    border: 1.5px solid #d1d5db;
+    border: 1.5px solid var(--line);
     transition: border-color .2s, color .2s, background .2s;
   }
-  .btn-ghost:hover { border-color: #1a1a2e; color: #1a1a2e; }
+  .btn-ghost:hover { border-color: var(--line2); color: var(--text); }
   .btn-white {
     display: inline-block;
-    background: #fff;
-    color: #1a1a2e;
+    background: var(--yellow);
+    color: #0b0c1d;
     padding: .85rem 2.2rem;
     border-radius: 50px;
     font-size: 1rem;
@@ -367,15 +367,13 @@ import Layout from '../../layouts/Layout.astro';
     position: fixed;
     inset: 0;
     z-index: -1;
-    background: radial-gradient(ellipse at 20% 40%, #dce8f5 0%, transparent 55%),
-                radial-gradient(ellipse at 80% 60%, #f5ead8 0%, transparent 50%),
-                #f8f9fb;
+    background: radial-gradient(40% 40% at 25% 20%, rgba(91,120,255,.16), transparent 70%), radial-gradient(32% 32% at 80% 55%, rgba(244,199,22,.08), transparent 70%);
     pointer-events: none;
   }
   .hero-badge {
     display: inline-block;
-    background: rgba(255,255,255,.8);
-    color: #4f7cac;
+    background: var(--glass);
+    color: var(--muted);
     font-size: .8rem;
     font-weight: 600;
     padding: .35rem 1rem;
@@ -391,9 +389,9 @@ import Layout from '../../layouts/Layout.astro';
     letter-spacing: -.04em;
     line-height: 1.07;
     margin-bottom: 1.5rem;
-    color: #111827;
+    color: var(--text);
   }
-  .hero-sub { font-size: 1.0625rem; color: #6b7280; line-height: 1.75; margin-bottom: 2.5rem; }
+  .hero-sub { font-size: 1.0625rem; color: var(--muted); line-height: 1.75; margin-bottom: 2.5rem; }
   .hero-cta { display: flex; gap: 1rem; flex-wrap: wrap; }
   .br-d { display: none; }
   @media (min-width: 640px) { .br-d { display: block; } }
@@ -406,7 +404,7 @@ import Layout from '../../layouts/Layout.astro';
     perspective: 1200px;
   }
   .launcher {
-    background: #fff;
+    background: var(--glass);
     border-radius: 20px;
     box-shadow: 0 30px 80px rgba(0,0,0,.12), 0 8px 24px rgba(0,0,0,.06);
     padding: 2rem;
@@ -433,11 +431,11 @@ import Layout from '../../layouts/Layout.astro';
   .lnc-subtitle-pill {
     display: inline-block;
     border: 1px solid #c8b870;
-    color: #6b5a20;
+    color: var(--yellow);
     font-size: .8rem;
     padding: .3rem .9rem;
     border-radius: 20px;
-    background: #fdfaf0;
+    background: rgba(244,199,22,.1);
   }
 
   /* ліцензія */
@@ -445,8 +443,8 @@ import Layout from '../../layouts/Layout.astro';
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: #f8faf8;
-    border: 1px solid #d1e8d1;
+    background: rgba(74,222,128,.08);
+    border: 1px solid rgba(74,222,128,.3);
     border-radius: 10px;
     padding: .6rem .9rem;
   }
@@ -454,8 +452,8 @@ import Layout from '../../layouts/Layout.astro';
   .lnc-lic-line { font-size: .75rem; }
   .lnc-lic-line.green { color: #2a7a2a; }
   .lnc-account-btn {
-    background: #1a1a2e;
-    color: #fff;
+    background: var(--yellow);
+    color: #0b0c1d;
     border: none;
     border-radius: 8px;
     padding: .4rem 1rem;
@@ -467,16 +465,16 @@ import Layout from '../../layouts/Layout.astro';
 
   /* останні документи */
   .lnc-docs {
-    border: 1px solid #e5e7eb;
+    border: 1px solid var(--line);
     border-radius: 14px;
     padding: 1rem 1.1rem;
     margin-bottom: 1rem;
   }
   .lnc-docs-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: .75rem; }
-  .lnc-docs-title { font-size: .9375rem; color: #6b7280; }
+  .lnc-docs-title { font-size: .9375rem; color: var(--muted); }
   .lnc-new-doc-btn {
-    background: #1a1a2e;
-    color: #fff;
+    background: var(--yellow);
+    color: #0b0c1d;
     border: none;
     border-radius: 8px;
     padding: .45rem 1rem;
@@ -491,24 +489,24 @@ import Layout from '../../layouts/Layout.astro';
     align-items: center;
     gap: .6rem;
     font-size: .9375rem;
-    color: #111827;
+    color: var(--text);
   }
-  .lnc-doc-icon { width: 18px; height: 18px; flex-shrink: 0; color: #6b7280; }
+  .lnc-doc-icon { width: 18px; height: 18px; flex-shrink: 0; color: var(--muted); }
 
   /* тегляйн */
-  .lnc-tagline { text-align: center; font-size: .8rem; color: #9ca3af; }
+  .lnc-tagline { text-align: center; font-size: .8rem; color: var(--muted); }
 
   /* ── Stats ── */
   .section-stats {
-    background: rgba(255,255,255,.7);
+    background: var(--glass);
     backdrop-filter: blur(12px);
-    border-top: 1px solid rgba(255,255,255,.8);
-    border-bottom: 1px solid #e5e7eb;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
     padding: 3rem 0;
   }
   .stats-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 2rem; text-align: center; }
-  .stat-num { font-size: 2rem; font-weight: 800; color: #111827; letter-spacing: -.03em; margin-bottom: .25rem; }
-  .stat-label { font-size: .875rem; color: #6b7280; font-weight: 500; }
+  .stat-num { font-size: 2rem; font-weight: 800; color: var(--text); letter-spacing: -.03em; margin-bottom: .25rem; }
+  .stat-label { font-size: .875rem; color: var(--muted); font-weight: 500; }
 
   /* ── What ── */
   .section-what { padding: 7rem 0; }
@@ -516,44 +514,44 @@ import Layout from '../../layouts/Layout.astro';
   .what-text h2 {
     font-size: clamp(1.75rem, 3vw, 2.5rem);
     font-weight: 800; letter-spacing: -.03em; line-height: 1.12;
-    margin-bottom: 1.25rem; color: #111827;
+    margin-bottom: 1.25rem; color: var(--text);
   }
   .facts-col { display: flex; flex-direction: column; gap: 1rem; }
   .fact-card {
     display: flex; gap: 1rem; align-items: center;
-    background: rgba(255,255,255,.8);
-    border: 1px solid #e5e7eb; border-radius: 14px; padding: 1.25rem;
+    background: var(--glass);
+    border: 1px solid var(--line); border-radius: 14px; padding: 1.25rem;
     backdrop-filter: blur(8px);
     transition: box-shadow .2s, transform .2s, border-color .2s;
   }
-  .fact-card:hover { box-shadow: 0 8px 24px rgba(0,0,0,.08); transform: translateY(-2px); border-color: #bfd4e8; }
+  .fact-card:hover { box-shadow: 0 8px 24px rgba(0,0,0,.08); transform: translateY(-2px); border-color: var(--line2); }
   .fact-icon-wrap { font-size: 1.5rem; flex-shrink: 0; width: 24px; height: 24px; display: flex; align-items: center; }
   .fact-svg { width: 24px; height: 24px; display: block; }
-  .fact-title { font-weight: 700; font-size: .9375rem; margin-bottom: .2rem; color: #111827; }
-  .fact-desc { font-size: .8125rem; color: #6b7280; line-height: 1.55; }
+  .fact-title { font-weight: 700; font-size: .9375rem; margin-bottom: .2rem; color: var(--text); }
+  .fact-desc { font-size: .8125rem; color: var(--muted); line-height: 1.55; }
 
   /* ── Features ── */
   .section-features { padding: 7rem 0; }
   .section-header { text-align: center; margin-bottom: 4rem; }
   .section-header h2 {
     font-size: clamp(2rem, 3.5vw, 3rem);
-    font-weight: 800; letter-spacing: -.04em; line-height: 1.1; color: #111827; margin-bottom: .75rem;
+    font-weight: 800; letter-spacing: -.04em; line-height: 1.1; color: var(--text); margin-bottom: .75rem;
   }
-  .section-sub { font-size: 1.0625rem; color: #6b7280; margin-top: .75rem; }
+  .section-sub { font-size: 1.0625rem; color: var(--muted); margin-top: .75rem; }
   .features-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.25rem; }
   .feature-card {
-    background: rgba(255,255,255,.85);
-    border: 1px solid #e5e7eb; border-radius: 18px; padding: 2rem;
+    background: var(--glass);
+    border: 1px solid var(--line); border-radius: 18px; padding: 2rem;
     backdrop-filter: blur(8px);
     transition: box-shadow .2s, transform .2s, border-color .2s;
   }
-  .feature-card:hover { box-shadow: 0 12px 32px rgba(0,0,0,.09); transform: translateY(-3px); border-color: #bfd4e8; }
+  .feature-card:hover { box-shadow: 0 12px 32px rgba(0,0,0,.09); transform: translateY(-3px); border-color: var(--line2); }
   .feature-icon { font-size: 2rem; margin-bottom: 1.25rem; width: 32px; height: 32px; }
   .feature-svg { width: 28px; height: 28px; display: block; flex-shrink: 0; }
   .feature-header { display: flex; align-items: center; gap: .75rem; margin-bottom: .75rem; }
   .feature-header h3 { margin: 0; }
-  .feature-card h3 { font-size: 1.0625rem; font-weight: 700; margin-bottom: .6rem; color: #111827; letter-spacing: -.01em; }
-  .feature-card p { font-size: .875rem; color: #6b7280; line-height: 1.7; }
+  .feature-card h3 { font-size: 1.0625rem; font-weight: 700; margin-bottom: .6rem; color: var(--text); letter-spacing: -.01em; }
+  .feature-card p { font-size: .875rem; color: var(--muted); line-height: 1.7; }
 
   /* ── New: власний шаблон ── */
   .section-new { padding: 1rem 0 0; }
@@ -562,8 +560,8 @@ import Layout from '../../layouts/Layout.astro';
     grid-template-columns: 1.05fr 1fr;
     gap: 3.5rem;
     align-items: center;
-    background: rgba(255,255,255,.85);
-    border: 1px solid #e5e7eb;
+    background: var(--glass);
+    border: 1px solid var(--line);
     border-radius: 28px;
     padding: 3.5rem;
     backdrop-filter: blur(8px);
@@ -573,9 +571,9 @@ import Layout from '../../layouts/Layout.astro';
     display: inline-flex;
     align-items: center;
     gap: .45rem;
-    background: #fdfaf0;
-    color: #6b5a20;
-    border: 1px solid #c8b870;
+    background: rgba(244,199,22,.1);
+    color: var(--yellow);
+    border: 1px solid rgba(244,199,22,.4);
     font-size: .8rem;
     font-weight: 600;
     padding: .35rem .9rem;
@@ -586,13 +584,13 @@ import Layout from '../../layouts/Layout.astro';
   .new-text h2 {
     font-size: clamp(1.75rem, 3vw, 2.5rem);
     font-weight: 800; letter-spacing: -.03em; line-height: 1.12;
-    margin-bottom: 1.25rem; color: #111827;
+    margin-bottom: 1.25rem; color: var(--text);
   }
   .new-list { list-style: none; margin-top: 1.25rem; display: flex; flex-direction: column; gap: .6rem; }
   .new-list li {
     position: relative;
     padding-left: 1.6rem;
-    color: #374151;
+    color: var(--text2);
     font-size: .9375rem;
     line-height: 1.6;
   }
@@ -601,8 +599,8 @@ import Layout from '../../layouts/Layout.astro';
     position: absolute;
     left: 0; top: .5em;
     width: .7rem; height: .4rem;
-    border-left: 2px solid #4f7cac;
-    border-bottom: 2px solid #4f7cac;
+    border-left: 2px solid var(--muted);
+    border-bottom: 2px solid var(--muted);
     transform: rotate(-45deg);
   }
 
@@ -610,8 +608,8 @@ import Layout from '../../layouts/Layout.astro';
   .new-sheets { position: relative; min-height: 340px; }
   .sheet {
     position: absolute;
-    background: #fff;
-    border: 1px solid #e5e7eb;
+    background: var(--glass);
+    border: 1px solid var(--line);
     border-radius: 6px;
     box-shadow: 0 18px 44px rgba(0,0,0,.1), 0 4px 12px rgba(0,0,0,.05);
     padding: 1.1rem 1rem;
@@ -627,7 +625,7 @@ import Layout from '../../layouts/Layout.astro';
   .sheet-label {
     position: absolute;
     top: -.7rem; right: .75rem;
-    background: #1a1a2e;
+    background: linear-gradient(140deg, rgba(244,199,22,.14), rgba(91,120,255,.08) 60%, rgba(255,255,255,.03));
     color: #fff;
     font-size: .6875rem;
     font-weight: 600;
@@ -635,14 +633,14 @@ import Layout from '../../layouts/Layout.astro';
     border-radius: 50px;
     letter-spacing: .02em;
   }
-  .sheet-title { width: 45%; height: 6px; border-radius: 3px; background: #d1d5db; align-self: center; }
+  .sheet-title { width: 45%; height: 6px; border-radius: 3px; background: var(--line); align-self: center; }
   .sheet-table { border: 1px solid #9ca3af; display: flex; flex-direction: column; }
   .st-row { display: grid; grid-template-columns: 1fr 2fr 1.2fr; min-height: 22px; }
   .st-wide .st-row { grid-template-columns: .8fr 2fr 1.2fr 1fr; }
   .st-row + .st-row { border-top: 1px solid #9ca3af; }
   .st-row span { display: flex; align-items: center; padding: 0 .35rem; }
   .st-row span + span { border-left: 1px solid #9ca3af; }
-  .st-head { background: #f3f4f6; min-height: 16px; }
+  .st-head { background: var(--glass); min-height: 16px; }
   .sheet-lines { display: flex; flex-direction: column; gap: .6rem; margin-top: auto; }
   /* «рукописний» рядок — чорнило ручки */
   .hw {
@@ -658,7 +656,7 @@ import Layout from '../../layouts/Layout.astro';
   /* ── CTA ── */
   .section-cta { padding: 7rem 0 8rem; }
   .cta-card {
-    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%);
+    background: linear-gradient(140deg, rgba(244,199,22,.14), rgba(91,120,255,.08) 60%, rgba(255,255,255,.03));
     border-radius: 28px; padding: 5rem 3rem; text-align: center; color: #fff;
     box-shadow: 0 24px 64px rgba(0,0,0,.25);
     position: relative; overflow: hidden;

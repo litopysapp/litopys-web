@@ -8,7 +8,7 @@ const products = [
   {
     name: 'Litopys',
     logo: '/logo-litopys.png',
-    desc: 'Офлайн-редактор документів: журнали ЖБД і ЖОВтР або власний шаблон, з друком ручкою через плотер.',
+    desc: 'Офлайн-редактор документів: готові шаблони журналів і бланків або власний шаблон, з друком ручкою через плотер.',
     page: '/litopys',
     links: [
       { label: 'Завантажити інсталятор', href: 'https://api.litopys.win/download/setup', primary: true },
@@ -95,7 +95,7 @@ const products = [
     font-weight: 700;
     letter-spacing: .1em;
     text-transform: uppercase;
-    color: #4f7cac;
+    color: var(--muted);
     margin-bottom: 1rem;
   }
 
@@ -105,9 +105,7 @@ const products = [
     position: fixed;
     inset: 0;
     z-index: -1;
-    background: radial-gradient(ellipse at 20% 40%, #dce8f5 0%, transparent 55%),
-                radial-gradient(ellipse at 80% 60%, #f5ead8 0%, transparent 50%),
-                #f8f9fb;
+    background: radial-gradient(40% 40% at 25% 20%, rgba(91,120,255,.16), transparent 70%), radial-gradient(32% 32% at 80% 55%, rgba(244,199,22,.08), transparent 70%);
     pointer-events: none;
   }
   .hero-page h1 {
@@ -115,11 +113,11 @@ const products = [
     font-weight: 800;
     letter-spacing: -.04em;
     line-height: 1.12;
-    color: #111827;
+    color: var(--text);
     margin-bottom: 1.25rem;
     max-width: 760px;
   }
-  .hero-sub { font-size: 1.0625rem; color: #6b7280; line-height: 1.75; max-width: 620px; }
+  .hero-sub { font-size: 1.0625rem; color: var(--muted); line-height: 1.75; max-width: 620px; }
 
   /* ── Downloads ── */
   .section-downloads { padding: 3rem 0 8rem; }
@@ -127,29 +125,29 @@ const products = [
   .dl-card {
     display: flex;
     flex-direction: column;
-    background: rgba(255,255,255,.85);
-    border: 1px solid #e5e7eb;
+    background: var(--glass);
+    border: 1px solid var(--line);
     border-radius: 20px;
     padding: 2.25rem 2rem;
     backdrop-filter: blur(8px);
     transition: box-shadow .2s, transform .2s, border-color .2s;
   }
-  .dl-card:hover { box-shadow: 0 12px 32px rgba(0,0,0,.09); transform: translateY(-3px); border-color: #bfd4e8; }
+  .dl-card:hover { box-shadow: 0 12px 32px rgba(0,0,0,.09); transform: translateY(-3px); border-color: var(--line2); }
   .dl-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; }
   .dl-logo { width: 56px; height: 56px; display: block; }
   .dl-badge {
     background: #f4c716;
-    color: #0d1024;
+    color: var(--text);
     font-size: .75rem;
     font-weight: 700;
     letter-spacing: .03em;
     padding: .3rem .9rem;
     border-radius: 50px;
   }
-  .dl-card h2 { font-size: 1.5rem; font-weight: 800; letter-spacing: -.03em; color: #111827; margin-bottom: .6rem; }
-  .dl-desc { font-size: .875rem; color: #6b7280; line-height: 1.6; margin-bottom: 1.75rem; flex: 1; }
+  .dl-card h2 { font-size: 1.5rem; font-weight: 800; letter-spacing: -.03em; color: var(--text); margin-bottom: .6rem; }
+  .dl-desc { font-size: .875rem; color: var(--muted); line-height: 1.6; margin-bottom: 1.75rem; flex: 1; }
   .dl-actions { display: flex; flex-direction: column; gap: .75rem; margin-bottom: 1.25rem; }
-  .dl-more { font-size: .875rem; font-weight: 600; color: #4f7cac; }
+  .dl-more { font-size: .875rem; font-weight: 600; color: var(--muted); }
   .dl-more:hover { text-decoration: underline; }
 
   /* ── Buttons ── */
@@ -165,8 +163,8 @@ const products = [
     transition: opacity .2s, transform .2s, box-shadow .2s;
   }
   .btn-primary {
-    background: #1a1a2e;
-    color: #fff;
+    background: var(--yellow);
+    color: #0b0c1d;
     border: none;
     box-shadow: 0 4px 16px rgba(0,0,0,.2);
   }
@@ -174,10 +172,10 @@ const products = [
   .btn-primary:disabled { opacity: .5; cursor: default; transform: none; box-shadow: none; }
   .btn-secondary {
     background: transparent;
-    color: #1a1a2e;
-    border: 1px solid #d1d5db;
+    color: var(--text);
+    border: 1px solid var(--line);
   }
-  .btn-secondary:hover { border-color: #1a1a2e; }
+  .btn-secondary:hover { border-color: var(--line2); }
 
   @media (max-width: 900px) {
     .dl-grid { grid-template-columns: 1fr; }

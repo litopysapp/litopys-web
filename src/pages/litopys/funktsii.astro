@@ -6,8 +6,8 @@ const groups = [
     icon: '/icon-book-open-check.svg',
     title: 'Готові журнали',
     items: [
-      { h: 'Журнал бойових дій (ЖБД)', p: 'Готовий бланк із таблицею, датою й часом — відкрив і одразу заповнюєш.' },
-      { h: 'Журнал відданих і отриманих розпоряджень (ЖОВтР)', p: 'Книжковий і альбомний варіанти бланку з усіма потрібними полями.' },
+      { h: 'Готові журнали', p: 'Бланк із таблицею, датою й часом — відкрив і одразу заповнюєш.' },
+      { h: 'Готові бланки', p: 'Книжковий і альбомний варіанти бланку з усіма потрібними полями.' },
     ],
   },
   {
@@ -77,7 +77,7 @@ const groups = [
   },
 ];
 ---
-<Layout title="Функції Літопису: журнали, бланки, таблиці, друк ручкою" description="Повний огляд можливостей Літопису: ЖБД, ЖОВтР, власні документи й таблиці, рукописні шрифти з варіантами літер, друк ручкою через плотер і збереження даних." breadcrumbs={[{ name: 'Програма Літопис', path: '/litopys' }, { name: 'Функції', path: '/litopys/funktsii' }]}>
+<Layout title="Функції Літопису: журнали, бланки, таблиці, друк ручкою" description="Повний огляд можливостей Літопису: готові журнали й бланки, власні документи й таблиці, рукописні шрифти з варіантами літер, друк ручкою через плотер і збереження даних." breadcrumbs={[{ name: 'Програма Літопис', path: '/litopys' }, { name: 'Функції', path: '/litopys/funktsii' }]}>
 
   <!-- ══ HERO ══ -->
   <section class="hero-page">
@@ -142,10 +142,10 @@ const groups = [
     font-weight: 700;
     letter-spacing: .1em;
     text-transform: uppercase;
-    color: #4f7cac;
+    color: var(--muted);
     margin-bottom: 1rem;
   }
-  .body-text { color: #4b5563; line-height: 1.75; font-size: .9375rem; }
+  .body-text { color: var(--text2); line-height: 1.75; font-size: .9375rem; }
 
   /* ── Hero ── */
   .hero-page { position: relative; padding: 6rem 0 3rem; }
@@ -153,9 +153,7 @@ const groups = [
     position: fixed;
     inset: 0;
     z-index: -1;
-    background: radial-gradient(ellipse at 20% 40%, #dce8f5 0%, transparent 55%),
-                radial-gradient(ellipse at 80% 60%, #f5ead8 0%, transparent 50%),
-                #f8f9fb;
+    background: radial-gradient(40% 40% at 25% 20%, rgba(91,120,255,.16), transparent 70%), radial-gradient(32% 32% at 80% 55%, rgba(244,199,22,.08), transparent 70%);
     pointer-events: none;
   }
   .hero-page h1 {
@@ -163,37 +161,37 @@ const groups = [
     font-weight: 800;
     letter-spacing: -.04em;
     line-height: 1.12;
-    color: #111827;
+    color: var(--text);
     margin-bottom: 1.25rem;
     max-width: 760px;
   }
-  .hero-sub { font-size: 1.0625rem; color: #6b7280; line-height: 1.75; max-width: 620px; }
+  .hero-sub { font-size: 1.0625rem; color: var(--muted); line-height: 1.75; max-width: 620px; }
 
   /* ── Groups ── */
   .section-groups { padding: 3rem 0 7rem; }
   .fgroup {
-    background: rgba(255,255,255,.85);
-    border: 1px solid #e5e7eb;
+    background: var(--glass);
+    border: 1px solid var(--line);
     border-radius: 22px;
     padding: 2.25rem 2.5rem 2.5rem;
     backdrop-filter: blur(8px);
     transition: box-shadow .2s, border-color .2s;
   }
-  .fgroup:hover { box-shadow: 0 12px 32px rgba(0,0,0,.06); border-color: #bfd4e8; }
+  .fgroup:hover { box-shadow: 0 12px 32px rgba(0,0,0,.06); border-color: var(--line2); }
   .fgroup + .fgroup { margin-top: 1.5rem; }
   .fgroup-head { display: flex; align-items: center; gap: .9rem; margin-bottom: 1.5rem; }
   .fgroup-icon-wrap {
     width: 44px; height: 44px;
     display: flex; align-items: center; justify-content: center;
-    background: #eef4fb;
+    background: rgba(91,120,255,.12);
     border-radius: 12px;
     flex-shrink: 0;
   }
   .fgroup-svg { width: 22px; height: 22px; display: block; }
-  .fgroup-head h2 { font-size: 1.375rem; font-weight: 800; letter-spacing: -.02em; color: #111827; }
+  .fgroup-head h2 { font-size: 1.375rem; font-weight: 800; letter-spacing: -.02em; color: var(--text); }
 
   .fgroup-list { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem 2rem; }
-  .fitem h3 { font-size: 1rem; font-weight: 700; color: #111827; margin-bottom: .4rem; letter-spacing: -.005em; }
+  .fitem h3 { font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: .4rem; letter-spacing: -.005em; }
 
   @media (max-width: 700px) {
     .fgroup { padding: 1.75rem 1.5rem 2rem; }
@@ -203,7 +201,7 @@ const groups = [
   /* ── CTA ── */
   .section-cta { padding: 3rem 0 8rem; }
   .cta-card {
-    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%);
+    background: linear-gradient(140deg, rgba(244,199,22,.14), rgba(91,120,255,.08) 60%, rgba(255,255,255,.03));
     border-radius: 28px; padding: 5rem 3rem; text-align: center; color: #fff;
     box-shadow: 0 24px 64px rgba(0,0,0,.25);
     position: relative; overflow: hidden;
@@ -233,8 +231,8 @@ const groups = [
   .cta-sub { font-size: 1.0625rem; color: rgba(255,255,255,.7); margin-bottom: 2.5rem; line-height: 1.6; position: relative; z-index: 1; }
   .btn-white {
     display: inline-block;
-    background: #fff;
-    color: #1a1a2e;
+    background: var(--yellow);
+    color: #0b0c1d;
     padding: .85rem 2.2rem;
     border-radius: 50px;
     font-size: 1rem;

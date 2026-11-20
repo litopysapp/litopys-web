@@ -10,7 +10,7 @@ import Layout from '../layouts/Layout.astro';
   inLanguage: 'uk',
   url: 'https://litopys.pro/litopys',
   image: 'https://litopys.pro/og-litopys.png',
-  description: 'Офлайн-редактор журналу бойових дій (ЖБД), ЖОВтР і власних документів, який друкує текст справжньою ручкою через плотер.',
+  description: 'Офлайн-редактор будь-яких документів, який друкує текст справжньою ручкою через плотер вашим почерком.',
   publisher: { '@id': 'https://litopys.pro/#org' },
   offers: [
     { '@type': 'Offer', name: 'Повна ліцензія', price: '9999', priceCurrency: 'UAH', availability: 'https://schema.org/InStock', url: 'https://litopys.pro/tsiny' },
@@ -194,7 +194,7 @@ import Layout from '../layouts/Layout.astro';
     font-weight: 700;
     letter-spacing: .1em;
     text-transform: uppercase;
-    color: #4f7cac;
+    color: var(--muted);
     margin-bottom: 1rem;
   }
 
@@ -204,9 +204,7 @@ import Layout from '../layouts/Layout.astro';
     position: fixed;
     inset: 0;
     z-index: -1;
-    background: radial-gradient(ellipse at 20% 40%, #dce8f5 0%, transparent 55%),
-                radial-gradient(ellipse at 80% 60%, #f5ead8 0%, transparent 50%),
-                #f8f9fb;
+    background: radial-gradient(40% 40% at 25% 20%, rgba(91,120,255,.16), transparent 70%), radial-gradient(32% 32% at 80% 55%, rgba(244,199,22,.08), transparent 70%);
     pointer-events: none;
   }
   .hero-page h1 {
@@ -214,11 +212,11 @@ import Layout from '../layouts/Layout.astro';
     font-weight: 800;
     letter-spacing: -.04em;
     line-height: 1.12;
-    color: #111827;
+    color: var(--text);
     margin-bottom: 1.25rem;
     max-width: 760px;
   }
-  .hero-sub { font-size: 1.0625rem; color: #6b7280; line-height: 1.75; max-width: 620px; }
+  .hero-sub { font-size: 1.0625rem; color: var(--muted); line-height: 1.75; max-width: 620px; }
 
   /* ── Promo banner ── */
   .section-promo { padding-top: 1rem; }
@@ -227,8 +225,8 @@ import Layout from '../layouts/Layout.astro';
     align-items: center;
     gap: 1rem;
     flex-wrap: wrap;
-    background: linear-gradient(135deg, #fff7ed 0%, #fef2e8 100%);
-    border: 1px solid #fed7aa;
+    background: linear-gradient(110deg, rgba(244,199,22,.14), rgba(255,255,255,.03));
+    border: 1px solid rgba(244,199,22,.35);
     border-radius: 16px;
     padding: 1.1rem 1.5rem;
   }
@@ -243,8 +241,8 @@ import Layout from '../layouts/Layout.astro';
     padding: .3rem .8rem;
     border-radius: 50px;
   }
-  .promo-banner-text { font-size: .9375rem; color: #7c2d12; line-height: 1.5; }
-  .promo-banner-text strong { color: #dc2626; }
+  .promo-banner-text { font-size: .9375rem; color: var(--text2); line-height: 1.5; }
+  .promo-banner-text strong { color: var(--yellow); }
 
   /* ── Plans ── */
   .section-plans { padding: 3rem 0 5rem; }
@@ -253,18 +251,18 @@ import Layout from '../layouts/Layout.astro';
   .plan-card {
     display: flex;
     flex-direction: column;
-    background: rgba(255,255,255,.85);
-    border: 1px solid #e5e7eb;
+    background: var(--glass);
+    border: 1px solid var(--line);
     border-radius: 20px;
     padding: 2.25rem 2rem;
     backdrop-filter: blur(8px);
     transition: box-shadow .2s, transform .2s, border-color .2s;
     position: relative;
   }
-  .plan-card:hover { box-shadow: 0 12px 32px rgba(0,0,0,.09); transform: translateY(-3px); border-color: #bfd4e8; }
+  .plan-card:hover { box-shadow: 0 12px 32px rgba(0,0,0,.09); transform: translateY(-3px); border-color: var(--line2); }
 
   .plan-featured {
-    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%);
+    background: linear-gradient(140deg, rgba(244,199,22,.14), rgba(91,120,255,.08) 60%, rgba(255,255,255,.03));
     color: #fff;
     border: none;
     box-shadow: 0 24px 64px rgba(0,0,0,.25);
@@ -275,39 +273,39 @@ import Layout from '../layouts/Layout.astro';
     top: -14px;
     left: 2rem;
     background: #ffd500;
-    color: #1a1a2e;
+    color: var(--text);
     font-size: .75rem;
     font-weight: 700;
     letter-spacing: .03em;
     padding: .3rem .9rem;
     border-radius: 50px;
   }
-  .plan-badge-soon { background: #e5e7eb; color: #6b7280; }
+  .plan-badge-soon { background: var(--line); color: var(--muted); }
   .plan-badge-sale { background: #dc2626; color: #fff; }
 
-  .plan-name { font-size: 1.0625rem; font-weight: 600; color: #6b7280; margin-bottom: .75rem; }
+  .plan-name { font-size: 1.0625rem; font-weight: 600; color: var(--muted); margin-bottom: .75rem; }
   .plan-featured .plan-name { color: rgba(255,255,255,.7); }
-  .plan-price { font-size: 2.5rem; font-weight: 800; letter-spacing: -.03em; color: #111827; }
+  .plan-price { font-size: 2.5rem; font-weight: 800; letter-spacing: -.03em; color: var(--text); }
   .plan-featured .plan-price { color: #fff; }
   .plan-price-old {
     font-size: 1.125rem;
     font-weight: 600;
-    color: #9ca3af;
+    color: var(--muted);
     text-decoration: line-through;
-    text-decoration-color: #dc2626;
+    text-decoration-color: var(--err);
     text-decoration-thickness: 2px;
     letter-spacing: -.01em;
     margin-bottom: .15rem;
   }
   .plan-featured .plan-price-old { color: rgba(255,255,255,.45); }
   .plan-currency { font-size: 1.125rem; font-weight: 600; }
-  .plan-period { font-size: .875rem; color: #9ca3af; margin-bottom: 1.75rem; }
+  .plan-period { font-size: .875rem; color: var(--muted); margin-bottom: 1.75rem; }
   .plan-featured .plan-period { color: rgba(255,255,255,.6); }
 
   .plan-features { list-style: none; display: flex; flex-direction: column; gap: .75rem; margin-bottom: 2rem; flex: 1; }
   .plan-features li {
     font-size: .875rem;
-    color: #4b5563;
+    color: var(--text2);
     line-height: 1.5;
     padding-left: 1.4rem;
     position: relative;
@@ -317,13 +315,13 @@ import Layout from '../layouts/Layout.astro';
     position: absolute;
     left: 0;
     font-weight: 700;
-    color: #4f7cac;
+    color: var(--muted);
   }
   .plan-featured .plan-features li { color: rgba(255,255,255,.85); }
   .plan-featured .plan-features li::before { color: #ffd500; }
 
-  .plans-note { text-align: center; color: #9ca3af; font-size: .875rem; margin-top: 2.5rem; }
-  .plans-note a { text-decoration: underline; color: #6b7280; }
+  .plans-note { text-align: center; color: var(--muted); font-size: .875rem; margin-top: 2.5rem; }
+  .plans-note a { text-decoration: underline; color: var(--muted); }
 
   /* ── Months picker (LitoGraph) ── */
   .months-picker {
@@ -332,16 +330,16 @@ import Layout from '../layouts/Layout.astro';
     justify-content: space-between;
     gap: 1rem;
     font-size: .875rem;
-    color: #4b5563;
+    color: var(--text2);
     margin-bottom: 1.25rem;
   }
   .months-picker select {
     font-family: inherit;
     font-size: .9375rem;
     font-weight: 600;
-    color: #111827;
-    background: #fff;
-    border: 1px solid #d1d5db;
+    color: var(--text);
+    background: var(--glass);
+    border: 1px solid var(--line);
     border-radius: 10px;
     padding: .5rem .75rem;
     cursor: pointer;
@@ -350,8 +348,8 @@ import Layout from '../layouts/Layout.astro';
   /* ── Buttons ── */
   .btn-primary {
     display: inline-block;
-    background: #1a1a2e;
-    color: #fff;
+    background: var(--yellow);
+    color: #0b0c1d;
     padding: .8rem 1.9rem;
     border-radius: 50px;
     font-size: .9375rem;
@@ -373,8 +371,8 @@ import Layout from '../layouts/Layout.astro';
   .btn-primary:disabled:hover { opacity: .5; transform: none; box-shadow: none; }
   .btn-white {
     display: inline-block;
-    background: #fff;
-    color: #1a1a2e;
+    background: var(--yellow);
+    color: #0b0c1d;
     padding: .85rem 2.2rem;
     border-radius: 50px;
     font-size: 1rem;
@@ -392,7 +390,7 @@ import Layout from '../layouts/Layout.astro';
   /* ── CTA ── */
   .section-cta { padding: 3rem 0 8rem; }
   .cta-card {
-    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%);
+    background: linear-gradient(140deg, rgba(244,199,22,.14), rgba(91,120,255,.08) 60%, rgba(255,255,255,.03));
     border-radius: 28px; padding: 5rem 3rem; text-align: center; color: #fff;
     box-shadow: 0 24px 64px rgba(0,0,0,.25);
     position: relative; overflow: hidden;

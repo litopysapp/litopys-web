@@ -124,10 +124,10 @@ const groups = [
     font-weight: 700;
     letter-spacing: .1em;
     text-transform: uppercase;
-    color: #0f6b52;
+    color: var(--ok);
     margin-bottom: 1rem;
   }
-  .body-text { color: #4b5563; line-height: 1.75; font-size: .9375rem; }
+  .body-text { color: var(--text2); line-height: 1.75; font-size: .9375rem; }
 
   /* ── Hero ── */
   .hero-page { position: relative; padding: 6rem 0 3rem; }
@@ -135,9 +135,7 @@ const groups = [
     position: fixed;
     inset: 0;
     z-index: -1;
-    background: radial-gradient(ellipse at 20% 40%, #dcf0e8 0%, transparent 55%),
-                radial-gradient(ellipse at 80% 60%, #f5ead8 0%, transparent 50%),
-                #f8f9fb;
+    background: radial-gradient(40% 40% at 25% 20%, rgba(91,120,255,.16), transparent 70%), radial-gradient(32% 32% at 80% 55%, rgba(244,199,22,.08), transparent 70%);
     pointer-events: none;
   }
   .hero-page h1 {
@@ -145,11 +143,11 @@ const groups = [
     font-weight: 800;
     letter-spacing: -.04em;
     line-height: 1.12;
-    color: #111827;
+    color: var(--text);
     margin-bottom: 1.25rem;
     max-width: 760px;
   }
-  .hero-sub { font-size: 1.0625rem; color: #6b7280; line-height: 1.75; max-width: 620px; margin-bottom: 2rem; }
+  .hero-sub { font-size: 1.0625rem; color: var(--muted); line-height: 1.75; max-width: 620px; margin-bottom: 2rem; }
   .hero-cta { display: flex; gap: 1rem; flex-wrap: wrap; }
 
   .btn-primary {
@@ -168,8 +166,8 @@ const groups = [
   /* ── Groups ── */
   .section-groups { padding: 3rem 0 7rem; }
   .fgroup {
-    background: rgba(255,255,255,.85);
-    border: 1px solid #e5e7eb;
+    background: var(--glass);
+    border: 1px solid var(--line);
     border-radius: 22px;
     padding: 2.25rem 2.5rem 2.5rem;
     backdrop-filter: blur(8px);
@@ -181,16 +179,16 @@ const groups = [
   .fgroup-icon-wrap {
     width: 44px; height: 44px;
     display: flex; align-items: center; justify-content: center;
-    background: #e9f5f0;
-    color: #0f6b52;
+    background: rgba(52,211,153,.12);
+    color: var(--ok);
     border-radius: 12px;
     flex-shrink: 0;
   }
   .fgroup-svg { width: 22px; height: 22px; display: block; }
-  .fgroup-head h2 { font-size: 1.375rem; font-weight: 800; letter-spacing: -.02em; color: #111827; }
+  .fgroup-head h2 { font-size: 1.375rem; font-weight: 800; letter-spacing: -.02em; color: var(--text); }
 
   .fgroup-list { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem 2rem; }
-  .fitem h3 { font-size: 1rem; font-weight: 700; color: #111827; margin-bottom: .4rem; letter-spacing: -.005em; }
+  .fitem h3 { font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: .4rem; letter-spacing: -.005em; }
 
   @media (max-width: 700px) {
     .fgroup { padding: 1.75rem 1.5rem 2rem; }
@@ -230,8 +228,8 @@ const groups = [
   .cta-sub { font-size: 1.0625rem; color: rgba(255,255,255,.75); margin-bottom: 2.5rem; line-height: 1.6; position: relative; z-index: 1; }
   .btn-white {
     display: inline-block;
-    background: #fff;
-    color: #0f6b52;
+    background: var(--yellow);
+    color: #0b0c1d;
     padding: .85rem 2.2rem;
     border-radius: 50px;
     font-size: 1rem;

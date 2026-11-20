@@ -84,7 +84,7 @@ function fmtDay(day: string) {
     <!-- Sidebar -->
     <aside class="sidebar">
       <div class="sidebar-logo">
-        <img src="/litopys-logo-dark.png" alt="Літопис" />
+        <img src="/litopys-logo-light.png" alt="Літопис" />
       </div>
       <nav class="sidebar-nav">
         <a href="/dashboard" class="nav-item">
@@ -193,11 +193,11 @@ function fmtDay(day: string) {
     min-height: 100vh;
   }
   .sidebar {
-    border-right: 1px solid #e5e7eb;
+    border-right: 1px solid var(--line);
     padding: 1.5rem 1rem;
     display: flex;
     flex-direction: column;
-    background: #fafafa;
+    background: var(--glass);
   }
   .sidebar-logo img { height: 36px; margin-bottom: 2rem; }
   .sidebar-nav { display: flex; flex-direction: column; gap: .25rem; flex: 1; }
@@ -209,42 +209,42 @@ function fmtDay(day: string) {
     border-radius: 10px;
     font-size: .875rem;
     font-weight: 500;
-    color: #374151;
+    color: var(--text2);
     transition: background .15s, color .15s;
   }
-  .nav-item:hover { background: #f3f4f6; color: #111827; }
-  .nav-item.active { background: #1a1a2e; color: #fff; }
+  .nav-item:hover { background: var(--glass2); color: var(--text); }
+  .nav-item.active { background: linear-gradient(140deg, rgba(244,199,22,.14), rgba(91,120,255,.08) 60%, rgba(255,255,255,.03)); color: #fff; }
   .nav-icon-svg img { width: 16px; height: 16px; display: block; filter: brightness(0) saturate(100%); }
   .nav-item.active .nav-icon-svg img { filter: brightness(0) invert(1); }
-  .nav-icon-chart { width: 16px; height: 16px; display: flex; color: #374151; }
+  .nav-icon-chart { width: 16px; height: 16px; display: flex; color: var(--text2); }
   .nav-icon-chart svg { width: 16px; height: 16px; }
   .nav-item.active .nav-icon-chart { color: #fff; }
   .sidebar-bottom-links { display: flex; flex-direction: column; gap: .15rem; margin-bottom: .5rem; }
-  .sidebar-ext-link { display: flex; align-items: center; gap: .6rem; font-size: .8125rem; color: #6b7280; padding: .4rem .85rem; border-radius: 8px; transition: color .15s, background .15s; }
-  .sidebar-ext-link:hover { color: #111827; background: #f3f4f6; }
+  .sidebar-ext-link { display: flex; align-items: center; gap: .6rem; font-size: .8125rem; color: var(--muted); padding: .4rem .85rem; border-radius: 8px; transition: color .15s, background .15s; }
+  .sidebar-ext-link:hover { color: var(--text); background: var(--glass2); }
   .sidebar-ext-link img { width: 15px; height: 15px; display: block; filter: brightness(0) saturate(100%) invert(47%) sepia(7%) saturate(400%) hue-rotate(180deg); flex-shrink: 0; }
   .sidebar-ext-link:hover img { filter: brightness(0); }
-  .sidebar-download { color: #1a1a2e; font-weight: 600; }
+  .sidebar-download { color: var(--text); font-weight: 600; }
   .sidebar-download img { filter: brightness(0) !important; }
   .sidebar-logout { margin-top: 0; }
   .logout-btn {
     width: 100%;
     background: none;
-    border: 1.5px solid #e5e7eb;
+    border: 1.5px solid var(--line);
     border-radius: 10px;
     padding: .55rem;
     font-size: .8125rem;
-    color: #6b7280;
+    color: var(--muted);
     cursor: pointer;
     font-family: inherit;
     transition: border-color .15s, color .15s;
   }
-  .logout-btn:hover { border-color: #dc2626; color: #dc2626; }
+  .logout-btn:hover { border-color: var(--err); color: var(--err); }
 
   .dash-main { padding: 2rem 2.5rem; max-width: 800px; }
   .dash-header { margin-bottom: 2rem; }
-  .dash-greeting { font-size: 1.25rem; font-weight: 800; color: #111827; letter-spacing: -.02em; }
-  .dash-email { font-size: .875rem; color: #6b7280; margin-top: .2rem; }
+  .dash-greeting { font-size: 1.25rem; font-weight: 800; color: var(--text); letter-spacing: -.02em; }
+  .dash-email { font-size: .875rem; color: var(--muted); margin-top: .2rem; }
 
   .stat-grid {
     display: grid;
@@ -253,20 +253,20 @@ function fmtDay(day: string) {
     margin-bottom: 1.5rem;
   }
   .stat-card {
-    background: #fff;
-    border: 1px solid #e5e7eb;
+    background: var(--glass);
+    border: 1px solid var(--line);
     border-radius: 16px;
     padding: 1.1rem 1.1rem 1.25rem;
   }
-  .stat-card-active { border-color: #1a1a2e; box-shadow: 0 0 0 1px #1a1a2e; }
-  .stat-label { font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: #9ca3af; margin-bottom: .5rem; }
-  .stat-value { font-size: 1.75rem; font-weight: 800; color: #111827; letter-spacing: -.02em; line-height: 1.1; }
-  .stat-value-secondary { font-size: 1.25rem; color: #4b5563; margin-top: .5rem; }
-  .stat-sub { font-size: .75rem; color: #9ca3af; margin-top: .15rem; }
+  .stat-card-active { border-color: var(--line2); box-shadow: 0 0 0 1px #1a1a2e; }
+  .stat-label { font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin-bottom: .5rem; }
+  .stat-value { font-size: 1.75rem; font-weight: 800; color: var(--text); letter-spacing: -.02em; line-height: 1.1; }
+  .stat-value-secondary { font-size: 1.25rem; color: var(--text2); margin-top: .5rem; }
+  .stat-sub { font-size: .75rem; color: var(--muted); margin-top: .15rem; }
 
   .card {
-    background: #fff;
-    border: 1px solid #e5e7eb;
+    background: var(--glass);
+    border: 1px solid var(--line);
     border-radius: 16px;
     padding: 1.5rem;
     margin-bottom: 1.25rem;
@@ -279,22 +279,22 @@ function fmtDay(day: string) {
     gap: .75rem;
     margin-bottom: 1.25rem;
   }
-  .card-header h2 { font-size: 1rem; font-weight: 700; color: #111827; }
-  .card-desc { font-size: .875rem; color: #6b7280; }
+  .card-header h2 { font-size: 1rem; font-weight: 700; color: var(--text); }
+  .card-desc { font-size: .875rem; color: var(--muted); }
 
-  .range-tabs { display: flex; gap: .25rem; background: #f3f4f6; padding: .25rem; border-radius: 10px; }
-  .range-tab { font-size: .8125rem; font-weight: 600; color: #6b7280; padding: .4rem .8rem; border-radius: 8px; transition: background .15s, color .15s; }
-  .range-tab:hover { color: #111827; }
-  .range-tab-active { background: #1a1a2e; color: #fff; }
+  .range-tabs { display: flex; gap: .25rem; background: var(--glass); padding: .25rem; border-radius: 10px; }
+  .range-tab { font-size: .8125rem; font-weight: 600; color: var(--muted); padding: .4rem .8rem; border-radius: 8px; transition: background .15s, color .15s; }
+  .range-tab:hover { color: var(--text); }
+  .range-tab-active { background: linear-gradient(140deg, rgba(244,199,22,.14), rgba(91,120,255,.08) 60%, rgba(255,255,255,.03)); color: #fff; }
 
   .chart-wrap { position: relative; }
   .chart-svg { width: 100%; height: auto; display: block; }
   .chart-axis { stroke: #e5e7eb; stroke-width: 1; }
   .chart-area { fill: rgba(26, 26, 46, 0.06); stroke: none; }
-  .chart-line { fill: none; stroke: #1a1a2e; stroke-width: 2; }
-  .chart-dot { fill: #1a1a2e; }
+  .chart-line { fill: none; stroke: var(--text); stroke-width: 2; }
+  .chart-dot { fill: var(--text); }
   .chart-x-labels { position: relative; height: 1.25rem; margin-top: .25rem; }
-  .chart-x-label { position: absolute; transform: translateX(-50%); font-size: .6875rem; color: #9ca3af; white-space: nowrap; }
+  .chart-x-label { position: absolute; transform: translateX(-50%); font-size: .6875rem; color: var(--muted); white-space: nowrap; }
 
   @media (max-width: 900px) {
     .stat-grid { grid-template-columns: repeat(2, 1fr); }
@@ -302,7 +302,7 @@ function fmtDay(day: string) {
 
   @media (max-width: 700px) {
     .dash-wrap { grid-template-columns: 1fr; }
-    .sidebar { flex-direction: row; flex-wrap: wrap; border-right: none; border-bottom: 1px solid #e5e7eb; padding: 1rem; }
+    .sidebar { flex-direction: row; flex-wrap: wrap; border-right: none; border-bottom: 1px solid var(--line); padding: 1rem; }
     .sidebar-logo { display: none; }
     .sidebar-nav { flex-direction: row; flex-wrap: wrap; }
     .sidebar-logout { margin-top: 0; margin-left: auto; }

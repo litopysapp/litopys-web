@@ -38,7 +38,7 @@ if (!token) {
 <Layout title="Підтвердження email — Літопис">
   <div class="wrap">
     <div class="card">
-      <img src="/litopys-logo-dark.png" alt="Літопис" class="logo" />
+      <img src="/litopys-logo-light.png" alt="Літопис" class="logo" />
 
       {status === 'loading' && (
         <div class="state">
@@ -94,8 +94,8 @@ if (!token) {
     padding: 2rem 1.5rem;
   }
   .card {
-    background: #fff;
-    border: 1px solid #e5e7eb;
+    background: var(--glass);
+    border: 1px solid var(--line);
     border-radius: 20px;
     padding: 2.5rem 2rem;
     width: 100%;
@@ -106,13 +106,13 @@ if (!token) {
   .logo { height: 48px; margin: 0 auto 1.25rem; }
   .state { display: flex; flex-direction: column; align-items: center; gap: .75rem; }
   .icon { font-size: 3rem; }
-  h1 { font-size: 1.375rem; font-weight: 800; color: #111827; letter-spacing: -.03em; }
-  .sub { font-size: .875rem; color: #6b7280; line-height: 1.6; max-width: 300px; }
+  h1 { font-size: 1.375rem; font-weight: 800; color: var(--text); letter-spacing: -.03em; }
+  .sub { font-size: .875rem; color: var(--muted); line-height: 1.6; max-width: 300px; }
   .btn {
     display: inline-block;
     margin-top: .5rem;
-    background: #1a1a2e;
-    color: #fff;
+    background: var(--yellow);
+    color: #0b0c1d;
     border-radius: 10px;
     padding: .65rem 1.5rem;
     font-size: .9rem;
