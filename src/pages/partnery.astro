@@ -19,7 +19,7 @@ const itemList = {
       {PARTNERS.map((p) => (
         <article class="item">
           <div class="head">
-            <span class="mark" aria-hidden="true">{p.name.slice(0, 1)}</span>
+            <span class="mark" aria-hidden="true" style={p.popup ? `background:${p.popup.circle}` : undefined}><img src={p.icon} alt="" width="28" height="33" /></span>
             <div>
               <h2>{p.name}</h2>
               <a class="domain" href={p.url} target="_blank" rel="noopener">{p.domain}</a>
@@ -53,8 +53,9 @@ const itemList = {
   .head { display: flex; align-items: center; gap: .9rem; }
   .mark {
     width: 48px; height: 48px; border-radius: 12px; flex-shrink: 0; display: grid; place-items: center;
-    background: linear-gradient(135deg, #3d1345 0%, #7c3a8a 100%); color: #fff; font-size: 1.4rem; font-weight: 800;
+    background: #f7f6f1; border: 1px solid #e5e7eb;
   }
+  .mark img { width: 28px; height: auto; }
   .item h2 { font-size: 1.3rem; font-weight: 800; letter-spacing: -.015em; color: #111827; line-height: 1.2; }
   .domain { font-weight: 700; color: #7c3a8a; font-size: .9rem; }
   .item p { color: #4b5563; line-height: 1.65; font-size: .9375rem; }

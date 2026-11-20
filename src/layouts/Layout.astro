@@ -1,4 +1,6 @@
 ---
+import { PARTNER_POPUPS } from '../lib/partners';
+
 interface Props {
   title: string;
   description?: string;
@@ -61,6 +63,13 @@ for (const ld of jsonLd) ldAll.push({ '@context': 'https://schema.org', ...ld })
 // (у ньому GA4) — обидва сайти в одному ресурсі Analytics. Кабінет не відстежуємо.
 const GTM_ID = 'GTM-WKTF3D83';
 const analytics = !(pathname === '/dashboard' || pathname.startsWith('/dashboard/'));
+
+// Плашка партнера (public/partner-popup.js): не в кабінеті, кошику, входах і на «Партнерах».
+const partnerPopup = {
+  partners: PARTNER_POPUPS,
+  exclude: [...NOINDEX, '/register', '/partnery'],
+  waitFor: '#cookie-banner',
+};
 ---
 <!doctype html>
 <html lang="uk">
@@ -92,6 +101,8 @@ const analytics = !(pathname === '/dashboard' || pathname.startsWith('/dashboard
     {analytics && <script async src={`https://www.googletagmanager.com/gtm.js?id=${GTM_ID}`}></script>}
     {analytics && <script is:inline>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());</script>}
     <script src="/cart.js" is:inline></script>
+    {!fullPage && PARTNER_POPUPS.length > 0 && <script is:inline set:html={`window.PARTNER_POPUP=${JSON.stringify(partnerPopup).replace(/</g, '\\u003c')};`} />}
+    {!fullPage && PARTNER_POPUPS.length > 0 && <script is:inline src="/partner-popup.js" defer></script>}
     <style is:global>
       @font-face {
         font-family: 'e-Ukraine';
