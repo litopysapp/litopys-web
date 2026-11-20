@@ -18,6 +18,7 @@ const PAGES: { path: string; priority: number; changefreq: string }[] = [
   { path: '/zavantazhennia', priority: 0.8, changefreq: 'weekly' },
   { path: '/rukopysnyi-tekst-onlain', priority: 0.9, changefreq: 'monthly' },
   { path: '/statti', priority: 0.6, changefreq: 'weekly' },
+  { path: '/partnery', priority: 0.4, changefreq: 'monthly' },
   ...ARTICLES.map((a) => ({ path: `/statti/${a.slug}`, priority: 0.7, changefreq: 'monthly' })),
   { path: '/register', priority: 0.5, changefreq: 'yearly' },
   { path: '/umovy-vykorystannia', priority: 0.3, changefreq: 'yearly' },

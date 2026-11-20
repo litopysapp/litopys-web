@@ -146,6 +146,8 @@ const analytics = !(pathname === '/dashboard' || pathname.startsWith('/dashboard
                 <a href="/litopys" class="nav-dropdown-item" role="menuitem">Litopys</a>
                 <a href="/litoscan" class="nav-dropdown-item" role="menuitem">LitoScan</a>
                 <a href="/litograph" class="nav-dropdown-item" role="menuitem">LitoGraph</a>
+                <a href="https://litograph.pro/" class="nav-dropdown-item nav-dropdown-ext" role="menuitem">Рукописні шрифти<span>litograph.pro</span></a>
+                <a href="/partnery" class="nav-dropdown-item" role="menuitem">Партнери</a>
               </div>
             </div>
             <a href="/tsiny">Ціни</a>
@@ -207,6 +209,7 @@ const analytics = !(pathname === '/dashboard' || pathname.startsWith('/dashboard
               <a href="https://litograph.pro/shryfty/" style="color:inherit; text-decoration:underline;">Українські рукописні шрифти</a>
               <a href="https://litograph.pro/stvoryty-shryft/" style="color:inherit; text-decoration:underline;">Створити шрифт зі свого почерку</a>
               <a href="/statti" style="color:inherit; text-decoration:underline;">Статті</a>
+              <a href="/partnery" style="color:inherit; text-decoration:underline;">Партнери</a>
               <a href="/umovy-vykorystannia" style="color:inherit; text-decoration:underline;">Умови використання</a>
               <a href="/pravyla-oflain-litsenzii" style="color:inherit; text-decoration:underline;">Правила офлайн-ліцензії</a>
             </span>
@@ -285,6 +288,8 @@ const analytics = !(pathname === '/dashboard' || pathname.startsWith('/dashboard
   }
   .nav-dropdown-item:hover { background: var(--bg-subtle); }
   .nav-dropdown-item + .nav-dropdown-item { border-top: 1px solid var(--border-subtle); }
+  /* Сестринський сайт litograph.pro — з підписом домену */
+  .nav-dropdown-ext span { display: block; font-size: .75rem; font-weight: 400; color: var(--text-secondary); margin-top: 1px; }
 
   .footer-contacts {
     display: flex;

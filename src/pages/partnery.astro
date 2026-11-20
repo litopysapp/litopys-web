@@ -1,0 +1,70 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { PARTNERS } from '../lib/partners';
+
+const description = `Партнери Літопису та LitoGraph: ${PARTNERS.map((p) => `${p.name} (${p.domain})`).join(', ')}. Проєкти, яким ми довіряємо й радимо.`;
+const itemList = {
+  '@type': 'ItemList',
+  name: 'Партнери Літопису',
+  itemListElement: PARTNERS.map((p, i) => ({ '@type': 'ListItem', position: i + 1, name: p.name, url: p.url })),
+};
+---
+<Layout title="Партнери Літопису та LitoGraph" description={description} breadcrumbs={[{ name: 'Партнери', path: '/partnery' }]} jsonLd={[itemList]}>
+  <div class="list-bg"></div>
+  <section class="list">
+    <p class="eyebrow">Партнери</p>
+    <h1>Проєкти, з якими ми співпрацюємо</h1>
+    <p class="lead">Ми радимо їх так само, як радимо Літопис. Той самий список — на <a href="https://litograph.pro/partnery/">litograph.pro</a>.</p>
+    <div class="grid">
+      {PARTNERS.map((p) => (
+        <article class="item">
+          <div class="head">
+            <span class="mark" aria-hidden="true">{p.name.slice(0, 1)}</span>
+            <div>
+              <h2>{p.name}</h2>
+              <a class="domain" href={p.url} target="_blank" rel="noopener">{p.domain}</a>
+            </div>
+          </div>
+          <p>{p.about}</p>
+          <ul class="topics">{p.topics.map((t) => <li>{t}</li>)}</ul>
+          <a class="more" href={p.url} target="_blank" rel="noopener">Перейти на {p.domain} →</a>
+        </article>
+      ))}
+    </div>
+    <p class="join">Хочете стати партнером? Напишіть на <a href="mailto:info@litopys.pro">info@litopys.pro</a>.</p>
+  </section>
+</Layout>
+
+<style>
+  .list-bg {
+    position: fixed; inset: 0; z-index: -1; pointer-events: none;
+    background: radial-gradient(ellipse at 20% 30%, #ecdcf5 0%, transparent 55%), #f8f9fb;
+  }
+  .list { max-width: 980px; margin: 0 auto; padding: 4rem 1.5rem 6rem; }
+  .eyebrow { font-size: .75rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: #7c3a8a; margin-bottom: .75rem; }
+  h1 { font-size: clamp(1.9rem, 4vw, 2.8rem); font-weight: 800; letter-spacing: -.04em; line-height: 1.12; color: #111827; margin-bottom: 1rem; max-width: 720px; }
+  .lead { color: #4b5563; line-height: 1.65; margin-bottom: 2rem; max-width: 640px; }
+  .lead a, .join a { color: #7c3a8a; text-decoration: underline; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+  .item {
+    display: flex; flex-direction: column; gap: .75rem; background: rgba(255,255,255,.9); border: 1px solid #e5e7eb;
+    border-radius: 20px; padding: 1.5rem 1.75rem;
+  }
+  .head { display: flex; align-items: center; gap: .9rem; }
+  .mark {
+    width: 48px; height: 48px; border-radius: 12px; flex-shrink: 0; display: grid; place-items: center;
+    background: linear-gradient(135deg, #3d1345 0%, #7c3a8a 100%); color: #fff; font-size: 1.4rem; font-weight: 800;
+  }
+  .item h2 { font-size: 1.3rem; font-weight: 800; letter-spacing: -.015em; color: #111827; line-height: 1.2; }
+  .domain { font-weight: 700; color: #7c3a8a; font-size: .9rem; }
+  .item p { color: #4b5563; line-height: 1.65; font-size: .9375rem; }
+  .topics { list-style: none; display: flex; flex-wrap: wrap; gap: .4rem; }
+  .topics li { padding: .25rem .7rem; border-radius: 999px; background: #f3e8f6; color: #5b2466; font-size: .8125rem; font-weight: 600; }
+  .more { font-weight: 700; color: #7c3a8a; font-size: .9rem; margin-top: auto; }
+  .more:hover, .domain:hover { text-decoration: underline; }
+  .join { margin-top: 2rem; color: #6b7280; font-size: .9rem; }
+  @media (max-width: 720px) {
+    .grid { grid-template-columns: 1fr; }
+    .list { padding: 2.5rem 1rem 4rem; }
+  }
+</style>
