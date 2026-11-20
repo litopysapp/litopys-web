@@ -12,7 +12,10 @@ export interface Partner {
   topics: string[];
   // Іконка партнера без фону (шлях від кореня сайту).
   icon: string;
-  // Плашка в правому нижньому куті (public/partner-popup.js). Без popup — не показується.
+  // Фон кола під іконкою в картках (якщо немає — popup.circle або кремовий).
+  markBg?: string;
+  // Плашка в правому нижньому куті (public/partner-popup.js) — лише для партнерів,
+  // яким її окремо погодили. Без popup — плашки немає, лише картки й карусель.
   popup?: {
     title: string;
     subtitle: string;
@@ -49,15 +52,12 @@ export const PARTNERS: Partner[] = [
     short: 'Ціни на бензин, дизель і автогаз на АЗС України сьогодні.',
     topics: ['Ціни на АЗС', 'Бензин і дизель', 'Автогаз', 'Карта АЗС', 'Калькулятор заправки'],
     icon: '/partners/palne.png',
-    popup: {
-      title: 'Пальне UA — ціни на пальне сьогодні',
-      subtitle: 'Партнер Літопису · 20.com.ua',
-      bg: '#0b1220',
-      fg: '#ffffff',
-      circle: '#22d383',
-    },
+    markBg: '#22d383',
   },
 ];
+
+// Фон кола під іконкою партнера в картках.
+export const markBg = (p: Partner) => p.markBg ?? p.popup?.circle ?? '#f7f6f1';
 
 // Дані для public/partner-popup.js: партнери з плашкою, у порядку списку.
 export const PARTNER_POPUPS = PARTNERS.filter((p) => p.popup).map((p) => ({

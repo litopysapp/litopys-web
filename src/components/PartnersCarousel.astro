@@ -3,7 +3,7 @@
 // і остання картка «Як стати партнером». Без бібліотек: прокрутка зі
 // «зачепленням» карток + кнопки ‹ ›, які ховаються, коли гортати нікуди.
 // Така сама карусель — на головній litograph.pro (site/build.js, partnersCarousel).
-import { PARTNERS } from '../lib/partners';
+import { PARTNERS, markBg } from '../lib/partners';
 ---
 <section class="pc" aria-labelledby="pc-title">
   <div class="pc-container">
@@ -22,7 +22,7 @@ import { PARTNERS } from '../lib/partners';
       {PARTNERS.map((p) => (
         <li class="pc-item">
           <a class="pc-card" href={p.url} target="_blank" rel="noopener">
-            <span class="pc-mark" style={`background:${p.popup?.circle ?? '#f7f6f1'}`}><img src={p.icon} alt="" width="26" height="30" loading="lazy" /></span>
+            <span class="pc-mark" style={`background:${markBg(p)}`}><img src={p.icon} alt="" width="26" height="30" loading="lazy" /></span>
             <span class="pc-name">{p.name}</span>
             <span class="pc-domain">{p.domain}</span>
             <span class="pc-short">{p.short}</span>
