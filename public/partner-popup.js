@@ -19,7 +19,8 @@
  *   - хрестик — не показувати цього партнера 30 днів;
  *   - перехід (клік по плашці) — не показувати до кінця відвідування (сесії вкладки),
  *     наступного разу плашка з'явиться знову;
- *   - кілька партнерів — показується перший, якого ще не закривали;
+ *   - кілька партнерів — на кожне відвідування випадково обирається один із тих,
+ *     кого ще не закривали; у межах відвідування він не змінюється;
  *   - на телефоні — на всю ширину внизу;
  *   - події GTM: partner_popup_show / partner_popup_click / partner_popup_close.
  */
@@ -28,7 +29,7 @@
   if (!cfg || !cfg.partners || !cfg.partners.length) return;
 
   var DAY = 864e5, HIDE_DAYS = 30, FIRST_DELAY = 12000, NEXT_DELAY = 1500;
-  var KEY = "partner-popup:", SEEN = "partner-popup-seen", CLICKED = "partner-popup-clicked:";
+  var KEY = "partner-popup:", SEEN = "partner-popup-seen", CLICKED = "partner-popup-clicked:", PICK = "partner-popup-pick";
 
   function get(store, k) { try { return window[store].getItem(k); } catch (e) { return null; } }
   function set(store, k, v) { try { window[store].setItem(k, v); } catch (e) {} }
@@ -44,13 +45,15 @@
   });
   if (excluded) return;
 
-  var partner = null;
-  for (var i = 0; i < cfg.partners.length; i++) {
-    var id = cfg.partners[i].id;
-    var until = Number(get("localStorage", KEY + id) || 0);
-    if (until < Date.now() && !get("sessionStorage", CLICKED + id)) { partner = cfg.partners[i]; break; }
-  }
-  if (!partner) return;
+  var eligible = cfg.partners.filter(function (p) {
+    var until = Number(get("localStorage", KEY + p.id) || 0);
+    return until < Date.now() && !get("sessionStorage", CLICKED + p.id);
+  });
+  if (!eligible.length) return;
+  var picked = get("sessionStorage", PICK);
+  var partner = eligible.filter(function (p) { return p.id === picked; })[0] ||
+    eligible[Math.floor(Math.random() * eligible.length)];
+  set("sessionStorage", PICK, partner.id);
 
   function esc(s) {
     return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; });

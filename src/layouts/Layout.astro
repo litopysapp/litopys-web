@@ -67,7 +67,7 @@ const analytics = !(pathname === '/dashboard' || pathname.startsWith('/dashboard
 // Плашка партнера (public/partner-popup.js): не в кабінеті, кошику, входах і на «Партнерах».
 const partnerPopup = {
   partners: PARTNER_POPUPS,
-  exclude: [...NOINDEX, '/register', '/partnery'],
+  exclude: [...NOINDEX, '/register', '/partnery', '/staty-partnerom'],
   waitFor: '#cookie-banner',
 };
 ---
@@ -221,6 +221,7 @@ const partnerPopup = {
               <a href="https://litograph.pro/stvoryty-shryft/" style="color:inherit; text-decoration:underline;">Створити шрифт зі свого почерку</a>
               <a href="/statti" style="color:inherit; text-decoration:underline;">Статті</a>
               <a href="/partnery" style="color:inherit; text-decoration:underline;">Партнери</a>
+              <a href="/staty-partnerom" style="color:inherit; text-decoration:underline;">Стати партнером</a>
               <a href="/umovy-vykorystannia" style="color:inherit; text-decoration:underline;">Умови використання</a>
               <a href="/pravyla-oflain-litsenzii" style="color:inherit; text-decoration:underline;">Правила офлайн-ліцензії</a>
             </span>

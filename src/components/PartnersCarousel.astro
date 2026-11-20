@@ -1,0 +1,115 @@
+---
+// Карусель партнерів для головної: картки зі списку src/lib/partners.ts
+// і остання картка «Як стати партнером». Без бібліотек: прокрутка зі
+// «зачепленням» карток + кнопки ‹ ›, які ховаються, коли гортати нікуди.
+// Така сама карусель — на головній litograph.pro (site/build.js, partnersCarousel).
+import { PARTNERS } from '../lib/partners';
+---
+<section class="pc" aria-labelledby="pc-title">
+  <div class="pc-container">
+    <div class="pc-head">
+      <div>
+        <p class="pc-eyebrow">Партнери</p>
+        <h2 id="pc-title">Проєкти, яким ми довіряємо</h2>
+      </div>
+      <div class="pc-nav">
+        <a class="pc-all" href="/partnery">Усі партнери →</a>
+        <button type="button" class="pc-btn" data-dir="-1" aria-label="Попередні">‹</button>
+        <button type="button" class="pc-btn" data-dir="1" aria-label="Наступні">›</button>
+      </div>
+    </div>
+    <ul class="pc-track" role="list">
+      {PARTNERS.map((p) => (
+        <li class="pc-item">
+          <a class="pc-card" href={p.url} target="_blank" rel="noopener">
+            <span class="pc-mark" style={`background:${p.popup?.circle ?? '#f7f6f1'}`}><img src={p.icon} alt="" width="26" height="30" loading="lazy" /></span>
+            <span class="pc-name">{p.name}</span>
+            <span class="pc-domain">{p.domain}</span>
+            <span class="pc-short">{p.short}</span>
+            <span class="pc-go">Перейти на {p.domain} →</span>
+          </a>
+        </li>
+      ))}
+      <li class="pc-item">
+        <a class="pc-card pc-join" href="/staty-partnerom">
+          <span class="pc-mark pc-plus" aria-hidden="true">+</span>
+          <span class="pc-name">Як стати партнером</span>
+          <span class="pc-short">Розкажемо про ваш проєкт на litopys.pro і litograph.pro: картка, карусель на головній і плашка з вашим логотипом.</span>
+          <span class="pc-go">Умови й контакти →</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<style>
+  .pc { padding: 0 0 6rem; }
+  .pc-container { max-width: 1060px; margin: 0 auto; padding: 0 1.5rem; }
+  .pc-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+  .pc-eyebrow { font-size: .75rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: #4f7cac; margin-bottom: .6rem; }
+  .pc h2 { font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 800; letter-spacing: -.03em; color: #111827; line-height: 1.15; }
+  .pc-nav { display: flex; align-items: center; gap: .5rem; }
+  .pc-all { font-size: .875rem; font-weight: 700; color: #111827; margin-right: .5rem; }
+  .pc-all:hover { text-decoration: underline; }
+  .pc-btn {
+    width: 38px; height: 38px; border-radius: 50%; border: 1px solid #e5e7eb; background: rgba(255,255,255,.9);
+    font-size: 1.3rem; line-height: 1; color: #111827; cursor: pointer; transition: border-color .15s, opacity .15s;
+  }
+  .pc-btn:hover:not(:disabled) { border-color: #111827; }
+  .pc-btn:disabled { opacity: .35; cursor: default; }
+  .pc-btn[hidden] { display: none; }
+  .pc-track {
+    list-style: none; display: grid; grid-auto-flow: column; grid-auto-columns: calc((100% - 2 * 1.25rem) / 3);
+    gap: 1.25rem; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth;
+    scrollbar-width: none; padding: .25rem .1rem 1rem; margin: -.25rem -.1rem 0;
+  }
+  .pc-track::-webkit-scrollbar { display: none; }
+  .pc-item { scroll-snap-align: start; display: flex; }
+  .pc-card {
+    display: flex; flex-direction: column; gap: .35rem; width: 100%; padding: 1.5rem; border-radius: 20px;
+    background: rgba(255,255,255,.85); border: 1px solid #e5e7eb; backdrop-filter: blur(8px);
+    transition: box-shadow .2s, transform .2s, border-color .2s;
+  }
+  .pc-card:hover { box-shadow: 0 14px 36px rgba(0,0,0,.08); transform: translateY(-3px); border-color: #c7cbd3; }
+  .pc-mark { width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center; margin-bottom: .6rem; border: 1px solid rgba(0,0,0,.06); }
+  .pc-mark img { width: 26px; height: auto; }
+  .pc-name { font-size: 1.15rem; font-weight: 800; letter-spacing: -.02em; color: #111827; }
+  .pc-domain { font-size: .8125rem; font-weight: 600; color: #6b7280; }
+  .pc-short { font-size: .9rem; color: #4b5563; line-height: 1.6; flex: 1; margin: .35rem 0 .75rem; }
+  .pc-go { font-size: .875rem; font-weight: 700; color: #111827; }
+  .pc-join { background: #1a1a2e; border-color: #1a1a2e; }
+  .pc-join .pc-name, .pc-join .pc-go { color: #fff; }
+  .pc-join .pc-short { color: rgba(255,255,255,.72); }
+  .pc-plus { background: rgba(255,255,255,.12); border-color: rgba(255,255,255,.2); color: #fff; font-size: 1.6rem; font-weight: 300; }
+  .pc-join:hover { border-color: #1a1a2e; }
+  .pc a:focus-visible, .pc-btn:focus-visible { outline: 2px solid #4f7cac; outline-offset: 3px; }
+  @media (max-width: 900px) { .pc-track { grid-auto-columns: calc((100% - 1.25rem) / 2); } }
+  @media (max-width: 600px) {
+    .pc-track { grid-auto-columns: 82%; }
+    .pc-all { margin-right: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) { .pc-track { scroll-behavior: auto; } .pc-card { transition: none; } }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('.pc').forEach((root) => {
+    const track = root.querySelector<HTMLElement>('.pc-track');
+    const btns = root.querySelectorAll<HTMLButtonElement>('.pc-btn');
+    if (!track) return;
+    const update = () => {
+      const max = track.scrollWidth - track.clientWidth;
+      btns.forEach((b) => {
+        b.hidden = max <= 2;
+        b.disabled = b.dataset.dir === '-1' ? track.scrollLeft <= 2 : track.scrollLeft >= max - 2;
+      });
+    };
+    btns.forEach((b) => b.addEventListener('click', () => {
+      const card = track.querySelector<HTMLElement>('.pc-item');
+      const step = card ? card.offsetWidth + 20 : track.clientWidth;
+      track.scrollBy({ left: step * Number(b.dataset.dir), behavior: 'smooth' });
+    }));
+    track.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    update();
+  });
+</script>
