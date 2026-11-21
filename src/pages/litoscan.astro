@@ -46,7 +46,7 @@ const groups = [
   },
 ];
 ---
-<Layout title="LitoScan — безкоштовне сканування та редагування PDF" description="LitoScan: безкоштовна програма для сканування, об’єднання та редагування PDF-документів. Дуплексне сканування, пошук у тексті, друк." breadcrumbs={[{ name: 'LitoScan', path: '/litoscan' }]} jsonLd={[{
+<Layout title="LitoScan — безкоштовне сканування та редагування PDF" description="LitoScan: безкоштовна програма для сканування, об’єднання та редагування PDF-документів. Дуплексне сканування, пошук у тексті, друк." brand="litoscan" breadcrumbs={[{ name: 'LitoScan', path: '/litoscan' }]} jsonLd={[{
   '@type': 'SoftwareApplication',
   name: 'LitoScan',
   applicationCategory: 'BusinessApplication',
@@ -62,7 +62,7 @@ const groups = [
   <section class="hero-page">
     <div class="hero-bg"></div>
     <div class="container">
-      <p class="eyebrow fade-up">LitoScan</p>
+      <img class="hero-logo fade-up" src="/litoscan-logo-light.png" alt="LitoScan" width="1300" height="258" />
       <h1 class="fade-up" style="--d:.05s">Сканування без клопоту.<br/>PDF без зайвих програм.</h1>
       <p class="hero-sub fade-up" style="--d:.1s">Безкоштовна програма для Windows: скануй документи, об’єднуй, редагуй і шукай текст у PDF — все офлайн, в одному вікні.</p>
       <div class="hero-cta fade-up" style="--d:.15s">
@@ -127,6 +127,7 @@ const groups = [
     color: var(--ok);
     margin-bottom: 1rem;
   }
+  .hero-logo { display: block; height: clamp(36px, 5vw, 52px); width: auto; margin-bottom: 1.25rem; }
   .body-text { color: var(--text2); line-height: 1.75; font-size: .9375rem; }
 
   /* ── Hero ── */

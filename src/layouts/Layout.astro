@@ -11,8 +11,13 @@ interface Props {
   ogImage?: string;
   breadcrumbs?: { name: string; path: string }[];
   jsonLd?: Record<string, unknown>[];
+  // Логотип у шапці й підвалі: Літопис (за замовчуванням) або LitoScan на його сторінці.
+  brand?: 'litopys' | 'litoscan';
 }
-const { title, description = "Літопис — програма, що пише будь-які документи справжньою ручкою через плотер. Також LitoScan для PDF і LitoGraph для рукописних шрифтів.", fullPage = false, noHeader = false, ogImage = '/og-litopys.png', breadcrumbs = [], jsonLd = [] } = Astro.props;
+const { title, description = "Літопис — програма, що пише будь-які документи справжньою ручкою через плотер. Також LitoScan для PDF і LitoGraph для рукописних шрифтів.", fullPage = false, noHeader = false, ogImage = '/og-litopys.png', breadcrumbs = [], jsonLd = [], brand = 'litopys' } = Astro.props;
+const BRAND = brand === 'litoscan'
+  ? { badge: '/litoscan-badge.png', word: '/litoscan-logo-light.png', alt: 'LitoScan', w: 141 }
+  : { badge: '/lito-badge.png', word: '/litopys-logo-light.png', alt: 'Litopys', w: 99 };
 
 // Пошук: канонічна адреса без query, а службові сторінки (кабінет, кошик,
 // входи й скидання паролю) — не індексуються.
@@ -153,7 +158,7 @@ const partnerPopup = {
     {!fullPage && !noHeader && (
       <header class="site-header">
         <nav class="site-nav" aria-label="Головне меню">
-          <a href="/" class="brand" aria-label="Літопис — на головну"><img class="brand-badge" src="/lito-badge.png" alt="" width="34" height="34"><img class="brand-word" src="/litopys-logo-light.png" alt="Litopys" width="99" height="28"></a>
+          <a href="/" class="brand" aria-label="Літопис — на головну"><img class="brand-badge" src={BRAND.badge} alt="" width="34" height="34"><img class="brand-word" src={BRAND.word} alt={BRAND.alt} width={BRAND.w} height="28"></a>
           <div class="site-nav-links">
             <div class="nav-download-wrap">
               <button class="nav-link nav-products-btn" id="products-btn" aria-expanded="false" aria-haspopup="true">
@@ -190,7 +195,7 @@ const partnerPopup = {
       <footer class="site-footer">
         <div class="footer-in">
           <div class="footer-top">
-            <a href="/" class="brand"><img class="brand-badge" src="/lito-badge.png" alt="" width="34" height="34"><img class="brand-word" src="/litopys-logo-light.png" alt="Litopys" width="99" height="28"></a>
+            <a href="/" class="brand"><img class="brand-badge" src={BRAND.badge} alt="" width="34" height="34"><img class="brand-word" src={BRAND.word} alt={BRAND.alt} width={BRAND.w} height="28"></a>
             <p class="footer-tag">Вводиш текст — плотер пише будь-які документи справжньою ручкою, твоїм почерком.</p>
           </div>
           <div class="footer-contacts">
