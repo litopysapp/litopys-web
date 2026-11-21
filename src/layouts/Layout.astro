@@ -17,7 +17,7 @@ interface Props {
 const { title, description = "Літопис — програма, що пише будь-які документи справжньою ручкою через плотер. Також LitoScan для PDF і LitoGraph для рукописних шрифтів.", fullPage = false, noHeader = false, ogImage = '/og-litopys.png', breadcrumbs = [], jsonLd = [], brand = 'litopys' } = Astro.props;
 const BRAND = brand === 'litoscan'
   ? { badge: '/litoscan-badge.png', word: '/litoscan-logo-light.png', alt: 'LitoScan', w: 141 }
-  : { badge: '', word: '/lito-wordmark-white.png', alt: 'Літопис', w: 72 };
+  : { badge: '/lito-badge.png', word: '/lito-wordmark-white.png', alt: 'Літопис', w: 72 };
 
 // Пошук: канонічна адреса без query, а службові сторінки (кабінет, кошик,
 // входи й скидання паролю) — не індексуються.
