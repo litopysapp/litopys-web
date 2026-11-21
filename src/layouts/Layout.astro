@@ -153,7 +153,7 @@ const partnerPopup = {
     {!fullPage && !noHeader && (
       <header class="site-header">
         <nav class="site-nav" aria-label="Головне меню">
-          <a href="/" class="brand" aria-label="Літопис — на головну"><img src="/lito-badge.png" alt="" width="34" height="34"><span>Літопис</span></a>
+          <a href="/" class="brand" aria-label="Літопис — на головну"><img class="brand-badge" src="/lito-badge.png" alt="" width="34" height="34"><img class="brand-word" src="/litopys-logo-light.png" alt="Litopys" width="99" height="28"></a>
           <div class="site-nav-links">
             <div class="nav-download-wrap">
               <button class="nav-link nav-products-btn" id="products-btn" aria-expanded="false" aria-haspopup="true">
@@ -190,7 +190,7 @@ const partnerPopup = {
       <footer class="site-footer">
         <div class="footer-in">
           <div class="footer-top">
-            <a href="/" class="brand"><img src="/lito-badge.png" alt="" width="34" height="34"><span>Літопис</span></a>
+            <a href="/" class="brand"><img class="brand-badge" src="/lito-badge.png" alt="" width="34" height="34"><img class="brand-word" src="/litopys-logo-light.png" alt="Litopys" width="99" height="28"></a>
             <p class="footer-tag">Вводиш текст — плотер пише будь-які документи справжньою ручкою, твоїм почерком.</p>
           </div>
           <div class="footer-contacts">
@@ -265,7 +265,8 @@ const partnerPopup = {
   .site-header { position: sticky; top: calc(12px + env(safe-area-inset-top, 0px)); z-index: 100; margin: 12px auto 0; width: min(1180px, calc(100% - 28px)); }
   .site-nav { display: flex; align-items: center; gap: 12px; height: var(--nav-h); padding: 0 8px 0 10px; border-radius: 999px; background: rgba(13,15,39,.66); border: 1px solid var(--line); backdrop-filter: blur(18px) saturate(1.4); -webkit-backdrop-filter: blur(18px) saturate(1.4); }
   .brand { display: inline-flex; align-items: center; gap: 10px; font: 700 1.15rem/1 var(--f-disp); letter-spacing: -.04em; color: var(--text); white-space: nowrap; }
-  .brand img { width: 34px; height: 34px; border-radius: 10px; border: 1px solid var(--line2); }
+  .brand .brand-badge { width: 34px; height: 34px; border-radius: 10px; border: 1px solid var(--line2); }
+  .brand .brand-word { height: 28px; width: auto; display: block; }
   .site-nav-links { display: flex; align-items: center; gap: 2px; margin-left: auto; }
   .nav-link { display: inline-flex; align-items: center; gap: 6px; padding: 9px 13px; border-radius: 999px; border: 0; background: transparent; color: var(--muted); font: 500 .9rem var(--f-body); cursor: pointer; white-space: nowrap; transition: color .2s, background .2s; }
   .nav-link:hover, .nav-products-btn[aria-expanded="true"] { color: var(--text); background: var(--glass); }
@@ -286,7 +287,7 @@ const partnerPopup = {
   @media (max-width: 760px) { .nav-hide-m { display: none; } }
   @media (max-width: 560px) {
     .site-nav { gap: 6px; padding-left: 8px; }
-    .brand span { display: none; }
+    .brand .brand-word { height: 22px; }
     .site-nav-links { margin-left: 0; }
     .nav-icons { margin-left: auto; gap: 4px; }
     .nav-icon-btn { width: 36px; height: 36px; }
